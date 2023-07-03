@@ -1,0 +1,34 @@
+{% extends 'components/base.html'%}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    <h1>Usuarios</h1>
+    <label for="query">Buscar:</label>
+    <input type="text" class="big">
+    <button class="button inactive small">Buscar</button><br><br>
+    <button class="button">Todos</button>
+    <button class="button inactive">Siguiendo</button>
+    <button class="button inactive">Seguidores</button>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Usuario</th>
+            </tr>
+        </thead>
+        <tbody> 
+        {% for data in [ 
+            ['marco'],
+            ['cris'],
+            ['gerardthedemon'],
+        ]
+        %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ data[0] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

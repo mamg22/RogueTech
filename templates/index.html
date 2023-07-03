@@ -1,0 +1,31 @@
+{% extends 'components/base.html'%}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    <h1 class="center">RogueTech</h1>
+    <img src="{{ url_for('static', filename='img/_2d78bea5-2776-44af-b55e-b730c057d19b.jpg')}}"
+    class="center appicon"/>
+    <button class="button block center">
+        <svg width="32" height="32">
+            <path d="M8 0 h16 v16 h8 l-16 16 l-16 -16 h8 v-16">
+            </path>
+        </svg>
+        <br>
+        <span class="big">Descargar</span>
+        <br>
+        <small>v001</small>
+         </button>
+    <p>
+        RogueTech es un juego RPG roguelike de temática tecnológica, donde asumes el rol de un héroe que se enfrenta a diversos enemigos en niveles únicos, generados al azar, ¡Cada partida es una aventura diferente! Podrás personalizar tu héroe con diferentes habilidades, armas y objetos que encontrarás en tu camino, y enfrentarte a enemigos variados y desafiantes. RogueTech te ofrece una experiencia de juego dinámica y divertida, donde cada partida es una aventura diferente.
+    </p>
+    {{ lipsum(1) }}
+    <h2>Características</h2>
+    <ul>
+        <li>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis explicabo voluptatibus id! Officiis aspernatur nobis minus rem necessitatibus deserunt. Natus fugit perferendis unde rerum alias dolor veritatis eius autem nihil!</li>
+        <li>Odio veniam temporibus assumenda molestiae unde beatae porro sunt quibusdam? Error nobis eligendi ea! Officiis, dicta dolor, repudiandae fugit iusto animi culpa facere dolorum quae totam officia obcaecati repellendus sed?</li>
+        <li>Aliquid ullam natus mollitia error et suscipit facilis cumque distinctio ut minus rem enim voluptatem labore voluptatum eos nemo architecto debitis expedita explicabo delectus voluptate, deserunt quia consequuntur. Repellendus, alias?</li>
+        <li>Sunt neque assumenda consequuntur accusamus repellat. Fugit debitis eius facere delectus autem esse voluptas dolor aspernatur. Fugiat tempore molestias accusantium eos provident id laboriosam sed laborum, amet ad nemo ab.</li>
+        <li>Eveniet aperiam ad quae repudiandae nam inventore quasi necessitatibus! Aliquid esse officiis natus ea ex similique excepturi! Aliquid vel illum tempora, accusantium officia repellendus praesentium dolor eveniet, fugiat, laboriosam totam!</li>
+    </ul>
+{% endblock content %}

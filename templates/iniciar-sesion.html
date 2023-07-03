@@ -1,0 +1,20 @@
+{% extends 'components/base.html'%}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    <h1 class="center">Iniciar sesión</h1>
+    <div class="center">
+        <label for="nombre">Nombre de usuario:</label><br>
+        <input type="text" name="nombre" id="nombre" class="big"><br>
+        <br>
+        <label for="clave">Contraseña:</label><br>
+        <input type="text" name="clave" id="clave" class="big"><br>
+        <br>
+        <button class="button big">Iniciar sesión</button>
+        <br>
+        <br>
+        <button class="button inactive">Crear cuenta</button>
+        <button class="button inactive">Recuperar contraseña</button>
+    </div>
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% extends 'components/base.html'%}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    <h1 class="center">Recuperar cuenta</h1>
+    <div class="center">
+        <label for="nombre">Nombre de usuario:</label><br>
+        <input type="text" name="nombre" id="nombre" class="big"><br>
+        <br>
+        <label for="pin">Pin de seguridad:</label><br>
+        <input type="text" name="pin" id="pin" class="big"><br>
+        <br>
+        <label for="clave">Nueva contraseña:</label><br>
+        <input type="text" name="clave" id="clave" class="big"><br>
+        <br>
+        <label for="claveconf">Confirmar contraseña:</label><br>
+        <input type="text" name="claveconf" id="claveconf" class="big"><br>
+        <br>
+        <button class="button big">Recuperar cuenta</button>
+        <br>
+        <br>
+        <br>
+        ¿Ya tienes una cuenta?<br><br>
+        <button class="button inactive">Iniciar sesión</button>
+    </div>
+{% endblock content %}

@@ -1,0 +1,43 @@
+{% extends 'components/base.html'%}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <span class="float-right">Fecha: 02/06/2023 08:59:12</span>
+    <h1>Puntuación <small>#4</small></h1>
+    Por: <b>marco</b><br>
+    Semilla: <span class="mono-num">938129489</span> <br>
+    Versión: <span class="mono-num">v0.0.1 (1)</span><br>
+    Puntos: <span class="mono-num">44400</span> <br>
+    Tiempo total: <span class="mono-num">2:34:23<small>.123</small></span> <br>
+    </div>
+    <h2>Detalles</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for data in [ 
+            ['Tipo de final', 'Daño por caída'],
+            ['Nivel', 22],
+            ['Dinero', 3040],
+            ['Enemigos derrotados', 139],
+        ]
+        %}
+            <tr>
+                <td>{{ data[0] }}</td>
+                <td>{{ data[1] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <h3>Tesoros encontrados</h3>
+    <ul>
+        <li>Tarjeta perforada</li>
+        <li>Disquete</li>
+    </ul>
+{% endblock content %}
