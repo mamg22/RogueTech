@@ -11,7 +11,12 @@
             "runOptions": {
                 "runOn": "folderOpen"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "options": {
+                "env": {
+                    "FLASK_ENV": "development"
+                }
+            }
         }
     ]
 }
