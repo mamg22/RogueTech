@@ -6,10 +6,10 @@
     <h1>Usuarios</h1>
     <label for="query">Buscar:</label>
     <input type="text" class="big">
-    <button class="button inactive small">Buscar</button><br><br>
-    <button class="button">Todos</button>
-    <button class="button inactive">Siguiendo</button>
-    <button class="button inactive">Seguidores</button>
+    <button class="button small">Buscar</button><br><br>
+    <button class="button active">Todos</button>
+    <button class="button">Siguiendo</button>
+    <button class="button">Seguidores</button>
     <table>
         <thead>
             <tr>
@@ -18,15 +18,13 @@
             </tr>
         </thead>
         <tbody> 
-        {% for data in [ 
-            ['marco'],
-            ['cris'],
-            ['gerardthedemon'],
-        ]
-        %}
-            <tr>
+        {% for user in userlist %}
+            <tr class="clickable"
+            _="on click
+                    go to url '/usuario?name={{ user }}'
+                ">
                 <td>{{ loop.index }}</td>
-                <td>{{ data[0] }}</td>
+                <td>{{ user }}</td>
             </tr>
         {% endfor %}
         </tbody>

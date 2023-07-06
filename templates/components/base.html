@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title required %}{% endblock title %}</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script defer src="{{ url_for('node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
     {% block head_add %}{% endblock head_add%}
 </head>
 <body>

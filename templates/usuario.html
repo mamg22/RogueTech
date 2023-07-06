@@ -1,17 +1,20 @@
 {% extends 'components/base.html'%}
 
+{% from 'functions.html' import pretty_time %}
+
 {% block title %}{% endblock title %}
 
 {% block content %}
 <div class="card">
-    <span class="float-right">Fecha de registro: 25/05/2023<br>Administrador</span>
-    <h1>marco</h1>
-    <b>0</b> Siguiendo <br>
-    <b>1</b> Seguidor
+    <span class="float-right">Fecha de registro: {{ user.join_date }}<br>
+        {{ user.account_type }}</span>
+    <h1>{{ user.name }}</h1>
+    <b>{{ user.follows }}</b> Siguiendo <br>
+    <b>{{ user.followers }}</b> Seguidor
     <h2>Estadísticas</h2>
-    Partidas jugadas: 2 <br>
-    Partidas ganadas: 1 <br>
-    Porcentaje de éxito: 50% <br>
+    Partidas jugadas: {{ user.runs }} <br>
+    Partidas ganadas: {{ user.wins }} <br>
+    Porcentaje de éxito: {{ (user.wins / user.runs * 100) | int }}% <br>
     Puntaje total: <span class="mono-num">44400</span> <br>
     Mejor puntuación: <span class="mono-num">43900</span> <br>
     Mejor tiempo: <span class="mono-num">2:34:23<small>.123</small></span> <br>
@@ -27,17 +30,12 @@
             </tr>
         </thead>
         <tbody>
-        {% for data in [ 
-            ['02/06/2023', 43900, '2:34:23.123'],
-            ['04/06/2023', 500,   '0:00:46.034'],
-        ]
-        %}
-        {% set timesplit = data[2].split(".")%}
+        {% for data in user.scores %}
             <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ data[0] }}</td>
-                <td class="mono-num">{{ data[1] }}</td>
-                <td class="mono-num">{{ timesplit[0] }}<small>.{{ timesplit[1] }}</small></td>
+                <td class="mono-num">{{ (data[1] | string).rjust(user.widest_score) }}</td>
+                <td class="mono-num">{{ pretty_time(data[2]) }}</td>
             </tr>
         {% endfor %}
         </tbody>

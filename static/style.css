@@ -3,7 +3,8 @@
     --black-1: hsl(60, 100%, 0%);
     --black-2: hsl(60, 100%, 4%);
     --black-3: hsl(60, 100%, 8%);
-    --black-4: hsl(60, 100%, 16%);
+    --black-4: hsl(60, 100%, 12%);
+    --black-5: hsl(60, 100%, 16%);
 
     --white-1: hsl(60, 100%, 80%);
     --white-2: hsl(60, 100%, 90%);
@@ -63,37 +64,80 @@ main {
     line-height: 1.333;
 }
 
-a {
-    text-decoration: none;
-    color: var(--foreground-color);
-}
-
 /* || Navbar */
 
 nav {
     background-color: var(--black-4);
-    border-width: 0 0 4px;
-    border-color: var(--yellow-6);
+    border-width: 0 0 3px;
+    border-color: var(--yellow-5);
     border-style: solid;
     color: white;
+
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0.1em 1em;
-    position: sticky;
-    top: 0;
+    padding: 1em 1em;
+    z-index: 3;
+    
+    font-weight: bold;
 }
 
-nav > ul {
+nav a {
+    text-decoration: none;
+    color: var(--foreground-color);
+    padding: 0.25em;
+    display: block;
+}
+
+nav > div {
     display:  flex;
     flex-direction: row;
     gap: 0.5em;
     padding-inline: 0;
 }
 
-nav li {
-    list-style-type: none;
+.navseparator {
+    border-color: var(--yellow-4);
+    border-style: solid;
+    border-width: 0 0 0 2px;
+}
+
+
+
+#nav-toggle {
+    display: none;
     font-weight: bold;
+}
+
+#navmenu * {
+    font-weight: bold;
+}
+
+@media screen and (max-width: 700px) {
+    #nav-toggle {
+        display: block;
+    }
+    #navmenu {
+        background-color: var(--black-4);
+        position: static;
+        display: none;
+        flex-direction: column;
+
+        border-width: 0 3px 3px 0;
+        border-color: var(--yellow-5);
+        border-style: solid;
+        border-bottom-right-radius: 1.5em;
+    }
+    #navmenu.open {
+        display: flex;
+        position: absolute;
+        left: 0;
+
+        padding: 0.75em;
+    }
+    .navseparator {
+        border-width: 2px 0 0 0;
+    }
 }
 
 .appicon {
@@ -105,18 +149,28 @@ nav li {
 }
 
 .button {
-    background: var(--yellow-4);
-    color: var(--black-1);
+    background: var(--yellow-1);
+    color: var(--white-3);
     border-radius: 1em;
     border: 2px solid var(--yellow-2);
     padding: 0.5em 1em;
+    margin: 0.5em 0.1em;
     font-weight: bold;
+    text-decoration: none;
     cursor: pointer;
 }
 
-.button.inactive {
-    background: var(--yellow-1);
-    color: var(--white-3);
+.button.active {
+    background: var(--yellow-4);
+    color: var(--black-1);
+}
+
+.button:hover {
+    background: var(--yellow-2);
+}
+
+.button.active:hover {
+    background: var(--yellow-6);
 }
 
 .block {
@@ -139,6 +193,10 @@ big, .big {
     font-size: larger;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 table {
     width: 100%;
     margin: 1em auto;
@@ -147,6 +205,7 @@ table {
 .mono-num {
     font-family: monospace;
     font-size: larger;
+    white-space: pre;
 }
 
 .float-right {
@@ -154,28 +213,40 @@ table {
     text-align: right;
 }
 
-tbody tr:nth-child(odd) {
+tbody tr:hover {
+    background: var(--cyan-2);
+}
+
+tbody tr:nth-child(odd):not(:hover) {
     background: var(--black-3);
 }
 
 th {
     font-weight: bold;
     font-size: large;
-    border-bottom: 3px solid var(--black-4);
+    border-bottom: 3px solid var(--black-5);
+    position: sticky;
+    top: 0;
+    background-color: var(--black-2);
 }
 
 table {
     border-spacing: 0;
-    border: 1px solid var(--black-4);
+    border: 1px solid var(--black-5);
+    overflow-x: scroll;
+    background-color: var(--black-2);
+    border-collapse: collapse;
 }
 
 td {
-    padding: 0.2em;
+    padding: 0.4em;
     text-align: center;
+    border-right: 2px solid var(--black-5);
+    border-left: 2px solid var(--black-5);
 }
 
 .card {
-    border: 3px solid var(--cur-border, var(--black-4));
+    border: 3px solid var(--cur-border, var(--black-5));
     background-color: var(--cur-back, var(--black-3));
     border-radius: 1em;
     margin: 1em;
@@ -184,9 +255,17 @@ td {
 }
 
 .center {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.centered {
     text-align: center;
-    margin: auto;
-    display: block;
 }
 
 input[type=text]{
@@ -195,10 +274,24 @@ input[type=text]{
     border-radius: 1em;
     color: var(--white-3);
     margin: 0.2em;
-    padding: 0.3em;
+    padding: 0.3em 0.6em;
 }
 
 .alert {
     --cur-back: var(--red-1);
     --cur-border: var(--red-5);
+}
+
+.input-block {
+    margin: 1em 0;
+    text-align: left;
+}
+
+.input-block label {
+    margin-left: 1em;
+    display: block;
+}
+
+a {
+    color: var(--cyan-5);
 }

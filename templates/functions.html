@@ -1,0 +1,4 @@
+{% macro pretty_time(time) -%}
+{%- set timesplit = time.split(".") -%}
+{{ timesplit[0] }}<span class="small">.{{ timesplit[1] }}</span>
+{%- endmacro %}

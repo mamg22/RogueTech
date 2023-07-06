@@ -1,15 +1,31 @@
-<nav>
-    <ul>
-        <li>
-            <a href="/">Inicio</a>
-        </li>
-        <li>
-            <a href="/puntuaciones">Puntuaciones</a>
-        </li>
-    </ul>
-    <ul>
-        <li>
-            <a href="">Iniciar sesión</a>
-        </li>
-    </ul>
+<nav id="navbar">
+    <div id="navmenu">
+        {% for link, name in [
+            ('index', 'Inicio'),
+            ('puntuaciones', 'Puntuaciones'),
+            ('usuarios', 'Usuarios'),
+        ] %}
+        <a href="{{ url_for(link) }}">{{ name }}</a>
+        {% if not loop.last %}
+            <span class="navseparator"></span>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div>
+        <a href="#" id="nav-toggle"
+            _="
+            on load
+                measure #navbar's x, height
+                set startpos to x + height + 'px'
+                set the #navmenu.style.top to startpos
+            end
+            on click
+                halt the event
+                toggle .open on #navmenu
+            end">
+        Menú</a>
+    </div>
+    <div>
+        <a href="">Iniciar sesión</a>
+    </div>
 </nav>

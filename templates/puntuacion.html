@@ -1,16 +1,18 @@
 {% extends 'components/base.html'%}
 
+{% from 'functions.html' import pretty_time %}
+
 {% block title %}{% endblock title %}
 
 {% block content %}
 <div class="card">
-    <span class="float-right">Fecha: 02/06/2023 08:59:12</span>
-    <h1>Puntuación <small>#4</small></h1>
-    Por: <b>marco</b><br>
-    Semilla: <span class="mono-num">938129489</span> <br>
-    Versión: <span class="mono-num">v0.0.1 (1)</span><br>
-    Puntos: <span class="mono-num">44400</span> <br>
-    Tiempo total: <span class="mono-num">2:34:23<small>.123</small></span> <br>
+    <span class="float-right">Fecha: {{ score.date }}</span>
+    <h1>Puntuación <small>#{{ score.id }}</small></h1>
+    Por: <b>{{ score.user }}</b><br>
+    Semilla: <span class="mono-num">{{ score.seed }}</span> <br>
+    Versión: <span class="mono-num">{{ score.version }}</span><br>
+    Puntos: <span class="mono-num">{{ score.score }}</span> <br>
+    Tiempo total: <span class="mono-num">{{ pretty_time(score.time) }}</span> <br>
     </div>
     <h2>Detalles</h2>
     <table>
@@ -21,23 +23,19 @@
             </tr>
         </thead>
         <tbody>
-        {% for data in [ 
-            ['Tipo de final', 'Daño por caída'],
-            ['Nivel', 22],
-            ['Dinero', 3040],
-            ['Enemigos derrotados', 139],
-        ]
+        {% for key, val in score.details.items()
         %}
             <tr>
-                <td>{{ data[0] }}</td>
-                <td>{{ data[1] }}</td>
+                <td>{{ key }}</td>
+                <td>{{ val }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
     <h3>Tesoros encontrados</h3>
     <ul>
-        <li>Tarjeta perforada</li>
-        <li>Disquete</li>
+        {% for t in score.treasures %}
+        <li>{{ t }}</li>
+        {% endfor %}
     </ul>
 {% endblock content %}

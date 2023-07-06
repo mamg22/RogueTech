@@ -1,11 +1,13 @@
 {% extends 'components/base.html'%}
 
+{% from 'functions.html' import pretty_time %}
+
 {% block title %}{% endblock title %}
 
 {% block content %}
     <h1>Puntuaciones</h1>
-    <button class="button">Todos</button>
-    <button class="button inactive">Siguiendo</button>
+    <button class="button active">Todos</button>
+    <button class="button">Siguiendo</button>
     <table>
         <thead>
             <tr>
@@ -17,33 +19,15 @@
             </tr>
         </thead>
         <tbody> 
-        {% for data in [ 
-            ['marco', '02/06/2023', 43900, '2:34:23.123'],
-            ['cris', '02/06/2023', 59200, '1:59:03.039'],
-            ['gerardthedemon', '03/06/2023', 100300, '2:20:30.045'],
-            ['marco', '04/06/2023', 500,   '0:00:46.034'],
-
-            ['marco', '02/06/2023', 43900, '2:34:23.123'],
-            ['cris', '02/06/2023', 59200, '1:59:03.039'],
-            ['marco', '02/06/2023', 43900, '2:34:23.123'],
-            ['cris', '02/06/2023', 59200, '1:59:03.039'],
-            ['marco', '02/06/2023', 43900, '2:34:23.123'],
-            ['cris', '02/06/2023', 59200, '1:59:03.039'],
-            ['gerardthedemon', '03/06/2023', 100300, '2:20:30.045'],
-            ['marco', '04/06/2023', 500,   '0:00:46.034'],
-            ['gerardthedemon', '03/06/2023', 100300, '2:20:30.045'],
-            ['marco', '04/06/2023', 500,   '0:00:46.034'],
-            ['gerardthedemon', '03/06/2023', 100300, '2:20:30.045'],
-            ['marco', '04/06/2023', 500,   '0:00:46.034'],
-        ]
-        %}
-        {% set timesplit = data[3].split(".")%}
-            <tr>
+        {% for data in scorelist %}
+            <tr class="clickable"
+            _="on click
+                go to url '/puntuacion?id={{ loop.index }}&user={{ data[0] }}&date={{ data[1] }}&score={{ data[2] }}&time={{ data[3] }}' ">
                 <td>{{ loop.index }}</td>
                 <td>{{ data[0] }}</td>
                 <td>{{ data[1] }}</td>
                 <td class="mono-num">{{ data[2] }}</td>
-                <td class="mono-num">{{ timesplit[0] }}<small>.{{ timesplit[1] }}</small></td>
+                <td class="mono-num">{{ pretty_time(data[3]) }}</td>
             </tr>
         {% endfor %}
         </tbody>

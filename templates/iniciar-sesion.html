@@ -4,17 +4,21 @@
 
 {% block content %}
     <h1 class="center">Iniciar sesión</h1>
-    <div class="center">
-        <label for="nombre">Nombre de usuario:</label><br>
-        <input type="text" name="nombre" id="nombre" class="big"><br>
-        <br>
-        <label for="clave">Contraseña:</label><br>
-        <input type="text" name="clave" id="clave" class="big"><br>
-        <br>
-        <button class="button big">Iniciar sesión</button>
-        <br>
-        <br>
-        <button class="button inactive">Crear cuenta</button>
-        <button class="button inactive">Recuperar contraseña</button>
+    <div class="center column">
+        <form>
+        <div class="input-block">
+            <label for="nombre">Nombre de usuario:</label>
+            <input type="text" name="nombre" id="nombre" class="big">
+        </div>
+
+        <div class="input-block">
+            <label for="clave">Contraseña:</label>
+            <input type="text" name="clave" id="clave" class="big">
+        </div>
+
+        <button class="button big active">Iniciar sesión</button>
+        </form>
+        <button class="button">Crear cuenta</button>
+        <button class="button">Recuperar contraseña</button>
     </div>
 {% endblock content %}
