@@ -10,23 +10,25 @@
     <button class="button active">Todos</button>
     <button class="button">Siguiendo</button>
     <button class="button">Seguidores</button>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Usuario</th>
-            </tr>
-        </thead>
-        <tbody> 
-        {% for user in userlist %}
-            <tr class="clickable"
-            _="on click
-                    go to url '/usuario?name={{ user }}'
-                ">
-                <td>{{ loop.index }}</td>
-                <td>{{ user }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in userlist %}
+                <tr class="clickable"
+                _="on click
+                        go to url '/usuario?name={{ user }}'
+                    ">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ user }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock content %}

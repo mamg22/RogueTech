@@ -51,6 +51,27 @@ body {
     color: var(--foreground-color);
     min-height: 100vh;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    scrollbar-color: var(--cyan-3) var(--cyan-1);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--cyan-3);
+    border-color: var(--cyan-2);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+    background-color: var(--cyan-1);
+    border-radius: 8px;
+}
+*::-webkit-scrollbar {
+    background-color: var(--black-1);
+    width: 8px;
+    height: 8px;
+}
+*::-webkit-scrollbar-corner {
+    background-color: var(--black-1);
 }
 
 main {
@@ -197,9 +218,9 @@ big, .big {
     cursor: pointer;
 }
 
-table {
+.table-container {
+    overflow-x: auto;
     width: 100%;
-    margin: 1em auto;
 }
 
 .mono-num {
@@ -213,15 +234,17 @@ table {
     text-align: right;
 }
 
-tbody tr:hover {
-    background: var(--cyan-2);
-}
-
 tbody tr:nth-child(odd):not(:hover) {
     background: var(--black-3);
 }
 
-th {
+tbody tr:hover {
+    background: var(--cyan-2);
+}
+
+
+
+thead {
     font-weight: bold;
     font-size: large;
     border-bottom: 3px solid var(--black-5);
@@ -230,12 +253,17 @@ th {
     background-color: var(--black-2);
 }
 
+th {
+    padding: 0.2em 0.4em;
+}
+
 table {
     border-spacing: 0;
     border: 1px solid var(--black-5);
-    overflow-x: scroll;
     background-color: var(--black-2);
     border-collapse: collapse;
+    width: 100%;
+    margin: 1em auto;
 }
 
 td {
@@ -268,13 +296,14 @@ td {
     text-align: center;
 }
 
-input[type=text]{
+input {
     background: var(--black-1);
     border: 2px solid grey;
     border-radius: 1em;
     color: var(--white-3);
     margin: 0.2em;
     padding: 0.3em 0.6em;
+    max-width: 80%;
 }
 
 .alert {

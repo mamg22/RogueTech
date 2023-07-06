@@ -15,23 +15,25 @@
     Tiempo total: <span class="mono-num">{{ pretty_time(score.time) }}</span> <br>
     </div>
     <h2>Detalles</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Tipo</th>
-                <th>Valor</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for key, val in score.details.items()
-        %}
-            <tr>
-                <td>{{ key }}</td>
-                <td>{{ val }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for key, val in score.details.items()
+            %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ val }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <h3>Tesoros encontrados</h3>
     <ul>
         {% for t in score.treasures %}

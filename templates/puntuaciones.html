@@ -8,28 +8,30 @@
     <h1>Puntuaciones</h1>
     <button class="button active">Todos</button>
     <button class="button">Siguiendo</button>
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Usuario</th>
-                <th>Fecha</th>
-                <th>Puntuación</th>
-                <th>Tiempo</th>
-            </tr>
-        </thead>
-        <tbody> 
-        {% for data in scorelist %}
-            <tr class="clickable"
-            _="on click
-                go to url '/puntuacion?id={{ loop.index }}&user={{ data[0] }}&date={{ data[1] }}&score={{ data[2] }}&time={{ data[3] }}' ">
-                <td>{{ loop.index }}</td>
-                <td>{{ data[0] }}</td>
-                <td>{{ data[1] }}</td>
-                <td class="mono-num">{{ data[2] }}</td>
-                <td class="mono-num">{{ pretty_time(data[3]) }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Puntuación</th>
+                    <th>Tiempo</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for data in scorelist %}
+                <tr class="clickable"
+                _="on click
+                    go to url '/puntuacion?id={{ loop.index }}&user={{ data[0] }}&date={{ data[1] }}&score={{ data[2] }}&time={{ data[3] }}' ">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ data[0] }}</td>
+                    <td>{{ data[1] }}</td>
+                    <td class="mono-num">{{ data[2] }}</td>
+                    <td class="mono-num">{{ pretty_time(data[3]) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock content %}
