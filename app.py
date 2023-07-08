@@ -6,6 +6,7 @@ import datetime
 from flask import Flask, render_template, send_from_directory, request
 
 app = Flask(__name__)
+app.secret_key = 'e6187732c0ad5760606c2871be66d3edb9fc9abd09e56e42ef443845ef4ef3a1'
 
 @app.route('/')
 def index():
@@ -22,8 +23,18 @@ def favicon():
 @app.route('/puntuaciones')
 def puntuaciones():
     page = request.args.get('page', 1, type=int)
+    user_filter = request.args.get('user_filter', 'all')
+    score_sort = request.args.get('score_sort', 'id')
     rand = Random(page)
     scorelist = []
+    
+    if user_filter == 'following':
+        filtr = lambda x: rand.random() > .8
+    else:
+        filtr = lambda x: True
+        
+    
+    
     for i in range(50):
         scorelist.append((
             f"usuario_{rand.randint(100, 999)}",
@@ -31,7 +42,25 @@ def puntuaciones():
             rand.randrange(0, 500_000, 250),
             '00:10:00.000'
         ))
-    return render_template('puntuaciones.html', scorelist=scorelist)
+
+    def sorter(mode):
+        n = -1
+        if mode == "user":
+            n = 0
+        elif mode == "score":
+            n = 2
+        else:
+            n = 1
+        def s(x):
+            return x[n]
+        
+        return s
+        
+    scorelist = [x for x in scorelist if filtr(x)]
+    scorelist.sort(key=sorter(score_sort))
+
+    return render_template('puntuaciones.html', 
+                           scorelist=scorelist)
 
 @app.route('/puntuacion')
 def puntuacion():
@@ -110,6 +139,18 @@ def usuario():
     }
 
     return render_template('usuario.html', user=userdata)
+
+@app.route('/iniciar-sesion', methods=['GET', 'POST'])
+def login():
+    return render_template(f"iniciar-sesion.html")
+
+@app.route('/crear-cuenta')
+def new_account():
+    return render_template(f"crear-cuenta.html")
+
+@app.route('/recuperar-pass')
+def recovery():
+    return render_template(f"recuperar-pass.html")
 
 @app.route('/<path:route>')
 def route(route):

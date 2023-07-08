@@ -4,24 +4,38 @@
 
 {% block content %}
     <h1 class="center">Recuperar cuenta</h1>
-    <div class="center">
-        <label for="nombre">Nombre de usuario:</label><br>
-        <input type="text" name="nombre" id="nombre" class="big"><br>
-        <br>
-        <label for="pin">Pin de seguridad:</label><br>
-        <input type="text" name="pin" id="pin" class="big"><br>
-        <br>
-        <label for="clave">Nueva contraseña:</label><br>
-        <input type="text" name="clave" id="clave" class="big"><br>
-        <br>
-        <label for="claveconf">Confirmar contraseña:</label><br>
-        <input type="text" name="claveconf" id="claveconf" class="big"><br>
-        <br>
-        <button class="button big">Recuperar cuenta</button>
-        <br>
-        <br>
-        <br>
-        ¿Ya tienes una cuenta?<br><br>
-        <button class="button inactive">Iniciar sesión</button>
+    <div class="center column">
+        <form action="" class="center column">
+            <div class="input-block">
+                <label for="nombre">Nombre de usuario:</label>
+                <input type="text" name="nombre" id="nombre" class="big"
+                autocomplete="username">
+            </div>
+            
+            <div class="input-block">
+                <label for="pin">Pin de seguridad:</label>
+                <input type="text" name="pin" id="pin" class="big"
+                autocomplete="current-password">
+            </div>
+            
+            <div class="input-block">
+                <label for="clave">Nueva contraseña:</label>
+                <input type="password" name="clave" id="clave" class="big"
+                autocomplete="new-password">
+            </div>
+            
+            <div class="input-block">
+                <label for="claveconf">Confirmar contraseña:</label>
+                <input type="password" name="claveconf" id="claveconf" class="big"
+                 autocomplete="new-password">
+            </div>
+            
+            <button class="button big active">Recuperar cuenta</button>
+        </form>
+        
+        <hr>
+        
+        ¿Ya tienes una cuenta?<br>
+        <a class="button" href="/iniciar-sesion">Iniciar sesión</a>
     </div>
 {% endblock content %}

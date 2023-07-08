@@ -206,12 +206,23 @@ nav > div {
     display: inline-block;
 }
 
+hr {
+    border-color: var(--black-5);
+    width: 90%;
+    border-width: thin;
+    border-style: solid;
+}
+
 small, .small {
     font-size: small;
 }
 
 big, .big {
     font-size: larger;
+}
+
+.hidden {
+    display: none;
 }
 
 .clickable {
@@ -232,6 +243,7 @@ big, .big {
 .float-right {
     float: right;
     text-align: right;
+    background-color: var(--black-2);
 }
 
 tbody tr:nth-child(odd):not(:hover) {
@@ -286,6 +298,7 @@ td {
     display: flex;
     justify-items: center;
     align-items: center;
+    justify-content: center;
 }
 
 .column {
@@ -296,14 +309,14 @@ td {
     text-align: center;
 }
 
-input {
+input, .input {
     background: var(--black-1);
     border: 2px solid grey;
     border-radius: 1em;
     color: var(--white-3);
     margin: 0.2em;
     padding: 0.3em 0.6em;
-    max-width: 80%;
+    max-width: 100%;
 }
 
 .alert {
@@ -312,7 +325,7 @@ input {
 }
 
 .input-block {
-    margin: 1em 0;
+    margin: 0.5em 0;
     text-align: left;
 }
 
@@ -323,4 +336,21 @@ input {
 
 a {
     color: var(--cyan-5);
+}
+
+fieldset {
+    padding: 1.5em 1em;
+    margin: 0.5em auto;
+    border-color: var(--yellow-2);
+    border-radius: 1em;
+}
+
+.htmx-request {
+    transition: opacity 500ms ease-in-out;
+    opacity: 1;
+}
+
+.htmx-indicator {
+    transition: opacity 500ms ease-in-out;
+    opacity: 0;
 }

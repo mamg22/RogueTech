@@ -4,29 +4,42 @@
 
 {% block content %}
     <h1 class="center">Crear cuenta</h1>
-    <div class="center">
-        <label for="nombre">Nombre de usuario:</label><br>
-        <input type="text" name="nombre" id="nombre" class="big"><br>
-        <br>
-        <label for="clave">Contraseña:</label><br>
-        <input type="text" name="clave" id="clave" class="big"><br>
-        <br>
-        <label for="claveconf">Confirmar contraseña:</label><br>
-        <input type="text" name="claveconf" id="claveconf" class="big"><br>
-        <br>
-        <label for="pin">Pin de seguridad:</label><br>
-        <input type="text" name="pin" id="pin" class="big"><br>
-        <div class="alert card inline-block">
-            <b>IMPORTANTE</b><br>
-            El pin de seguridad es un pin único, te servira para recuperar<br>
-            tu contraseña. Copialo y guardalo en un lugar seguro
-        </div>
-        <br>
-        <button class="button big">Crear cuenta</button>
-        <br>
-        <br>
-        <br>
-        ¿Ya tienes una cuenta?<br><br>
-        <button class="button inactive">Iniciar sesión</button>
+    <div class="center column">
+        <form action="" class="center column">
+            <div class="input-block">
+                <label for="nombre">Nombre de usuario:</label>
+                <input type="text" name="nombre" id="nombre" class="big"
+                autocomplete="username">
+            </div>
+            
+            <div class="input-block">
+                <label for="clave">Contraseña:</label>
+                <input type="password" name="clave" id="clave" class="big"
+                autocomplete="new-password">
+            </div>
+            
+            <div class="input-block">
+                <label for="claveconf">Confirmar contraseña:</label>
+                <input type="password" name="claveconf" id="claveconf" class="big"
+                autocomplete="new-password">
+            </div>
+            
+            <div class="input-block">
+                <label for="pin">Pin de seguridad:</label>
+                <input type="text" name="pin" id="pin" class="big">
+            </div>
+            <div class="alert card inline-block">
+                <b>IMPORTANTE</b><br>
+                El pin de seguridad es un pin único, te servira para recuperar<br>
+                tu contraseña. Copialo y guardalo en un lugar seguro
+            </div>
+            
+            <button class="button big active">Crear cuenta</button>
+        </form>
+        
+        <hr>
+        
+        ¿Ya tienes una cuenta?<br>
+        <a class="button" href="/iniciar-sesion">Iniciar sesión</a>
     </div>
 {% endblock content %}

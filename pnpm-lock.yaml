@@ -5,14 +5,23 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fortawesome/fontawesome-free':
+    specifier: ^6.4.0
+    version: 6.4.0
   htmx.org:
     specifier: ^1.9.2
     version: 1.9.2
   hyperscript.org:
-    specifier: ^0.9.8
-    version: 0.9.8
+    specifier: ^0.9.9
+    version: 0.9.9
 
 packages:
+
+  /@fortawesome/fontawesome-free@6.4.0:
+    resolution: {integrity: sha512-0NyytTlPJwB/BF5LtRV8rrABDbe3TdTXqNB3PdZ+UUUZAEIrdOJdmABqKjt4AXwIoJNaRVVZEXxpNrqvE1GAYQ==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: false
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
@@ -73,8 +82,8 @@ packages:
     resolution: {integrity: sha512-ZGbucKcalQyXdGUl+4Zt3xdRDPmNy70yNhMyDG1eDYUm/ImxmSo2rhIBDa53XitrAVhA+/CGgry+wJ1SO77wrA==}
     dev: false
 
-  /hyperscript.org@0.9.8:
-    resolution: {integrity: sha512-0en3TlJJ/rrZIr++ZkNyC8/yBbXG+IZzY8XU4ZyRWQejatZ/xP4rgBa+20jGchg+MrlclVcpeMzGLgO18vG2Mg==}
+  /hyperscript.org@0.9.9:
+    resolution: {integrity: sha512-6vR06weqpnelTk0WX2KrdnY0x1lgMi7KCiFSaYt42zNA3Q4hnu4IW78cvFa+34m2nv6+Wk8nBRyfYdxY/97TsQ==}
     hasBin: true
     dependencies:
       markdown-it-deflist: 2.1.0

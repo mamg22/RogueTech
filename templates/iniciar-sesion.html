@@ -3,22 +3,27 @@
 {% block title %}{% endblock title %}
 
 {% block content %}
-    <h1 class="center">Iniciar sesión</h1>
+    <h1 class="centered">Iniciar sesión</h1>
     <div class="center column">
-        <form>
+        <form class="center column">
         <div class="input-block">
             <label for="nombre">Nombre de usuario:</label>
-            <input type="text" name="nombre" id="nombre" class="big">
+            <input type="text" name="nombre" id="nombre" class="big"
+            autocomplete="username">
         </div>
 
         <div class="input-block">
             <label for="clave">Contraseña:</label>
-            <input type="text" name="clave" id="clave" class="big">
+            <input type="password" name="clave" id="clave" class="big"
+            autocomplete="current-password">
         </div>
 
         <button class="button big active">Iniciar sesión</button>
         </form>
-        <button class="button">Crear cuenta</button>
-        <button class="button">Recuperar contraseña</button>
+        <hr>
+        <div class="center column">
+            <a class="button" href="/crear-cuenta">Crear cuenta</a>
+            <a class="button" href="/recuperar-pass">Recuperar contraseña</a>
+        </div>
     </div>
 {% endblock content %}
