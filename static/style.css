@@ -456,6 +456,10 @@ label:disabled {
     justify-items: center;
 }
 
+.pagination-counter {
+    padding: 1em;
+}
+
 #scoretable.shine thead {
     color: var(--grey-5);
     transition: 0.5s color ease-in-out;

@@ -19,7 +19,7 @@
         name="page" value="{{ page - 1}}" _="install SubmitFix(value: {{ page - 1 }})"
         {{ disable_back }} {{ as_data_attr(disable_back) }}>Anterior</button>
 
-    <div title="aaa" class="centered clickable" _="on click
+    <div title="aaa" class="centered clickable pagination-counter" _="on click
             get prompt('Página:') as Int
             set #pagefix's value to it
             call #search.requestSubmit()">
