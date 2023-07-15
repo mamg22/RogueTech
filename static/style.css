@@ -460,3 +460,35 @@ label:disabled {
     color: var(--grey-5);
     transition: 0.5s color ease-in-out;
 }
+
+#loader {
+    position: fixed;
+    top: -1.5lh;
+    left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+    
+    display: flex;
+    justify-content: center;
+    
+    margin: 1em 0em;
+    padding: 0.5em;
+    width: 8em;
+
+    background-color: var(--cyan-1);
+    border: 2px solid var(--cyan-4);
+    border-radius: 1em;
+
+    transition: 0.2s opacity ease-in-out;
+    opacity: 0;
+}
+
+#loader.loader-visible {
+    top: 0px;
+    transition: 0.2s top ease-in-out;
+    opacity: 1;
+}
+
+#loader-dots {
+    min-width: 1em;
+}

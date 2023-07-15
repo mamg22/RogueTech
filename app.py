@@ -131,7 +131,7 @@ def usuarios():
             rand.randrange(0, 500_000, 250) for x in range(rand.randint(1, 15))
         ]
         userlist.append({
-            'id': page * 25 + i + 1,
+            'id': (page - 1) * 25 + i + 1,
             'name': f"usuario_{rand.randint(100, 999)}",
             'best_score': max(user_scores),
             'total_score': sum(user_scores)

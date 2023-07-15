@@ -23,9 +23,7 @@
             get prompt('Página:') as Int
             set #pagefix's value to it
             call #search.requestSubmit()">
-        Página <br>
-        <span class="clickable" >{{ page }}</span><br>
-        <span id="pagination-{{ pos }}" class="htmx-indicator">Cargando...</span>
+        Página {{ page }}
     </div>
 
     <button class="button" form="{{ form }}" type="submit"

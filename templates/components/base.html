@@ -35,6 +35,28 @@
         {% include 'components/messages.html' %}
     {% endif %}
     </div>
+    <div hx-preserve id="loader"
+    _=" on htmx:beforeRequest from document
+            wait for htmx:afterRequest or 250ms from window
+            if the result's type is 'htmx:afterRequest'
+                exit
+            end
+            add .loader-visible
+            repeat until event htmx:afterRequest from document
+                if #loader-dots.innerText.length == 3
+                    set #loader-dots.innerText to ''
+                else
+                    append '.' to #loader-dots
+                end
+                wait 250ms
+            end
+            remove .loader-visible
+        end
+--         on htmx:afterRequest from document queue all
+--         end
+    ">
+        <div id="loader-text">Cargando</div><div id="loader-dots"></div>
+    </div>
 </body>
 </html>
 {% if is_htmx_boost %}
