@@ -1,0 +1,13 @@
+{% set is_htmx = request.headers['HX-Request'] == 'true' %}
+{% if is_htmx %}
+{# htmx requests just append new messages #}
+<div id="message-container" hx-swap-oob="beforeend">
+{% endif %}
+
+{% for message in get_flashed_messages() %}
+<p class="button" _="on click remove me">{{ message }}</p>
+{% endfor %}
+
+{% if is_htmx %}
+</div>
+{% endif %}

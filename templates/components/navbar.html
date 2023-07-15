@@ -1,5 +1,7 @@
 <nav id="navbar">
-    <div id="navmenu">
+    <div id="navmenu"
+        _="on click from <a/> in me or click from elsewhere
+            remove .open">
         {% for link, name in [
             ('index', 'Inicio'),
             ('puntuaciones', 'Puntuaciones'),
@@ -12,20 +14,25 @@
         {% endfor %}
     </div>
     <div>
-        <a href="#" id="nav-toggle"
+        <div class="clickable" href="#" id="nav-toggle"
             _="
             on load
-                measure #navbar's x, height
-                set startpos to x + height + 'px'
-                set the #navmenu.style.top to startpos
+                measure #navbar's height
+                set the #navmenu.style.top to height + 'px'
             end
             on click
                 halt the event
                 toggle .open on #navmenu
             end">
-        Menú</a>
+            <span class="material-icons">menu</span>
+        </div>
     </div>
     <div>
+    {% if session.active %}
+        <span class="material-icons">person</span>
+        <span>{{ session.username }}</span>
+    {% else %}
         <a href="{{ url_for('login')}}">Iniciar sesión</a>
+    {% endif %}
     </div>
 </nav>

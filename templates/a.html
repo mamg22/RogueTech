@@ -1,0 +1,63 @@
+{% extends 'components/base.html' %}
+
+{% block title %}FUCK{% endblock%}
+
+{% block head_add %}
+<style>
+    #bot {
+        min-width: 50px;
+        min-height: 50px;
+        font-size: 50px;
+        position: fixed;
+        left: 300px;
+        top: 300px;
+        z-index: 10;
+    }
+    main#main {
+        min-height: 1000vh;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div id="bot" class="material-icons">accessibility</div>
+</div>
+<script>
+    function length_to_int(length) {
+        let length_num = length.match(/[0-9\.]+/g);
+        return parseFloat(length_num)
+    }
+    let bot = document.querySelector("#bot");
+    document.addEventListener("click", function (e) {
+        let x = e.clientX;
+        let y = e.clientY;
+        
+        let s = getComputedStyle(bot)
+        let my_x = length_to_int(s.left);
+        let my_y = length_to_int(s.top);
+        let my_size = length_to_int(s.width);
+        
+        let move_width = Math.abs(x - my_x);
+        let move_height = Math.abs(y - my_y);
+        let dist = Math.sqrt(Math.pow(move_width, 2) + Math.pow(move_height, 2));
+
+        let pos = {
+            left: x - my_size / 2 + 'px',
+            top: y - my_size / 2 + 'px'
+        };
+        let timing = {
+            duration: dist * 4,
+            iterations: 1,
+        };
+        let anim = bot.animate(pos, timing);
+        bot.innerText = 'directions_run'
+        
+        anim.addEventListener('finish', function (e) {
+            bot.style.left = pos.left
+            bot.style.top = pos.top
+            bot.innerText = 'accessibility'
+        });
+    });
+</script>
+{% endblock %}
