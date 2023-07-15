@@ -2,3 +2,37 @@
 {%- set timesplit = time.split(".") -%}
 {{ timesplit[0] }}<span class="small">.{{ timesplit[1] }}</span>
 {%- endmacro %}
+
+{% macro pagination(form, pos, page, has_more) -%}
+{%- set page = page | default(1) -%}
+{%- set disable_back = 'disabled' if page <= 1 else '' -%}
+{%- set disable_forward = 'disabled' if not has_more else '' -%}
+
+{%- macro as_data_attr(attr) -%}
+    {%- if attr -%}
+        data-{{attr}}
+    {%- endif -%}
+{%- endmacro -%}
+
+<div class="pagination">
+    <button class="button" form="{{ form }}" type="submit"
+        name="page" value="{{ page - 1}}" _="install SubmitFix(value: {{ page - 1 }})"
+        {{ disable_back }} {{ as_data_attr(disable_back) }}>Anterior</button>
+
+    <div title="aaa" class="centered clickable" _="on click
+            get prompt('Página:') as Int
+            set #pagefix's value to it
+            call #search.requestSubmit()">
+        Página <br>
+        <span class="clickable" >{{ page }}</span><br>
+        <span id="pagination-{{ pos }}" class="htmx-indicator">Cargando...</span>
+    </div>
+
+    <button class="button" form="{{ form }}" type="submit"
+        name="page" value="{{ page + 1 }}" _="install SubmitFix(value: {{ page + 1 }})"
+        {{ disable_forward }} {{ as_data_attr(disable_forward) }}>Siguiente</button>
+</div>
+{%- endmacro -%}
+
+{% set is_htmx = request.headers['HX-Request'] == 'true' %}
+{% set is_htmx_boost = request.headers['HX-Boosted'] == 'true' %}

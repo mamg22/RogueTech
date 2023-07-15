@@ -4,31 +4,59 @@
 
 {% block content %}
     <h1>Usuarios</h1>
-    <label for="query">Buscar:</label>
-    <input type="text" class="big">
-    <button class="button small">Buscar</button><br><br>
-    <button class="button active">Todos</button>
-    <button class="button">Siguiendo</button>
-    <button class="button">Seguidores</button>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Usuario</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for user in userlist %}
-                <tr class="clickable"
-                _="on click
-                        go to url '/usuario?name={{ user }}'
-                    ">
-                    <td>{{ loop.index }}</td>
-                    <td>{{ user }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <form id="search" method="get" action="/usuarios"
+        hx-target="#usertable"
+        hx-push-url="true"
+        hx-get="/usuarios"
+        hx-swap="innerHTML show:#usertable:top"
+        hx-indicator=".htmx-indicator"
+        _="install DisableOnSubmit(table: #usertable)">
+        <fieldset class="box">
+            <legend>Búsqueda</legend>
+            <label for="order">Ordenar por:</label>
+            <select name="user_sort" id="order" class="input">
+                <option value="id">Id</option>
+                <option value="name">Usuario</option>
+                <option value="best_score">Mejor puntuación</option>
+                <option value="total_score">Puntuación total</option>
+            </select>
+            <fieldset id="user_filter_field">
+                <legend>Filtrar usuarios</legend>
+                {% for key, val in {
+                'all': 'Todos',
+                'following': 'Siguiendo',
+                'followers': 'Seguidores',
+                'custom': 'Filtrar...'
+                }.items()
+                %}
+                {% set checked = 'checked' if request.args.get('user_filter', 'all') == key else '' %}
+                {% set disabled = 'disabled' if not session.active and key in ['following', 'followers']%}
+                {% set inputid = 'filter-' + key %}
+                {#
+                'custom': 'Filtrar...'
+                #}
+                <div class="block">
+                    <input class="" type="radio" name="user_filter" id="{{ inputid }}" value="{{ key }}" autocomplete="off" {{ checked }} {{ disabled }}>
+                    <label for="{{ inputid }}" class="{{ active }}">{{ val }}</label>
+                </div>
+                {% endfor %}
+                <div class="hidden" _="on load or click from #user_filter_field
+                    if #filter-custom.checked
+                        remove .hidden
+                    else
+                        add .hidden">
+                    <hr>
+                    <label for="custom_user_filter">Usuarios (separados por comas):</label>
+                    <input type="text" name="custom_user_filter" id="custom_user_filter"
+                    value="{{ request.args.get('custom_user_filter', '') }}">
+                </div>
+            </fieldset>
+            <!-- Remove once bigskysoftware/htmx#1559 is merged, and also related fixes -->
+            <input type="hidden" name="page" value="1" id="pagefix">
+            <button type="submit" class="button" name="page" value="1">Buscar</button>
+        </fieldset>
+    </form>
+    <div id="usertable">
+        {% include 'fragments/usertable.html' %}
     </div>
 {% endblock content %}

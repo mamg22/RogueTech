@@ -1,85 +1,63 @@
 {% extends 'components/base.html'%}
 
-{% from 'functions.html' import pretty_time %}
-
 {% block title %}{% endblock title %}
 
 {% block content %}
     <h1>Puntuaciones</h1>
-    <form id="search"
-        hx-target="tbody"
-        hx-select="tbody"
-        hx-swap="outerHTML"
+    <form id="search" method="get" action="/puntuaciones"
+        hx-target="#scoretable"
         hx-push-url="true"
         hx-get="/puntuaciones"
-    >
-    <label for="order">Ordenar por:</label>
-    <select name="score_sort" id="order" class="input">
-        <option value="id">Id</option>
-        <option value="user">Usuario</option>
-        <option value="date">Fecha</option>
-        <option value="score">Puntuación</option>
-        <option value="time">Tiempo</option>
-    </select>
-    <fieldset
-        _="on click from .button in me
-            take .active from .button for event.target">
-        <legend>Filtrar usuarios</legend>
-        
-        {% for key, val in {
-            'all': 'Todos',
-            'following': 'Siguiendo'
-        }.items()
-        %}
-        {% set active = 'active' if request.args.get('user_filter', 'all') == key else '' %}
-        {% set inputid = 'filter' + loop.index | string %}
-
-        <label for="{{ inputid }}" class="button {{ active }}">{{ val }}</label>
-        
-        <input class="hidden" type="radio" name="user_filter" id="{{ inputid }}" value="{{ key }}">
-        
-        {% endfor %}
-    </fieldset>
-        <button type="submit" class="button">Buscar</button>
-        <span class="htmx-indicator">Cargando...</span>
+        hx-swap="innerHTML show:#scoretable:top"
+        hx-indicator=".htmx-indicator"
+        _="install DisableOnSubmit(table: #scoretable)">
+        <fieldset class="box">
+            <legend>Búsqueda</legend>
+            <label for="order">Ordenar por:</label>
+            <select name="score_sort" id="order" class="input">
+                <option value="id">Id</option>
+                <option value="user">Usuario</option>
+                <option value="date">Fecha</option>
+                <option value="score">Puntuación</option>
+                <option value="time">Tiempo</option>
+            </select>
+            <fieldset id="user_filter_field">
+                <legend>Filtrar usuarios</legend>
+                {% for key, val in {
+                'all': 'Todos',
+                'following': 'Siguiendo',
+                'me': 'Mis puntuaciones',
+                'custom': 'Filtrar...'
+                }.items()
+                %}
+                {% set checked = 'checked' if request.args.get('user_filter', 'all') == key else '' %}
+                {% set disabled = 'disabled' if not session.active and key in ['following', 'me']%}
+                {% set inputid = 'filter-' + key %}
+                {#
+                'custom': 'Filtrar...'
+                #}
+                <div class="block">
+                    <input class="" type="radio" name="user_filter" id="{{ inputid }}" value="{{ key }}" autocomplete="off" {{ checked }} {{ disabled }}>
+                    <label for="{{ inputid }}" class="{{ active }}">{{ val }}</label>
+                </div>
+                {% endfor %}
+                <div class="hidden" _="on load or click from #user_filter_field
+                    if #filter-custom.checked
+                        remove .hidden
+                    else
+                        add .hidden">
+                    <hr>
+                    <label for="custom_user_filter">Usuarios (separados por comas):</label>
+                    <input type="text" name="custom_user_filter" id="custom_user_filter"
+                    value="{{ request.args.get('custom_user_filter', '') }}">
+                </div>
+            </fieldset>
+            <!-- Remove once bigskysoftware/htmx#1559 is merged, and also related fixes -->
+            <input type="hidden" name="page" value="1" id="pagefix">
+            <button type="submit" class="button" name="page" value="1">Buscar</button>
+        </fieldset>
     </form>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                    <th>Puntuación</th>
-                    <th>Tiempo</th>
-                </tr>
-            </thead>
-            <tbody
-                    hx-target="#main"
-                    hx-select="#main"
-                    hx-swap="outerHTML show:window:top"
-                    hx-push-url="true"
-            >
-            {% for data in scorelist %}
-                <tr class="clickable"
-                    hx-get="/puntuacion"
-                    hx-vals='{
-                        "id": {{ loop.index }},
-                        "user": "{{ data[0] }}",
-                        "date": "{{ data[1] }}",
-                        "score": "{{ data[2] }}",
-                        "time": "{{ data[3] }}"
-                    }'
-                _="on dblclick
-                    go to url '/puntuacion?id={{ loop.index }}&user={{ data[0] }}&date={{ data[1] }}&score={{ data[2] }}&time={{ data[3] }}' ">
-                    <td>{{ loop.index }}</td>
-                    <td>{{ data[0] }}</td>
-                    <td>{{ data[1] }}</td>
-                    <td class="mono-num">{{ data[2] }}</td>
-                    <td class="mono-num">{{ pretty_time(data[3]) }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div id="scoretable">
+        {% include 'fragments/scoretable.html' %}
     </div>
 {% endblock content %}

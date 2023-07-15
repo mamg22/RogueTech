@@ -1,0 +1,31 @@
+{% extends 'components/base-fragment.html' %}
+{% import 'functions.html' as funcs %}
+
+{% block content %}
+{%- set page = request.args.get('page', 1) | int -%}
+{{ funcs.pagination('search', 'top', page, page < 5) }}
+<div class="table-container">
+    <table>
+        <thead hx-preserve>
+            <tr>
+                <th>#</th>
+                <th>Usuario</th>
+                <th>Mejor puntuación</th>
+                <th>Puntos totales</th>
+            </tr>
+        </thead>
+        <tbody hx-target="#main" hx-select="#main" hx-swap="outerHTML show:window:top" hx-push-url="true">
+            {% for data in userlist %}
+            <tr class="clickable" hx-get="/usuario" hx-vals='{{ data | tojson }}'
+                >
+                <td>{{ data.id }}</td>
+                <td>{{ data.name }}</td>
+                <td class="mono-num">{{ (data.best_score | string).rjust(8) }}</td>
+                <td class="mono-num">{{ (data.total_score | string).rjust(8) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{{ funcs.pagination('search', 'bottom', page, page < 5) }}
+{% endblock %}
