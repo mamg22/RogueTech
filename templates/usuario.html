@@ -1,7 +1,5 @@
 {% extends 'components/base.html'%}
 
-{% from 'functions.html' import pretty_time %}
-
 {% block title %}{% endblock title %}
 
 {% block content %}
@@ -20,27 +18,5 @@
     Mejor tiempo: <span class="mono-num">2:34:23<small>.123</small></span> <br>
     </div>
     <h2>Puntuaciones</h2>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Fecha</th>
-                    <th>Puntuación</th>
-                    <th>Tiempo</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for data in user.scores %}
-                <tr class="clickable"
-                _="on click go to url '/puntuacion?id={{ loop.index }}&user={{ user.name }}&date={{ data[0] }}&score={{ data[1] }}&time={{ data[2] }}' ">
-                    <td>{{ loop.index }}</td>
-                    <td>{{ data[0] }}</td>
-                    <td class="mono-num">{{ (data[1] | string).rjust(user.widest_score) }}</td>
-                    <td class="mono-num">{{ pretty_time(data[2]) }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <a href="/puntuaciones?user_filter=custom&custom_user_filter={{ user.name }}" class="button">Ver puntuaciones</a>
 {% endblock content %}
