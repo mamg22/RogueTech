@@ -2,11 +2,23 @@
 
 from random import Random
 import datetime
+import json
+import time
 
-from flask import Flask, render_template, send_from_directory, request
+from flask import Flask, render_template, send_from_directory, request, flash, session, redirect
 
 app = Flask(__name__)
 app.secret_key = 'e6187732c0ad5760606c2871be66d3edb9fc9abd09e56e42ef443845ef4ef3a1'
+
+@app.route('/s')
+def s():
+    ses = request.args.get('s')
+    if ses == 'null':
+        session["s"] = None
+    else:
+        session["s"] = ses
+    return redirect('/')
+        
 
 @app.route('/')
 def index():
@@ -23,21 +35,26 @@ def favicon():
 @app.route('/puntuaciones')
 def puntuaciones():
     page = request.args.get('page', 1, type=int)
+    
+    if page < 1 or page > 5:
+        flash("Página fuera de rango")
+        page = 1
+
     user_filter = request.args.get('user_filter', 'all')
     score_sort = request.args.get('score_sort', 'id')
     rand = Random(page)
     scorelist = []
-    
+
     if user_filter == 'following':
-        filtr = lambda x: rand.random() > .8
+        filtr = lambda _: rand.random() > .8
+    elif user_filter == 'me':
+        filtr = lambda _: rand.random() > .5
     else:
-        filtr = lambda x: True
+        filtr = lambda _: True
         
-    
-    
     for i in range(50):
         scorelist.append((
-            f"usuario_{rand.randint(100, 999)}",
+            session.get('username') if user_filter == 'me' else f"usuario_{rand.randint(100, 999)}",
             '02/06/2023',
             rand.randrange(0, 500_000, 250),
             '00:10:00.000'
@@ -58,7 +75,12 @@ def puntuaciones():
         
     scorelist = [x for x in scorelist if filtr(x)]
     scorelist.sort(key=sorter(score_sort))
+    if score_sort == "score":
+        scorelist.reverse()
 
+    if request.headers.get("HX-Request") and not request.headers.get("HX-Boosted") == 'true':
+        return render_template('fragments/scoretable.html', scorelist=scorelist)
+    
     return render_template('puntuaciones.html', 
                            scorelist=scorelist)
 
@@ -105,7 +127,19 @@ def usuarios():
     rand = Random(page)
     userlist = []
     for i in range(25):
-        userlist.append(f"usuario_{rand.randint(100, 999)}")
+        user_scores = [
+            rand.randrange(0, 500_000, 250) for x in range(rand.randint(1, 15))
+        ]
+        userlist.append({
+            'id': page * 25 + i + 1,
+            'name': f"usuario_{rand.randint(100, 999)}",
+            'best_score': max(user_scores),
+            'total_score': sum(user_scores)
+        })
+
+    if request.headers.get("HX-Request") and not request.headers.get("HX-Boosted") == 'true':
+        return render_template('fragments/usertable.html', userlist=userlist)
+
     return render_template('usuarios.html', userlist=userlist)
 
 @app.route('/usuario')
@@ -142,7 +176,17 @@ def usuario():
 
 @app.route('/iniciar-sesion', methods=['GET', 'POST'])
 def login():
-    return render_template(f"iniciar-sesion.html")
+    if request.method == 'POST':
+        if user := request.form.get('nombre'):
+            session['active'] = True
+            session['username'] = user
+            flash(f"Bienvenido {user}")
+            return redirect('/')
+        else:
+            flash("Nombre de usuario vacío")
+            return render_template(f"iniciar-sesion.html")
+    else:
+        return render_template(f"iniciar-sesion.html")
 
 @app.route('/crear-cuenta')
 def new_account():
@@ -151,6 +195,11 @@ def new_account():
 @app.route('/recuperar-pass')
 def recovery():
     return render_template(f"recuperar-pass.html")
+
+@app.route('/cerrar-sesion')
+def logout():
+    session.clear()
+    return redirect('/')
 
 @app.route('/<path:route>')
 def route(route):
