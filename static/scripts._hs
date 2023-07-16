@@ -11,13 +11,14 @@ behavior DisableOnSubmit(table)
             add .shine to table
             add @disabled to <fieldset, .pagination button/>
             wait for htmx:afterOnLoad
-            remove @disabled from <fieldset:not([data-disabled])/>
+            remove @disabled from <fieldset:not([data-disabled]), .pagination button:not([data-disabled])/>
             settle
             remove .shine from table
         end
     end
     on htmx:historyRestore from window
         or popstate from window
+        or htmx:beforeHistorySave from window
         remove @disabled from <fieldset:not([data-disabled]), .pagination button:not([data-disabled])/>
     end
 end
