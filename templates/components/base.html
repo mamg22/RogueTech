@@ -42,7 +42,14 @@
                 exit
             end
             add .loader-visible
-            repeat until event htmx:afterRequest from document
+        end
+        on htmx:afterRequest from document
+            or htmx:historyRestore from window
+            or htmx:beforeHistorySave from window
+            remove .loader-visible
+        end
+        on mutation of @class
+            repeat while I match .loader-visible
                 if #loader-dots.innerText.length == 3
                     set #loader-dots.innerText to ''
                 else
@@ -50,7 +57,6 @@
                 end
                 wait 250ms
             end
-            remove .loader-visible
         end
     ">
         <div id="loader-text">Cargando</div><div id="loader-dots"></div>
