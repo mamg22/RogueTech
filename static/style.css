@@ -86,7 +86,7 @@ body {
 main {
     max-width: 60em;
     margin: 1em auto;
-    padding: 1em;
+    padding: 1em 1em 2em;
     background-color: var(--black-2);
     border: 2px solid var(--black-4);
     border-radius: 2em;
@@ -483,7 +483,7 @@ label:disabled {
     border: 2px solid var(--cyan-4);
     border-radius: 1em;
 
-    transition: 0.2s opacity ease-in-out;
+    transition: 0.2s top ease-in-out;
     opacity: 0;
 }
 
