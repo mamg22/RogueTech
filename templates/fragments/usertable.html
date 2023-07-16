@@ -18,10 +18,14 @@
             {% for data in userlist %}
             <tr class="clickable" hx-get="/usuario" hx-vals='{{ data | tojson }}'
                 >
-                <td>{{ data.id }}</td>
+                <td>{{ loop.index }}</td>
                 <td>{{ data.name }}</td>
                 <td class="mono-num">{{ (data.best_score | string).rjust(8) }}</td>
                 <td class="mono-num">{{ (data.total_score | string).rjust(8) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="99">No hay resultados</td>
             </tr>
             {% endfor %}
         </tbody>

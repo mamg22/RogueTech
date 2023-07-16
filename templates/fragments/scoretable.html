@@ -31,6 +31,10 @@
                 <td class="mono-num">{{ (data[2] | string).rjust(6) }}</td>
                 <td class="mono-num">{{ funcs.pretty_time(data[3]) }}</td>
             </tr>
+            {% else %}
+            <tr>
+                <td colspan="99">No hay resultados</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
