@@ -53,12 +53,24 @@ def puntuaciones():
         filtr = lambda _: True
         
     for i in range(50):
-        scorelist.append((
-            session.get('username') if user_filter == 'me' else f"usuario_{rand.randint(100, 999)}",
-            '02/06/2023',
-            rand.randrange(0, 500_000, 250),
-            '00:10:00.000'
-        ))
+        if user_filter == 'custom':
+            names = request.args.get('custom_user_filter')
+            namelist = [name.strip() for name in names.split(',') if len(name.strip()) > 0]
+            if len(namelist) == 0:
+                break
+            scorelist.append((
+                rand.choice(namelist),
+                '02/06/2023',
+                rand.randrange(0, 500_000, 250),
+                '00:10:00.000'
+            ))
+        else:
+            scorelist.append((
+                session.get('username') if user_filter == 'me' else f"usuario_{rand.randint(100, 999)}",
+                '02/06/2023',
+                rand.randrange(0, 500_000, 250),
+                '00:10:00.000'
+            ))
 
     def sorter(mode):
         n = -1
@@ -126,17 +138,37 @@ def usuarios():
     page = request.args.get('page', 1, type=int)
     rand = Random(page)
     userlist = []
-    for i in range(25):
-        user_scores = [
-            rand.randrange(0, 500_000, 250) for x in range(rand.randint(1, 15))
-        ]
-        userlist.append({
-            'id': (page - 1) * 25 + i + 1,
-            'name': f"usuario_{rand.randint(100, 999)}",
-            'best_score': max(user_scores),
-            'total_score': sum(user_scores)
-        })
 
+    if request.args.get('user_filter') == 'custom':
+        names = request.args.get('custom_user_filter')
+        namelist = [name.strip() for name in names.split(',') if len(name.strip()) > 0]
+        namelist = list(set(namelist))
+        for i, name in enumerate(namelist):
+            user_scores = [
+                rand.randrange(0, 500_000, 250) for x in range(rand.randint(1, 15))
+            ]
+            userlist.append({
+                'id': (page - 1) * 25 + i,
+                'name': name,
+                'best_score': max(user_scores),
+                'total_score': sum(user_scores)
+            })
+    else:
+        for i in range(25):
+            user_scores = [
+                rand.randrange(0, 500_000, 250) for x in range(rand.randint(1, 15))
+            ]
+            userlist.append({
+                'id': (page - 1) * 25 + i + 1,
+                'name': f"usuario_{rand.randint(100, 999)}",
+                'best_score': max(user_scores),
+                'total_score': sum(user_scores)
+            })
+            
+    sort = request.args.get('user_sort', 'name')
+
+    userlist.sort(key=lambda x: x[sort], reverse=(sort != 'name'))
+    
     if request.headers.get("HX-Request") and not request.headers.get("HX-Boosted") == 'true':
         return render_template('fragments/usertable.html', userlist=userlist)
 
