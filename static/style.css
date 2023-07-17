@@ -43,6 +43,30 @@
     --red-6: hsl(0, 100%, 60%);
     --red-7: hsl(0, 100%, 70%);
 
+    --orange-1: hsl(30, 100%, 10%);
+    --orange-2: hsl(30, 100%, 20%);
+    --orange-3: hsl(30, 100%, 30%);
+    --orange-4: hsl(30, 100%, 40%);
+    --orange-5: hsl(30, 100%, 50%);
+    --orange-6: hsl(30, 100%, 60%);
+    --orange-7: hsl(30, 100%, 70%);
+    
+    --green-1: hsl(120, 100%, 10%);
+    --green-2: hsl(120, 100%, 20%);
+    --green-3: hsl(120, 100%, 30%);
+    --green-4: hsl(120, 100%, 40%);
+    --green-5: hsl(120, 100%, 50%);
+    --green-6: hsl(120, 100%, 60%);
+    --green-7: hsl(120, 100%, 70%);
+    
+    --blue-1: hsl(240, 100%, 10%);
+    --blue-2: hsl(240, 100%, 20%);
+    --blue-3: hsl(240, 100%, 30%);
+    --blue-4: hsl(240, 100%, 40%);
+    --blue-5: hsl(240, 100%, 50%);
+    --blue-6: hsl(240, 100%, 60%);
+    --blue-7: hsl(240, 100%, 70%);
+
     --background-color: var(--black-1);
     --foreground-color: white;
     --accent-color: cyan;
@@ -383,27 +407,6 @@ fieldset {
 }
 
 
-#message-container {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    display: inline-flex;
-    flex-direction: column-reverse;
-    
-    padding: 0 0 0.1em 0.1em;
-    max-width: 20em;
-    width: 20em;
-    max-height: 60vh;
-    overflow: auto;
-}
-
-#message-container > * {
-    max-width: min(20em, 95vw);
-    box-sizing: border-box;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-}
-
 input[type=radio] {
     appearance: none;
     
@@ -495,4 +498,88 @@ label:disabled {
 
 #loader-dots {
     min-width: 1em;
+}
+
+#message-container {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    display: inline-flex;
+    flex-direction: column-reverse;
+    
+    padding: 0 0 0.1em 0.1em;
+    max-width: min(20em, 95vw);
+    width: 20em;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.notification {
+    /* max-width: min(20em, 95vw); */
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 0.5em;
+
+    width: auto;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+
+    background-color: var(--notif-back, var(--grey-1));
+    border-color: var(--notif-border, var(--grey-5));
+    color: var(--white-3);
+    --notif-hover: var(--grey-2);
+    
+    padding: 0.3em;
+    margin: 0.3em;
+    
+    user-select: none;
+
+    transition: 0.1s background-color linear;
+   /* box-shadow: 0px 0px 5px var(--white-3); */
+
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+.notification:hover {
+    background-color: var(--notif-hover);
+    transition: 0.1s background-color linear;
+}
+
+.notification-title {
+    font-weight: bold;
+}
+
+.notification.info {
+    --notif-back: var(--blue-1);
+    --notif-border: var(--blue-5);
+    --notif-hover: var(--blue-2);
+}
+.notification.success {
+    --notif-back: var(--green-1);
+    --notif-border: var(--green-5);
+    --notif-hover: var(--green-2);
+}
+.notification.warning {
+    --notif-back: var(--orange-1);
+    --notif-border: var(--orange-5);
+    --notif-hover: var(--orange-2);
+}
+.notification.error {
+    --notif-back: var(--red-1);
+    --notif-border: var(--red-5);
+    --notif-hover: var(--red-2);
+
+}
+
+.help {
+    display: inline-block;
+    user-select: none;
+}
+
+.help-icon {
+    color: var(--grey-5);
+    cursor: pointer;
 }

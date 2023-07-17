@@ -35,6 +35,9 @@
         {% include 'components/messages.html' %}
     {% endif %}
     </div>
+    <template id="notification-template">
+        <div></div>
+    </template>
     <div hx-preserve id="loader"
     _=" on htmx:beforeRequest from document
             wait for htmx:afterRequest or 250ms from window

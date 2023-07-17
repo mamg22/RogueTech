@@ -34,3 +34,16 @@
 
 {% set is_htmx = request.headers['HX-Request'] == 'true' %}
 {% set is_htmx_boost = request.headers['HX-Boosted'] == 'true' %}
+
+{%- macro help_icon(text) -%}
+    <div class="help" _="install Help">
+        <template class="help-text">
+            {%- if caller -%}
+                {{- caller() | trim -}}
+            {%- else -%}
+                {{ text }}
+            {%- endif -%}
+        </template>
+        <span class="material-icons help-icon">help</span>
+    </div>
+{%- endmacro -%}

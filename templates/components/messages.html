@@ -4,8 +4,32 @@
 <div id="message-container" hx-swap-oob="beforeend">
 {% endif %}
 
-{% for message in get_flashed_messages() %}
-<p class="button" _="on click remove me">{{ message }}</p>
+{% set icons = {
+    'message': 'message',
+    'info': 'info',
+    'warning': 'warning',
+    'error': 'error',
+    'success': 'check'
+}%}
+
+{% set titles = {
+    'message': '',
+    'info': 'Información',
+    'warning': 'Advertencia',
+    'error': 'Error',
+    'success': 'Éxito'
+}%}
+
+{% for category, message in get_flashed_messages(True) %}
+<div class="notification {{ category }} clickable" _="install Notification">
+    <div class="notification-icon"><span class="material-icons md-36">{{ icons[category] }}</span></div>
+    <div>
+        <div class="notification-title">
+            {{ titles[category] }}
+        </div>
+        <div class="notification-body">{{ message }}</div>
+    </div>
+</div>
 {% endfor %}
 
 {% if is_htmx %}

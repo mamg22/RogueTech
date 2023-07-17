@@ -22,3 +22,18 @@ behavior DisableOnSubmit(table)
         remove @disabled from <fieldset:not([data-disabled]), .pagination button:not([data-disabled])/>
     end
 end
+
+behavior Notification
+    on click
+        remove me
+    end
+end
+
+behavior Help
+    init
+        set element help_text to the innerHTML of first .help-text in me
+    end
+    on click
+        alert(help_text)
+    end
+end
