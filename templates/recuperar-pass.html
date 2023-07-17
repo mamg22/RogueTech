@@ -5,7 +5,7 @@
 {% block content %}
     <h1 class="center">Recuperar cuenta</h1>
     <div class="center column">
-        <form action="" class="center column">
+        <form class="center column" method="post">
             <div class="input-block">
                 <label for="nombre">Nombre de usuario:</label>
                 <input type="text" name="nombre" id="nombre" class="big"
@@ -14,7 +14,7 @@
             
             <div class="input-block">
                 <label for="pin">Pin de seguridad:</label>
-                <input type="text" name="pin" id="pin" class="big"
+                <input type="password" name="pin" id="pin" class="big"
                 autocomplete="current-password">
             </div>
             
@@ -30,7 +30,7 @@
                  autocomplete="new-password">
             </div>
             
-            <button class="button big active">Recuperar cuenta</button>
+            <button class="button big active" type="submit">Recuperar cuenta</button>
         </form>
         
         <hr>

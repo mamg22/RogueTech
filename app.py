@@ -37,7 +37,7 @@ def puntuaciones():
     page = request.args.get('page', 1, type=int)
     
     if page < 1 or page > 5:
-        flash("Página fuera de rango")
+        flash("Página fuera de rango", 'error')
         page = 1
 
     user_filter = request.args.get('user_filter', 'all')
@@ -215,18 +215,38 @@ def login():
             flash(f"Bienvenido {user}")
             return redirect('/')
         else:
-            flash("Nombre de usuario vacío")
+            flash("Nombre de usuario vacío", 'error')
             return render_template(f"iniciar-sesion.html")
     else:
         return render_template(f"iniciar-sesion.html")
 
-@app.route('/crear-cuenta')
+@app.route('/crear-cuenta', methods=['GET', 'POST'])
 def new_account():
-    return render_template(f"crear-cuenta.html")
+    if request.method == 'POST':
+        if user := request.form.get('nombre'):
+            session['active'] = True
+            session['username'] = user
+            flash(f"Cuenta creada exitosamente, bienvenido {user}", 'success')
+            return redirect('/')
+        else:
+            flash("Nombre de usuario vacío", 'error')
+            return render_template(f"crear-cuenta.html")
+    else:
+        return render_template(f"crear-cuenta.html")
 
-@app.route('/recuperar-pass')
+@app.route('/recuperar-pass', methods=['GET', 'POST'])
 def recovery():
-    return render_template(f"recuperar-pass.html")
+    if request.method == 'POST':
+        if user := request.form.get('nombre'):
+            session['active'] = True
+            session['username'] = user
+            flash(f"Contraseña cambiada exitosamente, bienvenido {user}", 'success')
+            return redirect('/')
+        else:
+            flash("Nombre de usuario vacío", 'error')
+            return render_template(f"recuperar-pass.html")
+    else:
+        return render_template(f"recuperar-pass.html")
 
 @app.route('/cerrar-sesion')
 def logout():
