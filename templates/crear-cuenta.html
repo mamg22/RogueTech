@@ -7,25 +7,47 @@
     <div class="center column">
         <form class="center column" method="post">
             <div class="input-block">
-                <label for="nombre">Nombre de usuario:</label>
+                <label for="nombre">Nombre de usuario:
+                {% call funcs.help_icon() %}
+Su nombre de usuario solo podrá contener carácteres alfanuméricos y guiones bajos (_)
+                {% endcall %}
+                </label>
                 <input type="text" name="nombre" id="nombre" class="big"
                 autocomplete="username">
             </div>
             
             <div class="input-block">
-                <label for="clave">Contraseña:</label>
+                <label for="clave">Contraseña:
+                {% call funcs.help_icon() %}
+Su contraseña debe contener al menos lo siguiente:
+
+* Una letra minúscula
+* Una letra mayúscula
+* Un número
+* Un símbolo
+* Debe tener al menos 8 carácteres
+                {% endcall %}
+                </label>
                 <input type="password" name="clave" id="clave" class="big"
                 autocomplete="new-password">
             </div>
             
             <div class="input-block">
-                <label for="claveconf">Confirmar contraseña:</label>
+                <label for="claveconf">Confirmar contraseña:
+                {% call funcs.help_icon() %}
+Repita su contraseña
+                {% endcall %}
+                </label>
                 <input type="password" name="claveconf" id="claveconf" class="big"
                 autocomplete="new-password">
             </div>
             
             <div class="input-block">
-                <label for="pin">Pin de seguridad:</label>
+                <label for="pin">Pin de seguridad:
+                {% call funcs.help_icon() %}
+Pin de seguridad que podrá utilizar para recuperar acceso a su cuenta en caso de que olvide su contraseña
+                {% endcall %}
+                </label>
                 <input type="text" name="pin" id="pin" class="big">
             </div>
             <div class="alert card inline-block">

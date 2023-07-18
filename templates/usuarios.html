@@ -35,7 +35,11 @@
                 #}
                 <div class="block">
                     <input class="" type="radio" name="user_filter" id="{{ inputid }}" value="{{ key }}" autocomplete="off" {{ checked }} {{ disabled }}>
-                    <label for="{{ inputid }}" class="{{ active }}">{{ val }}</label>
+                    <label for="{{ inputid }}" class="{{ active }}">{{ val }}
+                        {% if disabled %}
+                        {{ funcs.help_icon(funcs.login_required) }}
+                        {% endif %}
+                    </label>
                 </div>
                 {% endfor %}
                 <div class="hidden" _="on load or click from #user_filter_field
