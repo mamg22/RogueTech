@@ -16,7 +16,7 @@
     <div>
         <div class="clickable" href="#" id="nav-toggle"
             _="
-            on load
+            init
                 measure #navbar's height
                 set the #navmenu.style.top to height + 'px'
             end
@@ -29,8 +29,10 @@
     </div>
     <div>
     {% if session.active %}
-        <span class="material-icons">person</span>
-        <span>{{ session.username }}</span>
+        <a class="clickable" href="/cerrar-sesion" hx-confirm="¿Desea cerrar la sesión?">
+            <span class="material-icons">person</span>
+            <span>{{ session.username }}</span>
+        </a>
     {% else %}
         <a href="{{ url_for('login')}}">Iniciar sesión</a>
     {% endif %}

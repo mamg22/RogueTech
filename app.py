@@ -139,6 +139,10 @@ def usuarios():
     rand = Random(page)
     userlist = []
 
+    if page < 1 or page > 5:
+        flash("Página fuera de rango", 'error')
+        page = 1
+
     if request.args.get('user_filter') == 'custom':
         names = request.args.get('custom_user_filter')
         namelist = [name.strip() for name in names.split(',') if len(name.strip()) > 0]

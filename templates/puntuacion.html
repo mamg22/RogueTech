@@ -8,7 +8,7 @@
 <div class="card">
     <span class="float-right">Fecha: {{ score.date }}</span>
     <h1>Puntuación <small>#{{ score.id }}</small></h1>
-    Por: <b>{{ score.user }}</b><br>
+    Por: <a href="/usuario?name={{score.user}}"><b>{{ score.user }}</b></a><br>
     Semilla: <span class="mono-num">{{ score.seed }}</span> <br>
     Versión: <span class="mono-num">{{ score.version }}</span><br>
     Puntos: <span class="mono-num">{{ score.score }}</span> <br>
