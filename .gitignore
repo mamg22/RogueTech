@@ -9,3 +9,4 @@ __pycache__/
 # Other
 static/material-icons
 .vscode/settings.json
+templates/b.html
