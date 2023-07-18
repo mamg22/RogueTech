@@ -37,3 +37,32 @@ behavior Help
         alert(help_text)
     end
 end
+
+def notify(message, category)
+    set icons to {
+        'message': 'message',
+        'info': 'info',
+        'warning': 'warning',
+        'error': 'error',
+        'success': 'check'
+    }
+    set titles to {
+        'message': '',
+        'info': 'Información',
+        'warning': 'Advertencia',
+        'error': 'Error',
+        'success': 'Éxito'
+    }
+
+    if no category
+        set category to 'message'
+    end
+
+    render #notification-template with (
+        message: message,
+        category: category,
+        icons: icons,
+        titles: titles
+    )
+    put it at the end of #message-container
+end

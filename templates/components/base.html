@@ -12,6 +12,7 @@
     {% if config.ENV == 'development' %}
         <script defer src="{{ url_for('node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
         <script defer src="{{ url_for('node_modules', filename='htmx.org/dist/htmx.min.js.gz') }}"></script>
+        <script defer src="{{ url_for('node_modules', filename='hyperscript.org/dist/template.js') }}"></script>
         <link href="/static/material-icons/material-icons.css" rel="stylesheet">
     {% else %}
         <script defer src="https://unpkg.com/hyperscript.org@0.9.9"></script>
@@ -19,7 +20,7 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {% endif %}
     
-    <script src="/static/scripts._hs" type="text/hyperscript"></script>
+    <script src="{{ url_for('static', filename='scripts._hs') }}" type="text/hyperscript"></script>
     <meta name="htmx-config" content='{"useTemplateFragments": true}'>
     
     {% block head_add %}{% endblock head_add%}
@@ -36,7 +37,15 @@
     {% endif %}
     </div>
     <template id="notification-template">
-        <div></div>
+        <div class="notification ${category} clickable" _="install Notification">
+            <div class="notification-icon"><span class="material-icons md-36">${icons[category]}</span></div>
+            <div>
+                <div class="notification-title">
+                    ${titles[category]}
+                </div>
+                <div class="notification-body">${message}</div>
+            </div>
+        </div>
     </template>
     <div hx-preserve id="loader"
     _=" on htmx:beforeRequest from document

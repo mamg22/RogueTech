@@ -385,7 +385,8 @@ input:not([type=radio]), .input {
 }
 
 a {
-    color: var(--cyan-5);
+    color: var(--cyan-4);
+    text-decoration: none;
 }
 
 fieldset {
@@ -506,20 +507,22 @@ label:disabled {
     left: 0px;
     display: inline-flex;
     flex-direction: column-reverse;
+    row-gap: 0.5em;
     
-    padding: 0 0 0.1em 0.1em;
-    max-width: min(20em, 95vw);
-    width: 20em;
+    padding: 0 0 0.5em 0.5em;
+    max-width: 97vw;
+    width: 25em;
     max-height: 60vh;
     overflow-y: auto;
 }
 
 .notification {
-    /* max-width: min(20em, 95vw); */
+    max-width: 25em;
+    width: 95%;
     display: flex;
     align-items: center;
     justify-content: left;
-    gap: 0.5em;
+    column-gap: 0.5em;
 
     width: auto;
     border-width: 2px;
@@ -531,8 +534,7 @@ label:disabled {
     color: var(--white-3);
     --notif-hover: var(--grey-2);
     
-    padding: 0.3em;
-    margin: 0.3em;
+    padding: 0.5em;
     
     user-select: none;
 
