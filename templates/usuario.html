@@ -8,7 +8,26 @@
         {{ user.account_type }}</span>
     <h1>{{ user.name }}</h1>
     <b>{{ user.follows }}</b> Siguiendo <br>
-    <b>{{ user.followers }}</b> Seguidores
+    <b id="followers">{{ user.followers }}</b> Seguidores <br>
+    <button class="button" _="
+        on click
+            toggle .active
+            if I match .active
+                set .t's innerText to 'Siguiendo'
+                remove .hidden from .indicator in me
+                increment #followers's innerText
+            else
+                set .t's innerText to 'Seguir'
+                add .hidden to .indicator in me
+                decrement #followers's innerText
+            end
+        end
+    ">
+    <span class="t">Seguir</span>
+    <span class="indicator hidden">
+    <span class="material-icons md-18">check</span>
+    </span>
+</button>
     <h2>Estadísticas</h2>
     Partidas jugadas: {{ user.runs }} <br>
     Partidas ganadas: {{ user.wins }} <br>
