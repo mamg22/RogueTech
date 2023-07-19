@@ -12,7 +12,7 @@
     <h2>Estadísticas</h2>
     Partidas jugadas: {{ user.runs }} <br>
     Partidas ganadas: {{ user.wins }} <br>
-    Porcentaje de éxito: {{ (user.wins / user.runs * 100) | int }}% <br>
+    Porcentaje de éxito: {{ ((user.wins / user.runs * 100) | int) if user.runs > 0 else 0 }}% <br>
     Puntaje total: <span class="mono-num">44400</span> <br>
     Mejor puntuación: <span class="mono-num">43900</span> <br>
     Mejor tiempo: <span class="mono-num">2:34:23<small>.123</small></span> <br>
