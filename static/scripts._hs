@@ -40,10 +40,10 @@ end
 
 def notify(message, category)
     set icons to {
-        'message': 'message',
-        'info': 'info',
+        'message': '',
+        'info': 'info_outline',
         'warning': 'warning',
-        'error': 'error',
+        'error': 'error_outline',
         'success': 'check'
     }
     set titles to {
