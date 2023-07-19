@@ -189,13 +189,6 @@ def usuario():
     
     t = datetime.datetime.fromtimestamp(1687665600).strftime('%x')
     
-    scores = [
-        ('30/06/2023', rand.randrange(0, 500_000, 250), '0.0')
-        for i in range(min(runs, 25))
-    ]
-    
-    widest_score = len(str(max(scores, key=lambda s: len(str(s[1])))[1]))
-    
     userdata = {
         'name': name,
         'join_date': t,
@@ -204,8 +197,6 @@ def usuario():
         'follows': rand.randint(0, 100),
         'runs': runs,
         'wins': wins,
-        'scores': scores,
-        'widest_score': widest_score,
     }
 
     return render_template('usuario.html', user=userdata)
