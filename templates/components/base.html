@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title required %}{% endblock title %}</title>
-    <link rel="stylesheet" href="/static/style.css">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
     {# Load htmx, _hyperscript and material-icons according to dev/prod environment #}
     {% if config.ENV == 'development' %}
         <script defer src="{{ url_for('node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
