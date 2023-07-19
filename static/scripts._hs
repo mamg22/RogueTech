@@ -10,7 +10,7 @@ behavior DisableOnSubmit(table)
         async do
             add .shine to table
             add @disabled to <fieldset, .pagination button/>
-            wait for htmx:afterOnLoad
+            wait for htmx:afterRequest
             remove @disabled from <fieldset:not([data-disabled]), .pagination button:not([data-disabled])/>
             settle
             remove .shine from table
@@ -65,4 +65,9 @@ def notify(message, category)
         titles: titles
     )
     put it at the end of #message-container
+end
+
+on htmx:onLoadError from document
+    or htmx:sendError from document
+    notify("Ha ocurrido un error al conectar, por favor intentelo de nuevo", "error")
 end
