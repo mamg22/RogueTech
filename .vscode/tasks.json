@@ -6,10 +6,10 @@
         {
             "label": "Flask server @ 8080",
             "type": "shell",
-            "command": "flask --debug run -h 0 --port 8080",
+            "command": "source .venv/bin/activate; flask --debug run -h 0 --port 8080",
             "isBackground": true,
             "runOptions": {
-                "runOn": "folderOpen"
+                "instanceLimit": 1,
             },
             "problemMatcher": [],
             "options": {
