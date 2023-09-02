@@ -24,6 +24,11 @@ behavior DisableOnSubmit(table)
 end
 
 behavior Notification
+    init
+        wait 7s
+        transition my *opacity to 0.0 over 3s
+        remove me
+    end
     on click
         remove me
     end
@@ -70,4 +75,8 @@ end
 on htmx:onLoadError from document
     or htmx:sendError from document
     notify("Ha ocurrido un error al conectar, por favor intentelo de nuevo", "error")
+end
+
+on htmx:responseError from document
+    notify(`Ha ocurrido un error en el servidor, por favor intentelo de nuevo. Código: ${detail.xhr.status} ${detail.xhr.statusText}`, "error")
 end
