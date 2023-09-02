@@ -2,40 +2,77 @@
 
 {% block title %}Usuario{% endblock title %}
 
+{% set is_current_user = session.user_session and session.user_session.uid == user.id %}
+
 {% block content %}
 <div class="card">
-    <span class="float-right">Fecha de registro: {{ user.join_date }}<br>
-        {{ user.account_type }}</span>
-    <h1>{{ user.name }}</h1>
-    <b>{{ user.follows }}</b> Siguiendo <br>
-    <b id="followers">{{ user.followers }}</b> Seguidores <br>
-    <button class="button" _="
-        on click
-            toggle .active
-            if I match .active
-                set .t's innerText to 'Siguiendo'
-                remove .hidden from .indicator in me
-                increment #followers's innerText
-            else
-                set .t's innerText to 'Seguir'
-                add .hidden to .indicator in me
-                decrement #followers's innerText
-            end
-        end
-    ">
-    <span class="t">Seguir</span>
-    <span class="indicator hidden">
-    <span class="material-icons md-18">check</span>
-    </span>
-</button>
+    <span class="float-right">Fecha de registro:
+        {{ '{:{date_format}}'.format(user.fecha_registro, date_format=funcs.date_format_long) }}<br>
+        {% include 'fragments/roleinfo.html' %}</span>
+    <h1>{{ user.nombre }}</h1>
+    {% include 'fragments/followinfo.html' %}
     <h2>Estadísticas</h2>
-    Partidas jugadas: {{ user.runs }} <br>
-    Partidas ganadas: {{ user.wins }} <br>
-    Porcentaje de éxito: {{ ((user.wins / user.runs * 100) | int) if user.runs > 0 else 0 }}% <br>
-    Puntaje total: <span class="mono-num">44400</span> <br>
-    Mejor puntuación: <span class="mono-num">43900</span> <br>
-    Mejor tiempo: <span class="mono-num">2:34:23<small>.123</small></span> <br>
-    </div>
-    <h2>Puntuaciones</h2>
-    <a href="/puntuaciones?user_filter=custom&custom_user_filter={{ user.name }}" class="button">Ver puntuaciones</a>
+    Partidas jugadas: {{ user.numero_puntuaciones }} <br>
+    Puntaje total: <span class="mono-num">{{ user.puntuacion_total }}</span> <br>
+    Mejor puntuación: <span class="mono-num">{{ user.puntuacion_maxima }}</span> <br>
+    {% if is_current_user %}
+        {%- set score_target = url_for('web.puntuaciones', user_filter='me') -%}
+    {% else %}
+        {%- set score_target = url_for('web.puntuaciones', user_filter='custom', custom_user_filter=user.nombre) -%}
+    {% endif %}
+    <a href="{{ score_target }}" class="button inline-block">Ver puntuaciones</a>
+
+    <h2>Opciones</h2>
+    {% if is_current_user %}
+        <a href="{{ url_for('web.logout') }}" class="button inline-block" hx-confirm="¿Desea cerrar la sesión?">Cerrar sesión</a>
+        <br>
+        <a href="{{ url_for('web.change_password') }}" class="button inline-block">Cambiar contraseña</a>
+        <a href="{{ url_for('web.change_pin') }}" class="button inline-block">Cambiar Pin</a>
+        <br>
+    {% endif %}
+    {% if session.user_session.level == funcs.USER_LEVEL_ADMIN %}
+        <span href="" class="button inline-block"
+        _="
+            on click
+                call #role-select-dialog.showModal()
+        ">Cambiar rol de usuario</span>
+        <dialog id="role-select-dialog">
+            <form id="role-select-form"
+                  hx-patch="{{ url_for('web.set_user_role', target_id=user.id) }}"
+                  hx-target="#roleinfo">
+
+                <div class="input-block center column">
+                    <label for="role-select">Seleccione el nuevo rol del usuario:</label>
+                    
+                    <select name="role" id="role-select" class="input">
+                        {% for nivel, nombre in {
+                            10: 'Administrador',
+                            25: 'Tester',
+                            30: 'Regular'
+                        }.items() %}
+                        {% set selected = 'selected' if user.nivel_perfil == nivel %}
+                        <option value="{{ nivel }}" {{ selected }}
+                            hx-vals='{ "role": {{ nivel }} }'>{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <br>
+
+                <div class="center">
+                    <button type="button" class="button" _="
+                        on click
+                            call #role-select-form.reset()
+                            call #role-select-dialog.close()
+                    ">Cancelar</button>
+                    <button type="button" class="button" _="
+                        on click
+                            call #role-select-form.requestSubmit()
+                            call #role-select-dialog.close()
+                    ">Aceptar</button>
+                </div>
+            </form>
+        </dialog>
+    {% endif %}
+</div>
 {% endblock content %}

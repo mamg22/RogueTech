@@ -1,3 +1,4 @@
+{%- import 'functions.html' as funcs -%}
 {%- block content required -%}
 {%- endblock -%}
 {%- if request.headers.get("HX-Request") == 'true' and request.headers.get("HX-Boosted") != 'true' -%}

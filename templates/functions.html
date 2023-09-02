@@ -1,35 +1,49 @@
 {% macro pretty_time(time) -%}
-{%- set timesplit = time.split(".") -%}
+{%- set timesplit = time.split(".", 1) -%}
 {{ timesplit[0] }}<span class="small">.{{ timesplit[1] }}</span>
 {%- endmacro %}
 
-{% macro pagination(form, pos, page, has_more) -%}
-{%- set page = page | default(1) -%}
-{%- set disable_back = 'disabled' if page <= 1 else '' -%}
-{%- set disable_forward = 'disabled' if not has_more else '' -%}
+{% macro pagination(form, pos, page, items_per_page, total_items) -%}
 
-{%- macro as_data_attr(attr) -%}
-    {%- if attr -%}
-        data-{{attr}}
-    {%- endif -%}
-{%- endmacro -%}
+    {%- set page = page | default(1) -%}
+    {%- set has_more = page * items_per_page < total_items -%}
+    {%- set total_pages = (total_items / items_per_page) | round(0, 'ceil') | int -%}
+    {%- set disable_back = 'disabled' if page <= 1 else '' -%}
+    {%- set disable_forward = 'disabled' if not has_more else '' -%}
 
-<div class="pagination">
-    <button class="button" form="{{ form }}" type="submit"
-        name="page" value="{{ page - 1}}" _="install SubmitFix(value: {{ page - 1 }})"
-        {{ disable_back }} {{ as_data_attr(disable_back) }}>Anterior</button>
+    {%- macro as_data_attr(attr) -%}
+        {%- if attr -%}
+            data-{{attr}}
+        {%- endif -%}
+    {%- endmacro -%}
 
-    <div title="aaa" class="centered clickable pagination-counter" _="on click
-            get prompt('Página:') as Int
-            set #pagefix's value to it
-            call #search.requestSubmit()">
-        Página {{ page }}
+    <div class="pagination">
+        <button class="button" form="{{ form }}" type="submit"
+            name="page" value="{{ page - 1}}" _="install SubmitFix(value: {{ page - 1 }})"
+            {{ disable_back }} {{ as_data_attr(disable_back) }}>Anterior</button>
+
+        <div title="aaa" class="centered clickable pagination-counter" _="on click
+                get prompt('Página:') as Int
+                log it
+                if the result exists and not isNaN(result)
+                    if the result is greater than {{ total_pages }} or the result is less than 1
+                        notify('El numero ingresado está fuera del rango permitido', 'warning')
+                        exit
+                    end
+                    set #pagefix's value to it
+                    call #search.requestSubmit()
+                else
+                    notify('El numero ingresado es inválido', 'warning')
+                    exit
+                end
+                ">
+            Página {{ page }} de {{ total_pages }}
+        </div>
+
+        <button class="button" form="{{ form }}" type="submit"
+            name="page" value="{{ page + 1 }}" _="install SubmitFix(value: {{ page + 1 }})"
+            {{ disable_forward }} {{ as_data_attr(disable_forward) }}>Siguiente</button>
     </div>
-
-    <button class="button" form="{{ form }}" type="submit"
-        name="page" value="{{ page + 1 }}" _="install SubmitFix(value: {{ page + 1 }})"
-        {{ disable_forward }} {{ as_data_attr(disable_forward) }}>Siguiente</button>
-</div>
 {%- endmacro -%}
 
 {% set is_htmx = request.headers['HX-Request'] == 'true' %}
@@ -49,3 +63,9 @@
 {%- endmacro -%}
 
 {%- set login_required = 'Esta función sólo esta disponible si inicias sesión' -%}
+{%- set date_format_long = '%Y-%m-%d %H:%M %P' -%}
+{%- set date_format_short = '%Y-%m-%d' -%}
+
+{%- set USER_LEVEL_ADMIN = 10 -%}
+{%- set USER_LEVEL_TESTER = 20 -%}
+{%- set USER_LEVEL_REGULAR = 30 -%}

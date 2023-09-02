@@ -2,8 +2,7 @@
 {% import 'functions.html' as funcs %}
 
 {% block content %}
-{%- set page = request.args.get('page', 1) | int -%}
-{{ funcs.pagination('search', 'top', page, page < 5) }}
+{{ funcs.pagination('search', 'top', page, SCORES_PER_PAGE, score_count) }}
 <div class="table-container">
     <table>
         <thead hx-preserve>
@@ -18,18 +17,14 @@
         <tbody hx-target="#main" hx-select="#main" hx-swap="outerHTML show:window:top" hx-push-url="true">
             {% for data in scorelist %}
             <tr class="clickable" hx-get="/puntuacion" hx-vals='{
-                        "id": {{ loop.index }},
-                        "user": "{{ data[0] }}",
-                        "date": "{{ data[1] }}",
-                        "score": "{{ data[2] }}",
-                        "time": "{{ data[3] }}"
+                        "id": {{ data.id }}
                     }'
                 >
-                <td>{{ loop.index }}</td>
-                <td>{{ data[0] }}</td>
-                <td>{{ data[1] }}</td>
-                <td class="mono-num">{{ (data[2] | string).rjust(6) }}</td>
-                <td class="mono-num">{{ funcs.pretty_time(data[3]) }}</td>
+                <td>{{ ((page - 1) * SCORES_PER_PAGE) + loop.index }}</td>
+                <td>{{ data.nombre_usuario }}</td>
+                <td>{{ '{:{date_format}}'.format(data.fecha, date_format=funcs.date_format_short) }}</td>
+                <td class="mono-num">{{ (data.puntuacion | string).rjust(8) }}</td>
+                <td class="mono-num">{{ funcs.pretty_time(data.tiempo) }}</td>
             </tr>
             {% else %}
             <tr>
@@ -39,5 +34,5 @@
         </tbody>
     </table>
 </div>
-{{ funcs.pagination('search', 'bottom', page, page < 5) }}
+{{ funcs.pagination('search', 'bottom', page, SCORES_PER_PAGE, score_count) }}
 {% endblock %}

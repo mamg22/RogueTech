@@ -14,9 +14,21 @@
             <legend>Búsqueda</legend>
             <label for="order">Ordenar por:</label>
             <select name="user_sort" id="order" class="input">
-                <option value="name">Nombre</option>
-                <option value="best_score">Mejor puntuación</option>
-                <option value="total_score">Puntuación total</option>
+                {% for key, val in {
+                    'name-asc':         'Nombre (A &rightarrow; Z)',
+                    'name-desc':        'Nombre (Z &rightarrow; A)',
+                    'runs-desc':        'Más Partidas',
+                    'runs-asc':         'Menos Partidas',
+                    'best_score-desc':  'Mejor Puntuación (Mayor a Menor)',
+                    'best_score-asc':   'Mejor Puntuación (Menor a Mayor)',
+                    'total_score-desc': 'Puntuación total (Mayor a Menor)',
+                    'total_score-asc':  'Puntuación total (Menor a Mayor)',
+                    'age-desc':    'Creación (Más nueva)',
+                    'age-asc':     'Creación (Más antigua)',
+                }.items() %}
+                {% set selected = 'selected' if request.args.get('user_sort', 'name-asc') == key else '' %}
+                <option value="{{ key }}" {{ selected }}>{{ val | safe }}</option>
+                {% endfor %}
             </select>
             <fieldset id="user_filter_field">
                 <legend>Filtrar usuarios</legend>
@@ -28,7 +40,7 @@
                 }.items()
                 %}
                 {% set checked = 'checked' if request.args.get('user_filter', 'all') == key else '' %}
-                {% set disabled = 'disabled' if not session.active and key in ['following', 'followers']%}
+                {% set disabled = 'disabled' if not session.user_session and key in ['following', 'followers']%}
                 {% set inputid = 'filter-' + key %}
                 {#
                 'custom': 'Filtrar...'

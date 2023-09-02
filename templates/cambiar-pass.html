@@ -1,0 +1,38 @@
+{% extends 'components/base.html'%}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    <h1 class="center">Cambiar contraseña</h1>
+    <div class="center column">
+        <form class="center column" method="post">
+            <div class="input-block">
+                <label for="clave">Nueva contraseña:
+                {% call funcs.help_icon() %}
+Su contraseña debe contener al menos lo siguiente:
+
+* Una letra minúscula
+* Una letra mayúscula
+* Un número
+* Un símbolo
+* Debe tener al menos 8 carácteres
+                {% endcall %}
+                </label>
+                <input type="password" name="clave" id="clave" class="big"
+                autocomplete="new-password">
+            </div>
+            
+            <div class="input-block">
+                <label for="claveconf">Confirmar contraseña:
+                {% call funcs.help_icon() %}
+Repita su contraseña
+                {% endcall %}
+                </label>
+                <input type="password" name="claveconf" id="claveconf" class="big"
+                 autocomplete="new-password">
+            </div>
+            
+            <button class="button big active" type="submit">Cambiar contraseña</button>
+        </form>
+    </div>
+{% endblock content %}

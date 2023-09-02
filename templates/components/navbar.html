@@ -2,15 +2,21 @@
     <div id="navmenu"
         _="on click from <a/> in me or click from elsewhere
             remove .open">
-        {% for link, name in [
+        {%- set linklist = [
             ('index', 'Inicio'),
             ('puntuaciones', 'Puntuaciones'),
             ('usuarios', 'Usuarios'),
-        ] %}
-        <a href="{{ url_for(link) }}">{{ name }}</a>
-        {% if not loop.last %}
-            <span class="navseparator"></span>
-        {% endif %}
+            
+        ] -%}
+        {%- set authlinklist = [
+            ('my_profile', 'Mi perfil')
+        ] -%}
+
+        {% for link, name in linklist + ( authlinklist if session.user_session else [] ) %}
+            <a href="{{ url_for('web.' + link) }}">{{ name }}</a>
+            {% if not loop.last %}
+                <span class="navseparator"></span>
+            {% endif %}
         {% endfor %}
     </div>
     <div>
@@ -28,13 +34,13 @@
         </div>
     </div>
     <div>
-    {% if session.active %}
+    {% if session.user_session %}
         <a class="clickable" href="/cerrar-sesion" hx-confirm="¿Desea cerrar la sesión?">
             <span class="material-icons">person</span>
-            <span>{{ session.username }}</span>
+            <span>{{ session.user_session.name }}</span>
         </a>
     {% else %}
-        <a href="{{ url_for('login')}}">Iniciar sesión</a>
+        <a href="{{ url_for('web.login')}}">Iniciar sesión</a>
     {% endif %}
     </div>
 </nav>

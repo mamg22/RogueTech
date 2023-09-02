@@ -1,0 +1,30 @@
+{% extends 'components/base.html'%}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    <h1 class="center">Cambiar pin</h1>
+    <div class="center column">
+        <form class="center column" method="post">
+            <div class="input-block">
+                <label for="clave">Nuevo pin:
+                {% call funcs.help_icon() %}Ingrese su nuevo pin{% endcall %}
+                </label>
+                <input type="password" name="pin" id="pin" class="big"
+                autocomplete="new-password">
+            </div>
+            
+            <div class="input-block">
+                <label for="claveconf">Confirmar pin:
+                {% call funcs.help_icon() %}
+Repita su nuevo pin
+                {% endcall %}
+                </label>
+                <input type="password" name="pinconf" id="pinconf" class="big"
+                 autocomplete="new-password">
+            </div>
+            
+            <button class="button big active" type="submit">Cambiar pin</button>
+        </form>
+    </div>
+{% endblock content %}

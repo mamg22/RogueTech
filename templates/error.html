@@ -1,0 +1,17 @@
+{% extends 'components/base.html'%}
+
+{% block title %}Error{% endblock title %}
+
+{% block content %}
+    <div class="center column card">
+        <h2 class="centered">Ha ocurrido un error</h2>
+        <p>{{ message }}</p>
+
+        <hr>
+
+        <h3>Detalles</h3>
+
+        <pre class="scroll-box"><code>{{ details }}</code></pre>
+        
+    </div>
+{% endblock content %}

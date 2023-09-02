@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     
     {# Load htmx, _hyperscript and material-icons according to dev/prod environment #}
-    {% if config.ENV == 'development' %}
-        <script defer src="{{ url_for('node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
-        <script defer src="{{ url_for('node_modules', filename='htmx.org/dist/htmx.min.js.gz') }}"></script>
-        <script defer src="{{ url_for('node_modules', filename='hyperscript.org/dist/template.js') }}"></script>
+    {% if config.ENVIRONMENT == 'development' %}
+        <script defer src="{{ url_for('web.node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
+        <script defer src="{{ url_for('web.node_modules', filename='htmx.org/dist/htmx.min.js.gz') }}"></script>
+        <script defer src="{{ url_for('web.node_modules', filename='hyperscript.org/dist/template.js') }}"></script>
         <link href="/static/material-icons/material-icons.css" rel="stylesheet">
     {% else %}
         <script defer src="https://unpkg.com/hyperscript.org@0.9.9"></script>
