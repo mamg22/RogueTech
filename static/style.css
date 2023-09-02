@@ -118,6 +118,15 @@ main {
     line-height: 1.333;
 }
 
+dialog {
+    background-color: var(--black-2);
+    border: 2px solid var(--black-4);
+    border-radius: 2em;
+    box-shadow: var(--black-4) 0em 0em 20px;
+    color: var(--foreground-color);
+    line-height: 1.333;
+}
+
 /* || Navbar */
 
 nav {
@@ -584,4 +593,9 @@ label:disabled {
 .help-icon {
     color: var(--grey-5);
     cursor: pointer;
+}
+
+.scroll-box {
+    overflow-x: auto;
+    width: 90%;
 }
