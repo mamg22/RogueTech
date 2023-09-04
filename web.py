@@ -95,8 +95,6 @@ def puntuaciones():
         score_sort=score_sort,
         custom_user_filter=custom_user_filter_list
     )
-    for score in scores:
-        score['tiempo'] = core.format_ms(score['tiempo_ms'])
 
     template = 'puntuaciones.html'
 
