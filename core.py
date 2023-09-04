@@ -449,5 +449,24 @@ class Model:
             cursor.connection.commit()
 
             return cursor.rowcount > 0
+    
+    def insert_score(
+        self, seed: int, version: int, date: datetime.datetime,
+        score: int, time_ms: int, details: str
+    ) -> int:
+        with self._get_cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO Calificacion(
+                    semilla, version_juego, fecha, puntuacion,
+                    tiempo_ms, detalles, usuario
+                ) VALUES
+                %s
+                    
+            """, ((seed, version, date, score, time_ms, details, self.get_session().uid),))
+            row_id = cursor.connection.insert_id()
+            cursor.connection.commit()
+
+            return row_id
+
 
 
