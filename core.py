@@ -152,6 +152,7 @@ class Model:
         sort_field, sort_order = score_sort.split('-')
 
         order_clause = f"ORDER BY {SORT_FIELDS[sort_field]} {_SORT_ORDERS[sort_order]}"
+        order_clause += ", fecha DESC, c.id DESC"
 
         query_arguments = []
 
@@ -236,6 +237,7 @@ class Model:
         sort_field, sort_order = user_sort.split('-')
 
         order_clause = f"ORDER BY {SORT_FIELDS[sort_field]} {_SORT_ORDERS[sort_order]}"
+        order_clause += ", fecha_registro DESC, c.id DESC"
 
         query_arguments = []
 
