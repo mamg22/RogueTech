@@ -17,6 +17,27 @@ def get_model():
         # TODO: Return an error
         return core.Model()
 
+"""
+TODO: Function to generate base response bodies:
+
+{
+    "status": "ok" | "error",
+    "result": Object (if "ok"),
+    "details": { (if "error")
+        "code": Integer,
+        "message"
+    }
+}
+
+Use a single function with branching
+
+response(data, type)
+
+or
+
+ok(data), err(details)
+
+"""
 
 @api.route('/users')
 def get_users():
@@ -26,11 +47,11 @@ def get_users():
 @api.post('/login')
 def login():
     data = request.get_json()
-    nombre = data['nombre']
-    clave = data['clave']
+    username = data['username']
+    password = data['password']
     model = get_model()
 
-    if user := model.login(nombre, clave):
+    if user := model.login(username, password):
         return jsonify(user)
     else:
         return {"error": "Not ok"}, 400
@@ -39,16 +60,45 @@ def login():
 @api.post('/create-account')
 def create_account():
     data = request.get_json()
-    nombre = data['nombre']
-    clave = data['clave']
+    username = data['username']
+    password = data['password']
     pin = data['pin']
 
     model = get_model()
 
-    if model.create_account(nombre, clave, pin):
+    if model.create_account(username, password, pin):
         return {"status": "ok"}
     else:
         return {"status": "failed"}
+
+@api.post('/recovery')
+def recovery():
+    data = request.get_json()
+    username = data['username']
+    pin = data['pin']
+    new_password = data['new_password']
+
+    model = get_model()
+
+    if model.recover_account(username, pin, new_password):
+        return {"status": "ok"}
+    else:
+        return {"status": "failed"}
+
+
+@api.patch('/user/<int:id>')
+def update_user(id):
+    data = request.get_json()
+
+    model = get_model()
+
+    if password := data.get("password"):
+        model.change_password(password)
+    if pin := data.get("pin"):
+        model.change_pin(pin)
+    
+    return {}
+
 
 @api.post('/score')
 def insert_score():
