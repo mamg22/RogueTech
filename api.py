@@ -146,7 +146,7 @@ def insert_score():
 
 @api.errorhandler(Exception)
 def catch_all_handler(e):
-    return api_response(Status.error, e)
+    return api_response(Status.error, str(e))
 
 @api.errorhandler(404)
 def not_found_handler(e):
