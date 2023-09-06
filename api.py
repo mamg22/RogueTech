@@ -47,10 +47,10 @@ class Status(IntEnum):
 """
 {
     "status": "ok" | "error",
-    "result": Object (if "ok"),
-    "details": { (if "error")
+    "result": Any,
+    "details": {
         "code": Integer,
-        "message"
+        "message": String
     }
 }
 """
@@ -61,7 +61,7 @@ def api_response(status: Status, data=None):
         "status": status_type,
         "details": {
             "code": status.value,
-            "message": "" #TBD
+            "message": status.name
         },
         "result": data,
     }, status.as_http_status()
@@ -81,7 +81,7 @@ def login():
     if user := model.login(username, password):
         return api_response(Status.ok, user)
     else:
-        return api_response(Status.bad_request, "Invalid username or password")
+        return api_response(Status.not_found, "Invalid username or password")
 
 
 @api.post('/create-account')
