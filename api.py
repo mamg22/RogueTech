@@ -142,3 +142,12 @@ def insert_score():
         json.dumps(data['details'])
     )
     return api_response(Status.created)
+
+
+@api.errorhandler(Exception)
+def catch_all_handler(e):
+    return api_response(Status.error, e)
+
+@api.errorhandler(404)
+def not_found_handler(e):
+    return api_response(Status.not_found, e.description)

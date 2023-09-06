@@ -44,6 +44,9 @@ def not_authorized_handler(e):
 def exception_handler(e: Exception):
     return render_template("error.html", message=e, details=traceback.format_exc())
 
+def not_found_handler(e):
+    return render_template("error.html", message="No se ha podido encontrar esta página", details=e)
+
 
 def get_model():
     try:
