@@ -1,4 +1,6 @@
 import datetime
+from enum import Enum, IntEnum, auto
+from http import HTTPStatus
 import json
 
 from flask import Blueprint, request, jsonify
@@ -17,9 +19,32 @@ def get_model():
         # TODO: Return an error
         return core.Model()
 
-"""
-TODO: Function to generate base response bodies:
+class Status(IntEnum):
+    ok = HTTPStatus.OK.value
+    created = HTTPStatus.CREATED.value
+    no_content = HTTPStatus.NO_CONTENT.value
 
+    bad_request = HTTPStatus.BAD_REQUEST.value
+    error = bad_request
+    unauthorized = HTTPStatus.UNAUTHORIZED.value
+    forbidden = HTTPStatus.FORBIDDEN.value
+    not_found = HTTPStatus.NOT_FOUND.value
+    conflict = HTTPStatus.CONFLICT.value
+    gone = HTTPStatus.GONE.value
+
+
+    def is_ok(self):
+        return self.value < 400
+
+    def as_http_status(self):
+        if 100 <= self.value < 600:
+            return self.value
+        elif self.value < 100:
+            return HTTPStatus.OK.value
+        else:
+            return HTTPStatus.BAD_REQUEST.value
+
+"""
 {
     "status": "ok" | "error",
     "result": Object (if "ok"),
@@ -28,21 +53,23 @@ TODO: Function to generate base response bodies:
         "message"
     }
 }
-
-Use a single function with branching
-
-response(data, type)
-
-or
-
-ok(data), err(details)
-
 """
+
+def api_response(status: Status, data=None):
+    status_type = "ok" if status.is_ok() else "error"
+    return {
+        "status": status_type,
+        "details": {
+            "code": status.value,
+            "message": "" #TBD
+        },
+        "result": data,
+    }, status.as_http_status()
 
 @api.route('/users')
 def get_users():
     model = get_model()
-    return jsonify(model.get_users())
+    return api_response(Status.ok, model.get_users())
 
 @api.post('/login')
 def login():
@@ -52,9 +79,9 @@ def login():
     model = get_model()
 
     if user := model.login(username, password):
-        return jsonify(user)
+        return api_response(Status.ok, user)
     else:
-        return {"error": "Not ok"}, 400
+        return api_response(Status.bad_request, "Invalid username or password")
 
 
 @api.post('/create-account')
@@ -67,9 +94,9 @@ def create_account():
     model = get_model()
 
     if model.create_account(username, password, pin):
-        return {"status": "ok"}
+        return api_response(Status.created)
     else:
-        return {"status": "failed"}
+        return api_response(Status.conflict, "User already exists")
 
 @api.post('/recovery')
 def recovery():
@@ -81,13 +108,13 @@ def recovery():
     model = get_model()
 
     if model.recover_account(username, pin, new_password):
-        return {"status": "ok"}
+        return api_response(Status.ok)
     else:
-        return {"status": "failed"}
+        return api_response(Status.not_found)
 
 
-@api.patch('/user/<int:id>')
-def update_user(id):
+@api.patch('/user')
+def update_user():
     data = request.get_json()
 
     model = get_model()
@@ -97,7 +124,7 @@ def update_user(id):
     if pin := data.get("pin"):
         model.change_pin(pin)
     
-    return {}
+    return api_response(Status.ok)
 
 
 @api.post('/score')
@@ -114,4 +141,4 @@ def insert_score():
         data['time_ms'],
         json.dumps(data['details'])
     )
-    return {}, 200
+    return api_response(Status.created)
