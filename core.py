@@ -1,11 +1,11 @@
-from random import Random
 import datetime
 import json
-import time
 from hashlib import blake2s
 from secrets import token_urlsafe
 from dataclasses import dataclass
 from enum import IntEnum
+import logging
+from pathlib import Path
 
 import MySQLdb
 import MySQLdb.cursors
@@ -15,6 +15,25 @@ _SORT_ORDERS = {
     'asc': 'ASC',
     'desc': 'DESC'
 }
+
+def _setup_logger():
+    logdir = Path("log")
+    logdir.mkdir(exist_ok=True)
+
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    ch = logging.FileHandler(logdir / "core.log")
+    ch.setLevel(logging.INFO)
+
+    _formatter = logging.Formatter('[%(asctime)s] %(name)s %(levelname)s: %(message)s')
+    ch.setFormatter(_formatter)
+
+    logger.addHandler(ch)
+
+    return logger
+
+_logger = _setup_logger()
 
 def get_pw_digest(password: str) -> str:
     pwhash = blake2s()
@@ -113,8 +132,9 @@ class Model:
             else:
                 return None
 
-    def get_session(self):
+    def get_session(self) -> 'Model.Session':
         if not self.session:
+            _logger.error("Expected session, but no session is active")
             raise NoSessionError()
         
         return self.session
@@ -315,6 +335,8 @@ class Model:
                 """, (token, expiration, user['id']))
                 cursor.connection.commit()
 
+                _logger.info(f"Generated session for '{username}', expiring on {expiration}")
+
                 self._load_session(token)
 
                 return self.session
@@ -342,6 +364,9 @@ class Model:
                     VALUES (%s, %s, %s, %s)
                 """, (username, pwhash, pinhash, level))
                 cursor.connection.commit()
+
+                _logger.info(f"Created account for user '{username}' with level {level}")
+
                 return True
     
     def recover_account(self, username: str, pin: str, new_password: str):
@@ -364,6 +389,9 @@ class Model:
                     WHERE id = %s
                 """, (new_pwhash, uid['id']))
                 cursor.connection.commit()
+
+                _logger.info(f"Recovered account for {username}")
+
                 return True
             else:
                 return False
@@ -378,7 +406,10 @@ class Model:
                 WHERE id = %s
             """, (new_pwhash, self.get_session().uid))
             cursor.connection.commit()
-            return cursor.rowcount > 0
+
+            _logger.info(f"Changed password for UID {self.get_session().uid}")
+
+            return True
 
     def change_pin(self, new_pin:str):
         new_pinhash = get_pw_digest(new_pin)
@@ -390,7 +421,10 @@ class Model:
                 WHERE id = %s
             """, (new_pinhash, self.get_session().uid))
             cursor.connection.commit()
-            return cursor.rowcount > 0
+
+            _logger.info(f"Changed pin for UID {self.get_session().uid}")
+
+            return True
 
     
     def follow(self, target_id: int):
@@ -402,6 +436,9 @@ class Model:
                 ON DUPLICATE KEY UPDATE id=id
             """, (uid, target_id))
             cursor.connection.commit()
+
+            _logger.info(f"Setting following from {uid} to {target_id}")
+
             return cursor.rowcount
 
     def unfollow(self, target_id: int):
@@ -412,6 +449,9 @@ class Model:
                 WHERE id = %s AND seguido = %s
             """, (uid, target_id))
             cursor.connection.commit()
+
+            _logger.info(f"Setting unfollowing from {uid} to {target_id}")
+
             return cursor.rowcount
     
     def is_following(self, target_id: int):
@@ -441,6 +481,8 @@ class Model:
                 admin_count = cursor.fetchone()['admin_count']
 
                 if admin_count == 0:
+                    _logger.warning(f"Cannot update UID {target_id} level to {new_level}, user is the only administrator on the system")
+
                     raise LastAdminRemoveError()
             
             cursor.execute("""
@@ -449,6 +491,8 @@ class Model:
                 WHERE id = %s
             """, (new_level, target_id))
             cursor.connection.commit()
+
+            _logger.info(f"Updating UID {target_id} level to {new_level}")
 
             return cursor.rowcount > 0
     
@@ -467,6 +511,8 @@ class Model:
             """, ((seed, version, date, score, time_ms, details, self.get_session().uid),))
             row_id = cursor.connection.insert_id()
             cursor.connection.commit()
+
+            _logger.info(f"Inserting score {row_id} by UID {self.get_session().uid} ({self.get_session().name})")
 
             return row_id
 
