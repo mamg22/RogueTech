@@ -10,3 +10,5 @@ __pycache__/
 static/material-icons
 .vscode/settings.json
 templates/b.html
+log/
+test-headers.txt
