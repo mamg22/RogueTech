@@ -221,7 +221,7 @@ def change_password():
             flash(f"Contraseña cambiada exitosamente", 'success')
             return redirect(url_for('web.my_profile'))
         else:
-            flash("Nombre de usuario o pin invalido", 'error')
+            flash("Error al cambiar la contraseña, intentelo de nuevo", 'error')
             return render_template(f"cambiar-pass.html")
     else:
         return render_template(f"cambiar-pass.html")
