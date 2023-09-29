@@ -9,8 +9,8 @@ dependencies:
     specifier: ^1.9.2
     version: 1.9.2
   hyperscript.org:
-    specifier: ^0.9.9
-    version: 0.9.9
+    specifier: ^0.9.11
+    version: 0.9.11
 
 packages:
 
@@ -73,8 +73,8 @@ packages:
     resolution: {integrity: sha512-ZGbucKcalQyXdGUl+4Zt3xdRDPmNy70yNhMyDG1eDYUm/ImxmSo2rhIBDa53XitrAVhA+/CGgry+wJ1SO77wrA==}
     dev: false
 
-  /hyperscript.org@0.9.9:
-    resolution: {integrity: sha512-6vR06weqpnelTk0WX2KrdnY0x1lgMi7KCiFSaYt42zNA3Q4hnu4IW78cvFa+34m2nv6+Wk8nBRyfYdxY/97TsQ==}
+  /hyperscript.org@0.9.11:
+    resolution: {integrity: sha512-XeWcbTHWJBHNSZQ0C+kNqZcs3PqR1hVYCE6L3cUAsVE+AYWSvIVq2BX/Jtgpdgyj75J8dBa5thDzX0gSzBqvJQ==}
     hasBin: true
     dependencies:
       markdown-it-deflist: 2.1.0
