@@ -13,7 +13,7 @@
     <span class="big"><b>{{ user.seguidores }}</b></span>
     <a href="{{ url_for('web.usuarios', user_filter='followers') }}" hx-target="body">Seguidores</a>
     <br>
-    {% if not is_current_user %}
+    {% if not is_current_user and logged_in %}
     <button class="button {{ 'active' if is_following }}" hx-{{ button_mode }}="/follow?id={{ user.id }}">
         <span class="t">{{ 'Siguiendo' if is_following else 'Seguir' }}</span>
         <span class="indicator {{ 'hidden' if not is_following}}">

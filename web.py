@@ -151,8 +151,13 @@ def usuario():
 
     model = get_model()    
     userdata = model.get_user_by_name(name)
-    is_following = model.is_following(userdata['id'])
-    return render_template('usuario.html', user=userdata, is_following=is_following)
+    try:
+        is_following = model.is_following(userdata['id'])
+        logged_in = True
+    except core.NoSessionError:
+        is_following = None
+        logged_in = False
+    return render_template('usuario.html', user=userdata, is_following=is_following, logged_in=logged_in)
 
 @web.route('/iniciar-sesion', methods=['GET', 'POST'])
 def login():
@@ -186,7 +191,7 @@ def new_account():
             flash(f"Cuenta creada exitosamente, bienvenido {user.name}", 'success')
             return redirect('/')
         else:
-            flash("Nombre de usuario vacío", 'error')
+            flash("Ya existe un usuario registrado con este nombre, por favor, elija otro nombre", 'error')
             return render_template(f"crear-cuenta.html")
     else:
         return render_template(f"crear-cuenta.html")

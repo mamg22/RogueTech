@@ -22,57 +22,59 @@
     {% endif %}
     <a href="{{ score_target }}" class="button inline-block">Ver puntuaciones</a>
 
-    <h2>Opciones</h2>
-    {% if is_current_user %}
-        <a href="{{ url_for('web.logout') }}" class="button inline-block" hx-confirm="¿Desea cerrar la sesión?">Cerrar sesión</a>
-        <br>
-        <a href="{{ url_for('web.change_password') }}" class="button inline-block">Cambiar contraseña</a>
-        <a href="{{ url_for('web.change_pin') }}" class="button inline-block">Cambiar Pin</a>
-        <br>
-    {% endif %}
-    {% if session.user_session.level == funcs.USER_LEVEL_ADMIN %}
-        <span href="" class="button inline-block"
-        _="
-            on click
-                call #role-select-dialog.showModal()
-        ">Cambiar rol de usuario</span>
-        <dialog id="role-select-dialog">
-            <form id="role-select-form"
-                  hx-patch="{{ url_for('web.set_user_role', target_id=user.id) }}"
-                  hx-target="#roleinfo">
+    {% if logged_in and (is_current_user or session.user_session.level == funcs.USER_LEVEL_ADMIN)%}
+        <h2>Opciones</h2>
+        {% if is_current_user %}
+            <a href="{{ url_for('web.logout') }}" class="button inline-block" hx-confirm="¿Desea cerrar la sesión?">Cerrar sesión</a>
+            <br>
+            <a href="{{ url_for('web.change_password') }}" class="button inline-block">Cambiar contraseña</a>
+            <a href="{{ url_for('web.change_pin') }}" class="button inline-block">Cambiar Pin</a>
+            <br>
+        {% endif %}
+        {% if session.user_session.level == funcs.USER_LEVEL_ADMIN %}
+            <span href="" class="button inline-block"
+            _="
+                on click
+                    call #role-select-dialog.showModal()
+            ">Cambiar rol de usuario</span>
+            <dialog id="role-select-dialog">
+                <form id="role-select-form"
+                    hx-patch="{{ url_for('web.set_user_role', target_id=user.id) }}"
+                    hx-target="#roleinfo">
 
-                <div class="input-block center column">
-                    <label for="role-select">Seleccione el nuevo rol del usuario:</label>
-                    
-                    <select name="role" id="role-select" class="input">
-                        {% for nivel, nombre in {
-                            10: 'Administrador',
-                            25: 'Tester',
-                            30: 'Regular'
-                        }.items() %}
-                        {% set selected = 'selected' if user.nivel_perfil == nivel %}
-                        <option value="{{ nivel }}" {{ selected }}
-                            hx-vals='{ "role": {{ nivel }} }'>{{ nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="input-block center column">
+                        <label for="role-select">Seleccione el nuevo rol del usuario:</label>
+                        
+                        <select name="role" id="role-select" class="input">
+                            {% for nivel, nombre in {
+                                10: 'Administrador',
+                                25: 'Tester',
+                                30: 'Regular'
+                            }.items() %}
+                            {% set selected = 'selected' if user.nivel_perfil == nivel %}
+                            <option value="{{ nivel }}" {{ selected }}
+                                hx-vals='{ "role": {{ nivel }} }'>{{ nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-                <br>
+                    <br>
 
-                <div class="center">
-                    <button type="button" class="button" _="
-                        on click
-                            call #role-select-form.reset()
-                            call #role-select-dialog.close()
-                    ">Cancelar</button>
-                    <button type="button" class="button" _="
-                        on click
-                            call #role-select-form.requestSubmit()
-                            call #role-select-dialog.close()
-                    ">Aceptar</button>
-                </div>
-            </form>
-        </dialog>
+                    <div class="center">
+                        <button type="button" class="button" _="
+                            on click
+                                call #role-select-form.reset()
+                                call #role-select-dialog.close()
+                        ">Cancelar</button>
+                        <button type="button" class="button" _="
+                            on click
+                                call #role-select-form.requestSubmit()
+                                call #role-select-dialog.close()
+                        ">Aceptar</button>
+                    </div>
+                </form>
+            </dialog>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock content %}
