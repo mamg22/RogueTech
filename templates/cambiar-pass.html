@@ -5,7 +5,10 @@
 {% block content %}
     <h1 class="center">Cambiar contraseña</h1>
     <div class="center column">
-        <form class="center column" method="post">
+        <form class="center column"
+              method="post"
+              _="install CheckConfirmation(field: #clave, confirmation: #claveconf, name: 'Contraseña')"
+            >
             <div class="input-block">
                 <label for="clave">Nueva contraseña:
                 {% call funcs.help_icon() %}
@@ -19,8 +22,13 @@ Su contraseña debe contener al menos lo siguiente:
                 {% endcall %}
                 </label>
                 <input type="password" name="clave" id="clave" class="big"
-                autocomplete="new-password">
+                autocomplete="new-password"
+                minlength="8"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9A-Za-z]).{8,}"
+                required
+                title="La contraseña debe contener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo">
             </div>
+            <!-- Tenía un problema, use regex, ahora tengo dos problemas -->
             
             <div class="input-block">
                 <label for="claveconf">Confirmar contraseña:
@@ -29,7 +37,9 @@ Repita su contraseña
                 {% endcall %}
                 </label>
                 <input type="password" name="claveconf" id="claveconf" class="big"
-                 autocomplete="new-password">
+                 autocomplete="new-password"
+                 required
+                 >
             </div>
             
             <button class="button big active" type="submit">Cambiar contraseña</button>

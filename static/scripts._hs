@@ -5,7 +5,7 @@ behavior SubmitFix(value)
 end
 
 behavior DisableOnSubmit(table)
-    on submit
+    on submit or htmx:validation:validate
         -- Async, because sync breaks form submission
         async do
             add .shine to table
@@ -79,4 +79,16 @@ end
 
 on htmx:responseError from document
     notify(`Ha ocurrido un error en el servidor, por favor intentelo de nuevo. Código: ${detail.xhr.status} ${detail.xhr.statusText}`, "error")
+end
+
+behavior CheckConfirmation(field, confirmation, name)
+    on submit or htmx:validation:validate or input from confirmation
+        if field.value is not equal to confirmation.value
+            confirmation.setCustomValidity(`${name} no coincide con la confirmación de ${name}, por favor, introduzcalo de nuevo`)
+        else
+            confirmation.setCustomValidity('')
+        end
+        -- confirmation.reportValidity()
+    end
+
 end

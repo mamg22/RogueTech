@@ -5,23 +5,38 @@
 {% block content %}
     <h1 class="center">Cambiar pin</h1>
     <div class="center column">
-        <form class="center column" method="post">
+        <form class="center column" method="post"
+        _="install CheckConfirmation(field: #pin, confirmation: #pinconf, name: 'Pin')"
+        >
             <div class="input-block">
-                <label for="clave">Nuevo pin:
-                {% call funcs.help_icon() %}Ingrese su nuevo pin{% endcall %}
+                <label for="pin">Nuevo pin:
+{% call funcs.help_icon() -%}
+Su pin debe contener al menos lo siguiente:
+
+* Una letra minúscula
+* Una letra mayúscula
+* Un número
+* Un símbolo
+* Debe tener al menos 10 carácteres
+{%- endcall %}
                 </label>
                 <input type="password" name="pin" id="pin" class="big"
-                autocomplete="new-password">
+                autocomplete="new-password"
+                minlength="10"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9A-Za-z]).{10,}"
+                required
+                title="El pin debe contener al menos 10 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo">
             </div>
             
             <div class="input-block">
-                <label for="claveconf">Confirmar pin:
+                <label for="pinconf">Confirmar pin:
                 {% call funcs.help_icon() %}
 Repita su nuevo pin
                 {% endcall %}
                 </label>
                 <input type="password" name="pinconf" id="pinconf" class="big"
-                 autocomplete="new-password">
+                 autocomplete="new-password"
+                 required>
             </div>
             
             <button class="button big active" type="submit">Cambiar pin</button>

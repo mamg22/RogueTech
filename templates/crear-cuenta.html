@@ -3,22 +3,36 @@
 {% block title %}Crear cuenta{% endblock title %}
 
 {% block content %}
-    <h1 class="center">Crear cuenta</h1>
-    <div class="center column">
-        <form class="center column" method="post">
-            <div class="input-block">
-                <label for="nombre">Nombre de usuario:
-                {% call funcs.help_icon() %}
-Su nombre de usuario solo podrá contener carácteres alfanuméricos y guiones bajos (_)
-                {% endcall %}
-                </label>
-                <input type="text" name="nombre" id="nombre" class="big"
-                autocomplete="username">
-            </div>
-            
-            <div class="input-block">
-                <label for="clave">Contraseña:
-                {% call funcs.help_icon() %}
+<h1 class="center">Crear cuenta</h1>
+<div class="center column">
+    <form class="center column" method="post"
+        _="
+        
+        
+        on submit
+            if not me.checkValidity()
+                halt the event
+                log 'Invalid form'
+            end
+        end
+        ">
+        <div class="input-block">
+            <label for="nombre">Nombre de usuario:
+{% call funcs.help_icon() %}
+Su nombre de usuario solo podrá contener carácteres alfanuméricos y guiones bajos (_), debe tener entre 3 y 25 carácters.
+{% endcall %}
+            </label>
+            <input type="text" name="nombre" id="nombre" class="big"
+            required
+            minlength="3" maxlength="25"
+            pattern="[A-Za-z0-9_]+"
+            title="Solo puede contener carácteres alfanuméricos y guiones bajos (_), entre 3 y 25 carácters."
+            autocomplete="username">
+        </div>
+        
+        <div class="input-block">
+            <label for="clave">Contraseña:
+{% call funcs.help_icon() %}
 Su contraseña debe contener al menos lo siguiente:
 
 * Una letra minúscula
@@ -26,35 +40,65 @@ Su contraseña debe contener al menos lo siguiente:
 * Un número
 * Un símbolo
 * Debe tener al menos 8 carácteres
-                {% endcall %}
-                </label>
-                <input type="password" name="clave" id="clave" class="big"
-                autocomplete="new-password">
-            </div>
-            
-            <div class="input-block">
-                <label for="claveconf">Confirmar contraseña:
+{% endcall %}
+            </label>
+            <input type="password" name="clave" id="clave" class="big"
+            autocomplete="new-password"
+            minlength="8"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9A-Za-z]).{8,}"
+            required
+            title="La contraseña debe contener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo">
+        </div>
+        
+        <div class="input-block">
+            <label for="claveconf">Confirmar contraseña:
                 {% call funcs.help_icon() %}
-Repita su contraseña
+                Repita su contraseña
                 {% endcall %}
-                </label>
-                <input type="password" name="claveconf" id="claveconf" class="big"
-                autocomplete="new-password">
-            </div>
+            </label>
+            <input type="password" name="claveconf" id="claveconf" class="big"
+            required
+            _="install CheckConfirmation(field: #clave, confirmation: #claveconf, name: 'Contraseña')"
+            autocomplete="new-password">
+        </div>
+        
+        <div class="input-block">
+            <label for="pin">Pin de seguridad:
+{% call funcs.help_icon() %}
+Su pin debe contener al menos lo siguiente:
+
+* Una letra minúscula
+* Una letra mayúscula
+* Un número
+* Un símbolo
+* Debe tener al menos 10 carácteres
+{% endcall %}
+            </label>
+            <input type="password" name="pin" id="pin" class="big"
+            minlength="10"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9A-Za-z]).{10,}"
+            required
+            title="El pin debe contener al menos 10 caracteres, incluyendo una mayúscula, una minúscula, un número y un símbolo">
+        </div>
             
-            <div class="input-block">
-                <label for="pin">Pin de seguridad:
-                {% call funcs.help_icon() %}
-Pin de seguridad que podrá utilizar para recuperar acceso a su cuenta en caso de que olvide su contraseña
-                {% endcall %}
-                </label>
-                <input type="text" name="pin" id="pin" class="big">
-            </div>
-            <div class="alert card inline-block">
-                <b>IMPORTANTE</b><br>
-                El pin de seguridad es un pin único, te servira para recuperar<br>
-                tu contraseña. Copialo y guardalo en un lugar seguro
-            </div>
+        <div class="input-block">
+            <label for="pinconf">Confirmar pin:
+{% call funcs.help_icon() %}
+Repita su pin
+{% endcall %}
+            </label>
+            <input type="password" name="pinconf" id="pinconf" class="big"
+            required
+            _="install CheckConfirmation(field: #pin, confirmation: #pinconf, name: 'Pin')"
+            autocomplete="new-password">
+        </div>
+        
+        <div class="alert card inline-block">
+            <b>IMPORTANTE</b><br>
+            El pin de seguridad es un pin único, te servira para recuperar<br>
+            tu contraseña. Copialo y guardalo en un lugar seguro
+        </div>
+            
             
             <button class="button big active" type="submit">Crear cuenta</button>
         </form>
@@ -64,4 +108,5 @@ Pin de seguridad que podrá utilizar para recuperar acceso a su cuenta en caso d
         ¿Ya tienes una cuenta?<br>
         <a class="button" href="/iniciar-sesion">Iniciar sesión</a>
     </div>
-{% endblock content %}
+    {% endblock content %}
+    
