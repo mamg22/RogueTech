@@ -1,3 +1,5 @@
+const VERSION = 1
+
 
 const sprites = {
     player: {
@@ -551,3 +553,18 @@ await fetch(
     }
 )
 */
+
+async function upload_score(scoredata) {
+    const data_json = JSON.stringify(scoredata)
+
+    const upload_result = await fetch(
+        "/api/v1/score", 
+        {
+            method: "POST",
+            body: data_json,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+    )
+}
