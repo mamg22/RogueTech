@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    background-color: #222222;
+    overflow: hidden;
+}
+
+* {
+    user-select: none;
+}
+
+#content {
+    background-color: black;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    /* max-width: 65vh;
+    width: 65vh; */
+    margin: auto;
+    overflow: hidden;
+    position: relative;
+}
+
+img {
+    image-rendering: pixelated;
+    display: block;
+}
+
+#map {
+    z-index: -1;
+}
+
+.char {
+    z-index: 1;
+    position: absolute;
+    max-width: 64px;
+    max-height: 64px;
+    pointer-events: none;
+    padding:  auto;
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+#controls {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    background-color: rgba(0, 0, 0, 50%);
+    color: white;
+    z-index: 99;
+}
+
+#messages {
+    position: fixed;
+    bottom: 0.5em;
+    left: 0.5em;
+    background-color: rgba(0, 0, 0, 60%);
+    padding: 0.5em;
+    pointer-events: none;
+    z-index: 99;
+}
+
+#messages > div {
+    font-family: monospace;
+    font-size: 14pt;
+    color: white;
+    user-select: none;
+    pointer-events: none;
+}

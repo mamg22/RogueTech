@@ -45,7 +45,7 @@ def exception_handler(e: Exception):
     return render_template("error.html", message=e, details=traceback.format_exc())
 
 def not_found_handler(e):
-    return render_template("error.html", message="No se ha podido encontrar esta página", details=e)
+    return render_template("error.html", message="No se ha podido encontrar esta página", details=e), 404
 
 
 def get_model():
@@ -287,3 +287,6 @@ def set_user_role(target_id: int):
 
     return render_template('fragments/roleinfo.html', user=userdata)
 
+@web.route('/game')
+def game():
+    return render_template('game.html')
