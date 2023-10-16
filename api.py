@@ -2,8 +2,9 @@ import datetime
 from enum import Enum, IntEnum, auto
 from http import HTTPStatus
 import json
+import traceback
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 
 import core
 
@@ -14,6 +15,11 @@ def get_model():
         token = None
         if request.authorization:
             token = request.authorization.token
+        else:
+            try:
+                token = session['user_session']['token']
+            except (KeyError, TypeError):
+                token = None
         return core.Model(token)
     except core.RemovedSessionError as e:
         # TODO: Return an error
@@ -133,10 +139,12 @@ def insert_score():
 
     model = get_model()
 
+    date = datetime.datetime.fromisoformat(data['date']).astimezone()
+
     model.insert_score(
         data['seed'],
         data['version'],
-        datetime.datetime.fromisoformat(data['date']),
+        date,
         data['score'],
         data['time_ms'],
         json.dumps(data['details'])
@@ -146,7 +154,7 @@ def insert_score():
 
 @api.errorhandler(Exception)
 def catch_all_handler(e):
-    return api_response(Status.error, str(e))
+    return api_response(Status.error, str(e) + "\n\n" + traceback.format_exc())
 
 @api.errorhandler(404)
 def not_found_handler(e):
