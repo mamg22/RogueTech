@@ -4,13 +4,23 @@
 
 {% block title %}Puntuación{% endblock title %}
 
+{%- if score.exito -%}
+{%- set star -%}
+        <span class="material-icons md-18">star</span>
+{%- endset -%}
+{%- endif -%}
+
+
 {% block content %}
 <div class="card">
-    <span class="float-right">{{ '{:{date_format}}'.format(score.fecha, date_format=funcs.date_format_long) }}</span>
-    <h1>Puntuación <small>#{{ score.id }}</small></h1>
+    <span class="float-right">
+        {{ '{:{date_format}}'.format(score.fecha, date_format=funcs.date_format_long) }}
+    </span>
+    <h1>Puntuación <small>#{{ score.id }} </small></h1>
     Por: <a href="/usuario?name={{score.nombre_usuario}}"><b>{{ score.nombre_usuario }}</b></a><br>
     Semilla: <span class="mono-num">{{ score.semilla }}</span> <br>
     Versión: <span class="mono-num">{{ score.version_juego }}</span><br>
+    Éxito: {{ "Sí" if score.exito else "No" }} {{ star }} <br>
     Puntos: <span class="mono-num">{{ score.puntuacion }}</span> <br>
     Tiempo total: <span class="mono-num">{{ pretty_time(score.tiempo) }}</span> <br>
     </div>
@@ -24,8 +34,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for key, val in score.detalles.items()
-            %}
+            {% for key, val in score.detalles.items() %}
                 <tr>
                     <td>{{ key }}</td>
                     <td>{{ val }}</td>

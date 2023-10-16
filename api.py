@@ -147,6 +147,7 @@ def insert_score():
         date,
         data['score'],
         data['time_ms'],
+        data['success'],
         json.dumps(data['details'])
     )
     return api_response(Status.created)

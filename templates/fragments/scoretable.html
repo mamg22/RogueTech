@@ -10,6 +10,7 @@
                 <th>#</th>
                 <th>Usuario</th>
                 <th>Fecha</th>
+                <th>Éxito</th>
                 <th>Puntuación</th>
                 <th>Tiempo</th>
             </tr>
@@ -23,6 +24,11 @@
                 <td>{{ ((page - 1) * SCORES_PER_PAGE) + loop.index }}</td>
                 <td>{{ data.nombre_usuario }}</td>
                 <td>{{ '{:{date_format}}'.format(data.fecha, date_format=funcs.date_format_short) }}</td>
+                <td>
+                {% if data.exito %}
+                    <span class="material-icons">star</span>
+                {% endif %}
+                </td>
                 <td class="mono-num">{{ (data.puntuacion | string).rjust(8) }}</td>
                 <td class="mono-num">{{ funcs.pretty_time(data.tiempo) }}</td>
             </tr>

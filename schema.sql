@@ -70,6 +70,7 @@ CREATE OR REPLACE TABLE Calificacion (
     fecha DATETIME NOT NULL,
     puntuacion INTEGER UNSIGNED NOT NULL,
     tiempo_ms BIGINT UNSIGNED NOT NULL,
+    exito BOOLEAN NOT NULL,
     detalles JSON NOT NULL,
     usuario INTEGER NOT NULL,
     CONSTRAINT fk_calificacion_usuario

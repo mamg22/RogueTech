@@ -206,7 +206,7 @@ class Model:
             n_results = cursor.fetchone()['count']
 
             cursor.execute(f"""
-                SELECT c.id as id, fecha, puntuacion, tiempo_ms, tiempo, u.id as id_usuario, u.nombre as nombre_usuario
+                SELECT c.id as id, fecha, puntuacion, tiempo_ms, exito, tiempo, u.id as id_usuario, u.nombre as nombre_usuario
                 FROM Calificacion AS c
                 INNER JOIN Usuario AS u
                     ON c.usuario = u.id
@@ -220,7 +220,7 @@ class Model:
         with self._get_cursor() as cursor:
             cursor.execute("""
             SELECT c.id as id, semilla, version_juego, fecha, puntuacion,
-                tiempo_ms, tiempo, detalles, u.id as id_usuario, nombre as nombre_usuario
+                tiempo_ms, tiempo, exito, detalles, u.id as id_usuario, nombre as nombre_usuario
             FROM Calificacion AS c
             INNER JOIN Usuario AS u
                 ON c.usuario = u.id
@@ -498,17 +498,17 @@ class Model:
     
     def insert_score(
         self, seed: int, version: int, date: datetime.datetime,
-        score: int, time_ms: int, details: str
+        score: int, time_ms: int, success: bool, details: str
     ) -> int:
         with self._get_cursor() as cursor:
             cursor.execute("""
                 INSERT INTO Calificacion(
                     semilla, version_juego, fecha, puntuacion,
-                    tiempo_ms, detalles, usuario
+                    tiempo_ms, exito, detalles, usuario
                 ) VALUES
                 %s
                     
-            """, ((seed, version, date, score, time_ms, details, self.get_session().uid),))
+            """, ((seed, version, date, score, time_ms, success, details, self.get_session().uid),))
             row_id = cursor.connection.insert_id()
             cursor.connection.commit()
 

@@ -25,14 +25,14 @@ SET @test_details = '{ "Tipo de final": "Murio por caida"}';
 
 INSERT INTO Calificacion(
     semilla, version_juego, fecha, puntuacion,
-    tiempo_ms, detalles, usuario
+    tiempo_ms, exito, detalles, usuario
 ) VALUES
-    (42, 1, '2023-08-04', 50000, 60000, @test_details, 1),
-    (42, 1, '2023-08-04', 102000, 300000, @test_details, 1),
-    (42, 1, '2023-08-04', 500, 3000, @test_details, 1),
-    (42, 1, '2023-08-04', 256000, 403044, @test_details, 3),
-    (42, 1, '2023-08-04', 69420, 4301048, @test_details, 2),
-    (42, 1, '2023-08-04', 1000000, 2394023, @test_details, 2),
-    (42, 1, '2023-08-04', 394000, 101 * 60 * 60 * 1000, @test_details, 1)
+    (42, 1, '2023-08-04', 50000, 60000, FALSE, @test_details, 1),
+    (42, 1, '2023-08-04', 102000, 300000, FALSE, @test_details, 1),
+    (42, 1, '2023-08-04', 500, 3000, FALSE, @test_details, 1),
+    (42, 1, '2023-08-04', 256000, 403044, TRUE, @test_details, 3),
+    (42, 1, '2023-08-04', 69420, 4301048, FALSE, @test_details, 2),
+    (42, 1, '2023-08-04', 1000000, 2394023, TRUE, @test_details, 2),
+    (42, 1, '2023-08-04', 394000, 101 * 60 * 60 * 1000, FALSE, @test_details, 1)
 
 ;
