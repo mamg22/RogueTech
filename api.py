@@ -141,7 +141,7 @@ def insert_score():
 
     date = datetime.datetime.fromisoformat(data['date']).astimezone()
 
-    model.insert_score(
+    id = model.insert_score(
         data['seed'],
         data['version'],
         date,
@@ -150,7 +150,7 @@ def insert_score():
         data['success'],
         json.dumps(data['details'])
     )
-    return api_response(Status.created)
+    return api_response(Status.created, id)
 
 
 @api.errorhandler(Exception)
