@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego</title>
-    <script defer src="/static/astar.js"></script>
-    <script defer src="/static/demo.js"></script>
+    <script defer src="{{ url_for('static', filename='astar.js') }}"></script>
+    <script defer src="{{ url_for('web.node_modules', filename='chance/dist/chance.min.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='demo.js') }}"></script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='demo.css') }}">
 </head>
 <body>
     <div id="game-area">
         <div id="main-hud" class="hud">
-            <div>AAAA</div>
+            <div>
+                <div>HP</div>
+                <div>99/100</div>
+            </div>
             <div>AAAA</div>
             <div>AAAA</div>
             <div id="controls">
