@@ -31,7 +31,18 @@ const sprites = {
     etc: {
         boom: "/static/res/etc/boom.gif"
     }
-}
+};
+
+const audios = {
+    bgm: {
+        main: '/static/res/bgm/main_game.mp3'
+    },
+    sfx: {
+        booster: '/static/res/sfx/booster.mp3',
+        pickup: '/static/res/sfx/pickup.mp3',
+        boom: '/static/res/sfx/boom.mp3'
+    }
+};
 
 function delay(ms) {
     return new Promise(function (resolve, reject) {
@@ -490,25 +501,25 @@ imgs.forEach(function (img) {
 })
 
 const bgm = new Audio();
-bgm.src = '/static/res/bgm/main_game.mp3'
+bgm.src = audios.bgm.main;
 bgm.preload = true;
 bgm.loop = true;
 bgm.volume = 0.05
 
 const player_sfx = new Audio();
-player_sfx.src = '/static/res/sfx/booster.mp3'
+player_sfx.src = audios.sfx.booster;
 player_sfx.preload = true;
 player_sfx.load();
 player_sfx.volume = 0.4;
 
 const pickup_sfx = new Audio();
-pickup_sfx.src = '/static/res/sfx/pickup.mp3'
+pickup_sfx.src = audios.sfx.pickup;
 pickup_sfx.preload = true;
 pickup_sfx.load();
 pickup_sfx.volume = 0.4;
 
 const boom_sfx = new Audio();
-boom_sfx.src = '/static/res/sfx/boom.mp3' 
+boom_sfx.src = audios.sfx.boom;
 boom_sfx.preload = true;
 boom_sfx.load();
 boom_sfx.volume = 0.1;
@@ -566,5 +577,16 @@ async function upload_score(scoredata) {
                 "Content-Type": "application/json"
             }
         }
-    )
+    );
+
+    if (!upload_result.ok) {
+        console.log("Failed upload:", upload_result);
+        return null;
+    }
+
+    const json = await upload_result.json();
+    const result = json.result;
+
+    // Return the newly generated id
+    return result;
 }
