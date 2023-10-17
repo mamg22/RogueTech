@@ -10,20 +10,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='demo.css') }}">
 </head>
 <body>
-    <div id="content">
-        <img src="/static/res/demo_map.png" class="" id="map" >
-        <img src="/static/res/player/standing-r.png" class="char" id="hero">
-    </div>
-    <div id="controls">
-        <div>
-            <input type="checkbox" name="music" id="music" checked>
-            <label for="music">Musica</label>
+    <div id="game-area">
+        <div id="hud"></div>
+        <div id="game-view">
+            <div id="map">
+                <img src="/static/res/demo_map.png">
+            </div>
+            <div id="entities">
+                <img src="/static/res/player/standing-r.png" class="char" id="hero">
+            </div>
         </div>
-        <div>
-            <input type="checkbox" name="sound" id="sound" checked>
-            <label for="sound">Sonido</label>
+        <div id="controls">
+            <div>
+                <input type="checkbox" name="music" id="music" checked>
+                <label for="music">Musica</label>
+            </div>
+            <div>
+                <input type="checkbox" name="sound" id="sound" checked>
+                <label for="sound">Sonido</label>
+            </div>
         </div>
+        <div id="messages"></div>
     </div>
-    <div id="messages"></div>
 </body>
 </html>

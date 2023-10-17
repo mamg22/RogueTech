@@ -415,6 +415,7 @@ let state = {
         console.log(entity, this.entities)
         let idx = this.entities.indexOf(entity)
         console.log(idx)
+        // TODO? Remove element asociated with entity, maybe conditionally based on a NO_REMOVE or SELF_REMOVING flag
         this.entities.splice(idx, 1)
     }
 }
@@ -430,7 +431,7 @@ function render() {
             entity_img.src = entity.sprite;
             entity_img.classList.add("char");
             entity.element = entity_img;
-            content.append(entity_img);
+            entities_elt.append(entity_img);
         }
         entity.element.style.left = CSS.px(grid_to_world(entity.x));
         entity.element.style.top = CSS.px(grid_to_world(entity.y));
@@ -453,12 +454,13 @@ window.addEventListener('keyup', function(e) {
     }
 });
 
-let content = document.querySelector("#content");
+let game_view = document.querySelector("#game-view");
+let entities_elt = document.querySelector("#entities");
 
-content.addEventListener('pointermove', function(e) {
+game_view.addEventListener('pointermove', function(e) {
     if (e.buttons == 1) {
-        content.scrollLeft -= e.movementX
-        content.scrollTop -= e.movementY
+        game_view.scrollLeft -= e.movementX
+        game_view.scrollTop -= e.movementY
     }
 });
 
@@ -478,11 +480,11 @@ function click_handler(e) {
         );
 }
 
-content.addEventListener('pointerdown', function(e) {
+game_view.addEventListener('pointerdown', function(e) {
     pointer_down = e;
 })
 
-content.addEventListener('pointerup', function(e) {
+game_view.addEventListener('pointerup', function(e) {
     if (is_click(pointer_down, e)) {
         click_handler(e)
     }
