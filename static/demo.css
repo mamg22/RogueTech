@@ -36,7 +36,7 @@ img {
     z-index: -1;
 }
 
-.char {
+#entities > * {
     z-index: 1;
     position: absolute;
     max-width: 64px;
