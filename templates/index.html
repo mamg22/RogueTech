@@ -8,12 +8,10 @@
         <img src="{{ url_for('static', filename='img/_2d78bea5-2776-44af-b55e-b730c057d19b.jpg')}}"
         alt="Icono del juego: Una espada y un escudo hecho de línes resplandecientes de variados colores"
         class="appicon"/>
-        <a class="button block active" 
-        _="on click
-                halt the event
-                alert('Aqui pondria mi juego, si tan solo tuviera uno listo')">
-            <span class="big">Descargar</span>
-            <span class="material-icons">download</span>
+        <a class="button block active" hx-boost="false"
+            href="{{ url_for('web.game') }}">
+            <span class="big">Jugar</span>
+            <span class="material-icons">play_arrow</span>
         </a>
         <p>
             RogueTech es un juego RPG roguelike de temática tecnológica, donde asumes el rol de un héroe que se enfrenta a diversos enemigos en niveles únicos, generados al azar, ¡Cada partida es una aventura diferente! Podrás personalizar tu héroe con diferentes habilidades, armas y objetos que encontrarás en tu camino, y enfrentarte a enemigos variados y desafiantes. RogueTech te ofrece una experiencia de juego dinámica y divertida, donde cada partida es una aventura diferente.

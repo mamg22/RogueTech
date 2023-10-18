@@ -4,16 +4,17 @@
             remove .open">
         {%- set linklist = [
             ('index', 'Inicio'),
+            ('game', 'Jugar'),
             ('puntuaciones', 'Puntuaciones'),
             ('usuarios', 'Usuarios'),
-            
         ] -%}
         {%- set authlinklist = [
             ('my_profile', 'Mi perfil')
         ] -%}
 
         {% for link, name in linklist + ( authlinklist if session.user_session else [] ) %}
-            <a href="{{ url_for('web.' + link) }}">{{ name }}</a>
+            {% set boost = link not in ['game'] %}
+            <a href="{{ url_for('web.' + link) }}" hx-boost="{{ boost }}">{{ name }}</a>
             {% if not loop.last %}
                 <span class="navseparator"></span>
             {% endif %}
