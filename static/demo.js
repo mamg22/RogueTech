@@ -87,6 +87,7 @@ function push_msg(message, category) {
     }
 }
 
+// Firefox-specific polyfill
 if (!CSS.px) {
     CSS.px = function(i) {
         return `${i}px`;
@@ -429,7 +430,6 @@ function render() {
         if (!entity.element) {
             let entity_img = document.createElement("img");
             entity_img.src = entity.sprite;
-            entity_img.classList.add("char");
             entity.element = entity_img;
             entities_elt.append(entity_img);
         }
@@ -555,17 +555,6 @@ sound_control.addEventListener('change', function(e) {
         boom_sfx.volume = 0;
     }
 })
-
-/*
-await fetch(
-    "/api/v1/score", 
-    {
-        method: "POST",
-        body: data,
-        headers: {"Content-Type": "application/json"}
-    }
-)
-*/
 
 async function upload_score(scoredata) {
     const data_json = JSON.stringify(scoredata)
