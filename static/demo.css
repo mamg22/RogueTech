@@ -122,10 +122,22 @@ img {
 dialog {
     border: 1px solid grey;
     width: min(95dvw, 30em);
+    max-width: 95dvw;
+    max-height: 90dvh;
     padding: 0rem;
 
     background-color: #222222;
     color: whitesmoke;
+}
+
+.dialog-window {
+    display: flex;
+    flex-direction: column;
+    max-height: 89dvh;
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
 .dialog-titlebar {
@@ -135,6 +147,8 @@ dialog {
     align-items: stretch;
 
     background-color: #444444;
+    overflow: hidden;
+    flex: 0 0;
 }
 
 .dialog-title {
@@ -159,5 +173,8 @@ dialog {
 }
 
 .dialog-body {
-    padding: 0.5rem
+    padding: 0.5rem 0.5rem 1rem;
+    overflow: auto;
+    /* max-height: 80dvh; */
+    flex: 1 1;
 }
