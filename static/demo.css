@@ -1,6 +1,7 @@
 body {
     margin: 0;
     background-color: #222222;
+    max-height: 100dvh;
     overflow: hidden;
 }
 
@@ -8,13 +9,18 @@ body {
     user-select: none;
 }
 
+#game-area {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 100dvh;
+    max-width: 100dvw;
+}
+
 #game-view {
     background-color: black;
-    min-height: 100dvh;
-    max-height: 100dvh;
-    /* max-width: 65vh;
-    width: 65vh; */
-    margin: auto;
+    /* min-height: 100dvh; */
+    /* margin: auto; */
     overflow: hidden;
     position: relative;
     touch-action: none;
@@ -45,14 +51,16 @@ img {
 
 #controls {
     /* background-color: rgba(0, 0, 0, 50%); */
-    color: white;
+    /* color: white; */
     z-index: 99;
 }
 
 #messages {
-    position: fixed;
+    position: sticky;
     bottom: 0.5em;
     left: 0.5em;
+    max-width: 90dvw;
+    width: fit-content;
     background-color: rgba(0, 0, 0, 60%);
     padding: 0.5em;
     pointer-events: none;
@@ -75,7 +83,80 @@ img {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     background-color: #222222;
     height: 5ex;
     color: white;
+    padding: 0.1em 0.25em;
+}
+
+.health-indicator {
+    color: limegreen;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+.material-icons {
+    vertical-align: text-bottom;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+dialog {
+    border: 1px solid grey;
+    width: min(95dvw, 30em);
+    padding: 0rem;
+
+    background-color: #222222;
+    color: whitesmoke;
+}
+
+.dialog-titlebar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+
+    background-color: #444444;
+}
+
+.dialog-title {
+    color: whitesmoke;
+    padding: 0.5rem 0.5rem;
+}
+
+.dialog-close {
+    background-color: #770000;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    width: 2.5em;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.dialog-close:hover {
+    background-color: #aa0000;
+}
+
+.dialog-body {
+    padding: 0.5rem
 }
