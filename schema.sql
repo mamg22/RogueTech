@@ -1,6 +1,3 @@
-CREATE OR REPLACE DATABASE gamedb;
-USE gamedb;
-
 -- Funcion de utilidad para convertir un tiempo en milisegundos a
 -- HH:MM:SS.mmm
 DELIMITER //
