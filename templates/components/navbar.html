@@ -14,7 +14,7 @@
 
         {% for link, name in linklist + ( authlinklist if session.user_session else [] ) %}
             {% set boost = link not in ['game'] %}
-            <a href="{{ url_for('web.' + link) }}" hx-boost="{{ boost }}">{{ name }}</a>
+            <a href="{{ url_for('web.' + link) }}" hx-boost="{{ boost | lower }}">{{ name }}</a>
             {% if not loop.last %}
                 <span class="navseparator"></span>
             {% endif %}
