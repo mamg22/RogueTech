@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 import logging
 from pathlib import Path
+import os
 
 import MySQLdb
 import MySQLdb.cursors
@@ -34,6 +35,20 @@ def _setup_logger():
     return logger
 
 _logger = _setup_logger()
+
+
+if settings := os.environ.get('SERVER_SETTINGS_FILE'):
+    if settings.endswith('debug.py'):
+        from config.debug import DB_NAME
+        _logger.info(f"Using debug configuration database '{DB_NAME}'")
+    else:
+        from config.release import DB_NAME
+        _logger.info(f"Using release configuration database '{DB_NAME}'")
+else:
+    from config.default import DB_NAME
+    _logger.info(f"Using default configuration database '{DB_NAME}'")
+
+
 
 def get_pw_digest(password: str) -> str:
     pwhash = blake2s()
@@ -102,7 +117,7 @@ class Model:
         if self._db_connection is None:
             self._db_connection = MySQLdb.connect(
                 host='localhost',
-                database='gamedb',
+                database=DB_NAME,
                 cursorclass=MySQLdb.cursors.DictCursor
             )
         return self._db_connection.cursor()
