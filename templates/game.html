@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juego</title>
     <script defer src="{{ url_for('static', filename='astar.js') }}"></script>
-    <script defer src="{{ url_for('web.node_modules', filename='chance/dist/chance.min.js') }}"></script>
     <script defer src="{{ url_for('static', filename='demo.js') }}"></script>
     
     {% if config.ENVIRONMENT == 'development' %}
         <script defer src="{{ url_for('web.node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
+        <script defer src="{{ url_for('web.node_modules', filename='chance/dist/chance.min.js') }}"></script>
         <link href="/static/material-icons/material-icons.css" rel="stylesheet">
     {% else %}
         <script defer src="https://unpkg.com/hyperscript.org@0.9.11"></script>
@@ -18,6 +18,7 @@
 
 
     <link rel="stylesheet" href="{{ url_for('static', filename='demo.css') }}">
+    <script src="{{ url_for('static', filename='main.js')}}"></script>
 </head>
 <body>
     <div id="game-area">
@@ -35,11 +36,11 @@
                 <img src="/static/res/demo_map.png">
             </div>
             <div id="entities">
-                <img src="/static/res/player/standing-r.png" class="char" id="hero">
+                <img src="/static/res/player/standing-r.png" id="hero">
             </div>
-            <div id="messages"></div>
         </div>
     </div>
+    <div id="messages"></div>
     <dialog id="pause-menu">
         <form method="dialog" class="dialog-window">
             <div class="dialog-titlebar">
@@ -56,11 +57,16 @@
             </div>
             <div class="dialog-body">
                 <div>
-                    <input type="checkbox" name="music" id="music" checked>
-                    <label for="music">Musica</label>
+                    <input type="checkbox" name="music" id="music" checked
+                    _="on change call set_audio('bgm', not my checked)">
+                    <label for="music">
+                        <span class="material-icons">music_note</span> <br>
+                        Musica
+                    </label>
                 </div>
                 <div>
-                    <input type="checkbox" name="sound" id="sound" checked>
+                    <input type="checkbox" name="sound" id="sound" checked
+                    _="on change call set_audio('sfx', not my checked)">
                     <label for="sound">Sonido</label>
                 </div>
             </div>

@@ -1,0 +1,15 @@
+{
+    "name": "RogueTech",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "main-icon.png",
+            "type": "image/png",
+            "sizes": "1024x1024"
+         }
+    ],
+    "theme_color": "#222222",
+    "background_color": "#222222",
+    "display": "standalone",
+    "orientation": "any"
+}

@@ -290,3 +290,11 @@ def set_user_role(target_id: int):
 @web.route('/game')
 def game():
     return render_template('game.html')
+
+@web.route('/service-worker.js')
+def sw():
+    return send_from_directory('static', 'service-worker.js')
+
+@web.route('/offline')
+def offline():
+    return render_template('offline.html')
