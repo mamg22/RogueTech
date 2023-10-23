@@ -145,7 +145,7 @@ def insert_score():
     # Python <= 3.10 can't parse Z in ISO timestamps
     if sys.version_info.major == 3 and sys.version_info.minor <= 10:
         if date_str.endswith('Z'):
-            date_str.replace('Z', '+00:00')
+            date_str = date_str.replace('Z', '+00:00')
 
     date = datetime.datetime.fromisoformat(date_str).astimezone()
 
