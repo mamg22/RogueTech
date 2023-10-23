@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+
 import core
 
 def main():
@@ -9,9 +11,10 @@ def main():
 
     try:
         model = core.Model()
-        created = model.create_account(username, password, pin, model.Level.ADMIN)
+        created = model.create_account(username, password, pin, model.Level.ADMIN.value)
     except Exception as e:
         print(f"Error: {e}")
+        sys.exit(1)
 
     if created:
         print(f"Created administrator '{username}'")
