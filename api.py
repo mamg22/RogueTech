@@ -3,6 +3,7 @@ from enum import Enum, IntEnum, auto
 from http import HTTPStatus
 import json
 import traceback
+import sys
 
 from flask import Blueprint, request, jsonify, session
 
@@ -139,7 +140,14 @@ def insert_score():
 
     model = get_model()
 
-    date = datetime.datetime.fromisoformat(data['date']).astimezone()
+    date_str: str = data['date']
+
+    # Python <= 3.10 can't parse Z in ISO timestamps
+    if sys.version_info.major == 3 and sys.version_info.minor <= 10:
+        if date_str.endswith('Z'):
+            date_str.replace('Z', '+00:00')
+
+    date = datetime.datetime.fromisoformat(date_str).astimezone()
 
     id = model.insert_score(
         data['seed'],
