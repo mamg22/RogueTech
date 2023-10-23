@@ -1,29 +1,3 @@
--- Funcion de utilidad para convertir un tiempo en milisegundos a
--- HH:MM:SS.mmm
-DELIMITER //
-CREATE OR REPLACE FUNCTION format_ms(ms BIGINT)
-	RETURNS VARCHAR(32) DETERMINISTIC
-BEGIN
-	DECLARE millis INT;
-    DECLARE secs INT;
-    DECLARE mins INT;
-    DECLARE hours INT;
-	SET millis = ms % 1000;
-    SET secs   = (ms / 1000) % 60;
-    SET mins   = (ms / (1000 * 60)) % 60;
-    SET hours  = (ms / (1000 * 60 * 60));
-    RETURN concat(
-        concat_ws(":",
-            lpad(hours, greatest(length(hours), 2), '0'),
-            lpad(mins, 2, '0'),
-            lpad(secs, 2, '0')
-        ),
-        '.',
-        lpad(millis, 3, '0')
-    );
-END //
-DELIMITER ;
-
 CREATE OR REPLACE TABLE Perfil_usuario (
     nivel INTEGER PRIMARY KEY NOT NULL,
     nombre VARCHAR(50) UNIQUE NOT NULL
