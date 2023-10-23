@@ -5,13 +5,16 @@ die() {
     exit 1
 }
 
-db_name="gamedb"
+mysql() {
+    command mysql --host="$DB_HOST" --password="$DB_PASS" --user="$DB_USER" "$@"
+}
 
-while getopts n:t name; do
+if ! [ "$DB_PASS" ]; then
+    die "Database configuration variables not defined"
+fi
+
+while getopts t name; do
     case "$name" in
-        (n)
-            db_name="$OPTARG"
-            ;;
         (t)
             use_test="1"
             ;;
@@ -23,14 +26,16 @@ while getopts n:t name; do
 done
 
 
-mysql <<<"DROP DATABASE IF EXISTS $db_name; CREATE DATABASE $db_name" || die "Failed dropping/creating"
+mysql <<<"DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME" ||
+    die "Failed dropping/creating"
+echo "Dropped and created database '$DB_NAME'"
 
-echo "Dropped and created database '$db_name'"
-
-mysql -D "${db_name}" < schema.sql ||die "Failed loading schema"
-echo "Loaded schema for database '$db_name'"
+mysql --database="$DB_NAME" < schema.sql ||
+    die "Failed loading schema"
+echo "Loaded schema for database '$DB_NAME'"
 
 if [ "$use_test" ]; then
-    mysql -D "${db_name}" < test-data.sql || die "Failed adding test data"
-    echo "Loaded test data for database '$db_name'"
+    mysql -D "$DB_NAME" < test-data.sql ||
+        die "Failed adding test data"
+    echo "Loaded test data for database '$DB_NAME'"
 fi
