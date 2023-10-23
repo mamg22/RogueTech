@@ -39,22 +39,12 @@ def _setup_logger():
 
 _logger = _setup_logger()
 
-
-if settings := os.environ.get('SERVER_SETTINGS_FILE'):
-    if settings.endswith('debug.py'):
-        from config.debug import DB_NAME
-        _logger.info(f"Using debug configuration database '{DB_NAME}'")
-    else:
-        from config.release import DB_NAME
-        _logger.info(f"Using release configuration database '{DB_NAME}'")
-else:
-    from config.default import DB_NAME
-    _logger.info(f"Using default configuration database '{DB_NAME}'")
-
 DB_NAME = os.environ.get('DB_NAME')
 DB_PASS = os.environ.get('DB_PASS')
+DB_USER = os.environ.get('DB_USER')
+DB_HOST = os.environ.get('DB_HOST')
 
-
+_logger.info(f"Loaded database config: USER={DB_USER} HOST={DB_HOST} DB={DB_NAME}")
 
 def get_pw_digest(password: str) -> str:
     pwhash = blake2s()
@@ -122,8 +112,9 @@ class Model:
     def _get_cursor(self) -> MySQLdb.cursors.DictCursor:
         if self._db_connection is None:
             self._db_connection = MySQLdb.connect(
-                host='localhost',
+                host=DB_HOST,
                 database=DB_NAME,
+                user=DB_USER,
                 password=DB_PASS,
                 cursorclass=MySQLdb.cursors.DictCursor
             )
