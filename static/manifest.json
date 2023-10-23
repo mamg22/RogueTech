@@ -8,8 +8,8 @@
             "sizes": "1024x1024"
          }
     ],
-    "theme_color": "#222222",
-    "background_color": "#222222",
+    "theme_color": "#000000",
+    "background_color": "#000000",
     "display": "standalone",
     "orientation": "any"
 }
