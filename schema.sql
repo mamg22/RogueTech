@@ -15,7 +15,6 @@ CREATE TABLE Usuario (
     clave VARCHAR(128) NOT NULL,
     pin VARCHAR(128) NOT NULL,
     fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    eliminado BOOLEAN NOT NULL DEFAULT FALSE,
     perfil INTEGER NOT NULL,
     CONSTRAINT fk_usuario_perfil
         FOREIGN KEY (perfil) REFERENCES Perfil_usuario(nivel)
