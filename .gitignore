@@ -13,3 +13,4 @@ templates/b.html
 log/
 test-headers.txt
 servidor.bak/
+.env

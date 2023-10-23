@@ -10,6 +10,9 @@ import os
 
 import MySQLdb
 import MySQLdb.cursors
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 _SORT_ORDERS = {
@@ -47,6 +50,9 @@ if settings := os.environ.get('SERVER_SETTINGS_FILE'):
 else:
     from config.default import DB_NAME
     _logger.info(f"Using default configuration database '{DB_NAME}'")
+
+DB_NAME = os.environ.get('DB_NAME')
+DB_PASS = os.environ.get('DB_PASS')
 
 
 
@@ -118,6 +124,7 @@ class Model:
             self._db_connection = MySQLdb.connect(
                 host='localhost',
                 database=DB_NAME,
+                password=DB_PASS,
                 cursorclass=MySQLdb.cursors.DictCursor
             )
         return self._db_connection.cursor()
