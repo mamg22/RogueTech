@@ -33,14 +33,45 @@ const sprites = {
     }
 };
 
+function audio_resource(src, options) {
+    const audio = new Audio();
+    audio.src = src;
+    audio.preload = true;
+
+    for (const option in options) {
+        audio[option] = options[option];
+
+        if (option === 'volume') {
+            audio._volume = options[option];
+        }
+    }
+
+    audio.load();
+
+    return audio;
+}
+
 const audios = {
     bgm: {
-        main: '/static/res/bgm/main_game.mp3'
+        main: audio_resource(
+            '/static/res/bgm/main_game.mp3', {
+                loop: true,
+                volume: 0.05,
+        }),
     },
     sfx: {
-        booster: '/static/res/sfx/booster.mp3',
-        pickup: '/static/res/sfx/pickup.mp3',
-        boom: '/static/res/sfx/boom.mp3'
+        booster: audio_resource(
+            '/static/res/sfx/booster.mp3', {
+                volume: 0.4,
+            }),
+        pickup: audio_resource(
+            '/static/res/sfx/pickup.mp3', {
+                volume: 0.4,
+            }),
+        boom: audio_resource(
+            '/static/res/sfx/boom.mp3', {
+                volume: 0.1,
+            }),
     }
 };
 
@@ -200,8 +231,8 @@ let player = {
             }
         }
         
-        player_sfx.currentTime = 0
-        player_sfx.play()
+        audios.sfx.booster.currentTime = 0
+        audios.sfx.booster.play()
         for (const step of result) {
             state.player.set_facing(get_move_dir(this.x, step.x));
             if (state.player.facing == +1) {
@@ -242,7 +273,7 @@ let player = {
         else {
             this.element.src = sprites.player.standingl;
         }
-        player_sfx.pause()
+        audios.sfx.booster.pause()
         this.moving = false;
     },
     move_relative(x_delta, y_delta) {
@@ -273,7 +304,7 @@ async function enemy_interact() {
         push_msg(`El robot ha sido derrotado!`)
         this.element.src = sprites.enemy.dying;
         await delay(1500);
-        boom_sfx.play()
+        audios.sfx.boom.play()
         state.remove_entity(this);
         this.element.src = sprites.decoration.boom;
         await delay(1500);
@@ -283,7 +314,7 @@ async function enemy_interact() {
 
 function item_interact() {
     push_msg(`Has recogido ${this.description}`)
-    pickup_sfx.play()
+    audios.sfx.pickup.play()
     state.remove_entity(this);
     this.element.remove()
 }
@@ -502,59 +533,28 @@ imgs.forEach(function (img) {
     })
 })
 
-const bgm = new Audio();
-bgm.src = audios.bgm.main;
-bgm.preload = true;
-bgm.loop = true;
-bgm.volume = 0.05
-
-const player_sfx = new Audio();
-player_sfx.src = audios.sfx.booster;
-player_sfx.preload = true;
-player_sfx.load();
-player_sfx.volume = 0.4;
-
-const pickup_sfx = new Audio();
-pickup_sfx.src = audios.sfx.pickup;
-pickup_sfx.preload = true;
-pickup_sfx.load();
-pickup_sfx.volume = 0.4;
-
-const boom_sfx = new Audio();
-boom_sfx.src = audios.sfx.boom;
-boom_sfx.preload = true;
-boom_sfx.load();
-boom_sfx.volume = 0.1;
-
 window.addEventListener('click', function(e) {
-    bgm.play()
+    audios.bgm.main.play()
 });
 
 window.addEventListener('DOMContentLoaded', render)
 
-const music_control = document.getElementById("music")
-music_control.addEventListener('change', function(e) {
-    if (music_control.checked) {
-        bgm.volume = 0.05;
+function set_audio(category, mute) {
+    if (! (category in audios)) {
+        throw Error("Invalid audio category")
     }
-    else {
-        bgm.volume = 0;
+    
+    const category_audios = audios[category];
+    for (const name in category_audios) {
+        const target = category_audios[name];
+        if (mute) {
+            target.volume = 0;
+        }
+        else {
+            target.volume = target._volume
+        }
     }
-})
-
-const sound_control = document.getElementById("sound")
-sound_control.addEventListener('change', function(e) {
-    if (sound_control.checked) {
-        player_sfx.volume = 0.4;
-        pickup_sfx.volume = 0.4;
-        boom_sfx.volume = 0.1;
-    }
-    else {
-        player_sfx.volume = 0;
-        pickup_sfx.volume = 0;
-        boom_sfx.volume = 0;
-    }
-})
+}
 
 async function upload_score(scoredata) {
     const data_json = JSON.stringify(scoredata)
