@@ -1,4 +1,4 @@
-CREATE OR REPLACE TABLE Perfil_usuario (
+CREATE TABLE Perfil_usuario (
     nivel INTEGER PRIMARY KEY NOT NULL,
     nombre VARCHAR(50) UNIQUE NOT NULL
 );
@@ -9,7 +9,7 @@ INSERT INTO Perfil_usuario VALUES
     (30, "Regular")
 ;
 
-CREATE OR REPLACE TABLE Usuario (
+CREATE TABLE Usuario (
     id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nombre VARCHAR(25) UNIQUE NOT NULL,
     clave VARCHAR(128) NOT NULL,
@@ -21,7 +21,7 @@ CREATE OR REPLACE TABLE Usuario (
         FOREIGN KEY (perfil) REFERENCES Perfil_usuario(nivel)
 );
 
-CREATE OR REPLACE TABLE Usuario_sigue (
+CREATE TABLE Usuario_sigue (
     id INTEGER NOT NULL,
     seguido INTEGER NOT NULL,
     CONSTRAINT Usuario_sigue_unique
@@ -34,7 +34,7 @@ CREATE OR REPLACE TABLE Usuario_sigue (
         FOREIGN KEY (seguido) REFERENCES Usuario(id)
 );
 
-CREATE OR REPLACE TABLE Calificacion (
+CREATE TABLE Calificacion (
     id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
     semilla BIGINT NOT NULL,
     version_juego INTEGER NOT NULL,
@@ -74,9 +74,9 @@ ALTER TABLE Calificacion ADD COLUMN tiempo VARCHAR(32) AS
             tiempo_ms % 1000, 3, '0'
         )
     )
-) PERSISTENT;
+) STORED;
 
-CREATE OR REPLACE TABLE Sesion (
+CREATE TABLE Sesion (
     token VARCHAR(256) PRIMARY KEY NOT NULL,
     expira TIMESTAMP NOT NULL,
     usuario INTEGER NOT NULL,
@@ -84,7 +84,7 @@ CREATE OR REPLACE TABLE Sesion (
         FOREIGN KEY (usuario) REFERENCES Usuario(id)
 );
 
-CREATE OR REPLACE VIEW Usuario_stats AS
+CREATE VIEW Usuario_stats AS
     SELECT
         u.id as id_usuario,
         ifnull(sum(puntuacion), 0) as puntuacion_total,
@@ -96,7 +96,7 @@ CREATE OR REPLACE VIEW Usuario_stats AS
     GROUP BY u.id
 ;
 
-CREATE OR REPLACE VIEW Usuario_detalles AS
+CREATE VIEW Usuario_detalles AS
     SELECT
         u.id as id,
         u.nombre as nombre,
@@ -124,7 +124,7 @@ CREATE OR REPLACE VIEW Usuario_detalles AS
         ON u.id = us.id_usuario
 ;
 
-CREATE OR REPLACE VIEW Calificacion_lista AS
+CREATE VIEW Calificacion_lista AS
     SELECT
         c.id as id,
         semilla,
