@@ -13,10 +13,13 @@ if ! [ "$DB_PASS" ]; then
     die "Database configuration variables not defined"
 fi
 
-while getopts t name; do
+while getopts dt name; do
     case "$name" in
         (t)
             use_test="1"
+            ;;
+        (d)
+            do_drop="1"
             ;;
         (?)
             echo "Unknown option"
@@ -25,10 +28,11 @@ while getopts t name; do
     esac
 done
 
-
-mysql <<<"DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME" ||
-    die "Failed dropping/creating"
-echo "Dropped and created database '$DB_NAME'"
+if [ "$do_drop" ]; then
+    mysql <<<"DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME" ||
+        die "Failed dropping/creating"
+    echo "Dropped and created database '$DB_NAME'"
+fi
 
 mysql --database="$DB_NAME" < schema.sql ||
     die "Failed loading schema"
