@@ -92,3 +92,16 @@ behavior CheckConfirmation(field, confirmation, name)
     end
 
 end
+
+behavior InstallButton
+    init
+        hide
+    end
+    on beforeinstallprompt from window
+        show
+        remove .hidden
+    end
+    on click
+        call window.deferredPrompt.prompt()
+    end
+end
