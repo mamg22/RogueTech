@@ -3,18 +3,13 @@ const VERSION = 1
 
 const sprites = {
     player: {
-        standingr: "/static/res/player/standing-r.png",
-        standingl: "/static/res/player/standing-l.png",
-        movingr: "/static/res/player/moving-r.png",
-        movingl: "/static/res/player/moving-l.png",
-        attackr: "/static/res/player/attack-r.png",
-        attackl: "/static/res/player/attack-l.png",
+        standing: "/static/res/player/standing-r.png",
+        moving: "/static/res/player/moving-r.png",
+        attack: "/static/res/player/attack-r.png",
     },
     enemy: {
-        standingr: "/static/res/npc/bot-1/standing-r.png",
-        standingl: "/static/res/npc/bot-1/standing-l.png",
-        attackr: "/static/res/npc/bot-1/attack-r.png",
-        attackl: "/static/res/npc/bot-1/attack-l.png",
+        standing: "/static/res/npc/bot-1/standing-r.png",
+        attack: "/static/res/npc/bot-1/attack-r.png",
         exploding: "/static/res/npc/bot-1/exploding.png",
         dead: "/static/res/npc/bot-1/dead.png",
         dying: "/static/res/npc/bot-1/dying.gif"
@@ -247,7 +242,7 @@ let player = {
             audios.sfx.booster.play()
             for (const step of result) {
                 state.player.set_facing(get_move_dir(this.x, step.x));
-                this.element.src = sprites.player.movingr;
+                this.element.src = sprites.player.moving;
                 let anim = this.element.animate(
                     [
                         {
@@ -274,7 +269,7 @@ let player = {
                     behavior: 'smooth'
                 })
             }
-            this.element.src = sprites.player.standingr;
+            this.element.src = sprites.player.standing;
             audios.sfx.booster.pause()
         }
         finally {
@@ -289,9 +284,9 @@ let player = {
 
 async function enemy_interact() {
     this.health -= 1;
-    state.player.element.src = sprites.player.attackr;
+    state.player.element.src = sprites.player.attack;
     setTimeout(function() {
-        state.player.element.src = sprites.player.standingr;
+        state.player.element.src = sprites.player.standing;
     }, 200)
     if (this.health > 0) {
         push_msg(`Atacas al robot! Todavia puede aguantar ${this.health} ataques`)
