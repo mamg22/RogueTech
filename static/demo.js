@@ -319,63 +319,63 @@ let state = {
             health: 5,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 11, y: 9,
             health: 3,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 12, y: 9,
             health: 3,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 31, y: 8,
             health: 15,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 25, y: 4,
             health: 1,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 26, y: 4,
             health: 1,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 25, y: 5,
             health: 1,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 26, y: 5,
             health: 1,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 18, y: 13,
             health: 5,
             solid: true,
             interact: enemy_interact,
-            sprite: sprites.enemy.standingl
+            sprite: sprites.enemy.standing
         },
         {
             x: 16,
