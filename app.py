@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
 from flask import Flask, request
+from dotenv import load_dotenv
 
 from web import web, not_found_handler as web_404
 from api import api, not_found_handler as api_404
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'e6187732c0ad5760606c2871be66d3edb9fc9abd09e56e42ef443845ef4ef3a1'
