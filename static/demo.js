@@ -87,12 +87,22 @@ function wait_for(obj, event) {
     })
 }
 
-function world_to_grid(x) {
-    return Math.floor(x / GRID_SIZE);
+scale = 1.0
+
+function world_to_grid(x, with_scale=true) {
+    let value_scale = with_scale ? scale : 1;
+    return Math.floor(x / (GRID_SIZE * value_scale));
 }
 
-function grid_to_world(x) {
-    return Math.floor(x * GRID_SIZE);
+function grid_to_world(x, with_scale=true) {
+    let value_scale = with_scale ? scale : 1;
+    return Math.floor(x * (GRID_SIZE * value_scale));
+}
+
+function zoom(delta) {
+    scale += delta;
+    document.body.style.setProperty("--scale", scale, "important");
+    render();
 }
 
 function push_msg(message, category) {
@@ -201,80 +211,76 @@ let player = {
         if (Math.abs(dir) == 1) {
             this.facing = dir
         }
+        this.element.style.setProperty('--flip', this.facing)
     },
     async move(x, y) {
-        if (this.moving) {
-            return;
-        }
-        this.moving = true;
-        state.player.set_facing(get_move_dir(this.x, x));
-        let entity = state.get_entity(x, y);
-        if (entity) {
-        }
-        transpose_array(state.map.data)
-        let graph = new Graph(transpose_array(state.get_map_with_entities()), {
-            diagonal: true
-        });
-        let start = graph.grid[this.x][this.y];
-        let end = graph.grid[x][y];
-        let result = astar.search(graph, start, end, {
-            heuristic: astar.heuristics.diagonal,
-            closest: true
-        });
-        console.log(result)
-        
-        if (entity) {
-            if (result.length == 0 || result.length == 1 && !entity.solid) {
-                entity.interact()
-                this.moving = false
+        try {
+            if (this.moving) {
                 return;
             }
-        }
-        
-        audios.sfx.booster.currentTime = 0
-        audios.sfx.booster.play()
-        for (const step of result) {
-            state.player.set_facing(get_move_dir(this.x, step.x));
-            if (state.player.facing == +1) {
-                this.element.src = sprites.player.movingr;
+            this.moving = true;
+            state.player.set_facing(get_move_dir(this.x, x));
+            let entity = state.get_entity(x, y);
+            if (entity) {
             }
-            else {
-                this.element.src = sprites.player.movingl;
-            }
-            let anim = this.element.animate(
-                [
-                    {
-                        left: CSS.px(grid_to_world(this.x)),
-                        top: CSS.px(grid_to_world(this.y))
-                    },
-                    {
-                        left: CSS.px(grid_to_world(step.x)),
-                        top: CSS.px(grid_to_world(step.y))
-                    }
-                ],
-                {
-                    duration: 125,
-                    iterations: 1
+            transpose_array(state.map.data)
+            let graph = new Graph(transpose_array(state.get_map_with_entities()), {
+                diagonal: true
+            });
+            let start = graph.grid[this.x][this.y];
+            let end = graph.grid[x][y];
+            let result = astar.search(graph, start, end, {
+                heuristic: astar.heuristics.diagonal,
+                closest: true
+            });
+            console.log(result)
+            
+            if (entity) {
+                if (result.length == 0 || result.length == 1 && !entity.solid) {
+                    entity.interact()
+                    this.moving = false
+                    return;
                 }
-            );
-            this.x = step.x;
-            this.y = step.y;
-            await wait_for(anim, 'finish');
-            render();
-            this.element.scrollIntoView({
-                block: 'center',
-                inline: 'center',
-                behavior: 'smooth'
-            })
-        }
-        if (state.player.facing == +1) {
+            }
+            
+            audios.sfx.booster.currentTime = 0
+            audios.sfx.booster.play()
+            for (const step of result) {
+                state.player.set_facing(get_move_dir(this.x, step.x));
+                this.element.src = sprites.player.movingr;
+                let anim = this.element.animate(
+                    [
+                        {
+                            left: CSS.px(grid_to_world(this.x)),
+                            top: CSS.px(grid_to_world(this.y))
+                        },
+                        {
+                            left: CSS.px(grid_to_world(step.x)),
+                            top: CSS.px(grid_to_world(step.y))
+                        }
+                    ],
+                    {
+                        duration: 125,
+                        iterations: 1
+                    }
+                );
+                this.x = step.x;
+                this.y = step.y;
+                await wait_for(anim, 'finish');
+                render();
+                this.element.scrollIntoView({
+                    block: 'center',
+                    inline: 'center',
+                    behavior: 'smooth'
+                })
+            }
             this.element.src = sprites.player.standingr;
+            audios.sfx.booster.pause()
         }
-        else {
-            this.element.src = sprites.player.standingl;
+        finally {
+            this.moving = false
+            audios.sfx.booster.pause()
         }
-        audios.sfx.booster.pause()
-        this.moving = false;
     },
     move_relative(x_delta, y_delta) {
         this.move(this.x + x_delta, this.y + y_delta)
@@ -283,19 +289,9 @@ let player = {
 
 async function enemy_interact() {
     this.health -= 1;
-    if (state.player.facing == +1) {
-        state.player.element.src = sprites.player.attackr;
-    }
-    else {
-        state.player.element.src = sprites.player.attackl;
-    }
+    state.player.element.src = sprites.player.attackr;
     setTimeout(function() {
-        if (state.player.facing == +1) {
-            state.player.element.src = sprites.player.standingr;
-        }
-        else {
-            state.player.element.src = sprites.player.standingl;
-        }
+        state.player.element.src = sprites.player.standingr;
     }, 200)
     if (this.health > 0) {
         push_msg(`Atacas al robot! Todavia puede aguantar ${this.health} ataques`)
@@ -467,6 +463,8 @@ function render() {
         entity.element.style.left = CSS.px(grid_to_world(entity.x));
         entity.element.style.top = CSS.px(grid_to_world(entity.y));
     }
+
+    map.element.style.transform = `scale(${scale})`;
 }
 
 window.addEventListener('keyup', function(e) {
@@ -506,8 +504,8 @@ function is_click(start, end) {
 
 function click_handler(e) {
     state.player.move(
-        world_to_grid(e.offsetX),
-        world_to_grid(e.offsetY)
+        world_to_grid(e.offsetX, false),
+        world_to_grid(e.offsetY, false)
         );
 }
 
