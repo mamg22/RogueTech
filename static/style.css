@@ -484,6 +484,7 @@ label:disabled {
     left: 50%;
     transform: translateX(-50%);
     box-sizing: border-box;
+    user-select: none;
     
     display: flex;
     justify-content: center;
