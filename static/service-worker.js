@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v3"
+const CACHE_VERSION = "v4"
 
 self.addEventListener("install", event => {
     console.log("Service worker installed");
@@ -18,7 +18,11 @@ self.addEventListener("install", (event) => {
             "/",
             "/static/style.css",
             "/offline",
-        ]),
+            '/static/res/bgm/main_game.mp3',
+            '/static/res/sfx/booster.mp3',
+            '/static/res/sfx/pickup.mp3',
+            '/static/res/sfx/boom.mp3',
+        ])
     );
 });
 
@@ -45,3 +49,19 @@ async function handle_request(event) {
 self.addEventListener("fetch", async (event) => {
     event.respondWith(handle_request(event));
 });
+
+const deleteCache = async (key) => {
+    await caches.delete(key);
+  };
+  
+  const deleteOldCaches = async () => {
+    const cacheKeepList = [CACHE_VERSION];
+    const keyList = await caches.keys();
+    const cachesToDelete = keyList.filter((key) => !cacheKeepList.includes(key));
+    await Promise.all(cachesToDelete.map(deleteCache));
+  };
+  
+  self.addEventListener("activate", (event) => {
+    event.waitUntil(deleteOldCaches());
+  });
+  
