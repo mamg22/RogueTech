@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v2"
+const CACHE_VERSION = "v3"
 
 self.addEventListener("install", event => {
     console.log("Service worker installed");
@@ -22,7 +22,7 @@ self.addEventListener("install", (event) => {
     );
 });
 
-self.addEventListener("fetch", async (event) => {
+async function handle_request(event) {
     try {
         let response = await caches.match(event.request);
         // If the response is in the cache, return it
@@ -40,5 +40,8 @@ self.addEventListener("fetch", async (event) => {
     } catch (error) {
         console.error(error);
     }
-    //event.respondWith(caches.match(event.request));
+}
+
+self.addEventListener("fetch", async (event) => {
+    event.respondWith(handle_request(event));
 });
