@@ -441,6 +441,12 @@ let state = {
 }
 
 function render() {
+    if (! state.player.element) {
+        let entity_img = document.createElement("img");
+        entity_img.src = sprites.player.standing;
+        state.player.element = entity_img;
+        entities_elt.append(entity_img);
+    }
     let player_elt = state.player.element;
     player_elt.style.left = CSS.px(grid_to_world(state.player.x));
     player_elt.style.top = CSS.px(grid_to_world(state.player.y));
