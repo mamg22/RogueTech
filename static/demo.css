@@ -56,13 +56,13 @@ img {
 }
 
 #map {
-    z-index: -1;
+    z-index: -5;
     transform-origin: top left;
     transform: scale(var(--scale));
 }
 
 #entities > * {
-    z-index: 1;
+    z-index: 5;
     position: absolute;
     width: calc(64px * var(--scale));
     height: calc(64px * var(--scale));
@@ -76,12 +76,6 @@ img {
 
 .hidden {
     display: none;
-}
-
-#controls {
-    /* background-color: rgba(0, 0, 0, 50%); */
-    /* color: white; */
-    z-index: 99;
 }
 
 /* #region Messages Box */
@@ -218,3 +212,33 @@ dialog::backdrop {
 }
 
 /* #endregion Dialog */
+
+#map-table {
+    position: relative;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    z-index: -4;
+    background-image: url("/static/res/demo_map.png");
+}
+
+#map-table td {
+    padding: 0px;
+    border-width: 0px;
+}
+
+#map-table div {
+    min-width: 64px;
+    min-height: 64px;
+    border-width: 0px;
+    padding: 0px;
+}
+
+#map-table * {
+    pointer-events: none;
+}
+
+#map-table tr:nth-child(odd) td:nth-child(odd) div,
+#map-table tr:nth-child(even) td:nth-child(even) div {
+    background: rgba(0, 0, 0, 0.2);
+}
+

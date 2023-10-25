@@ -38,7 +38,23 @@
         </div>
         <div id="game-view">
             <div id="map">
-                <img src="/static/res/demo_map.png">
+                <table id="map-table" _="
+                init
+                    repeat 17 times
+                        make a <tr/>
+                        set current_row to it
+                        put it at the end of me
+                        repeat 38 times
+                            make a <td/>
+                            set current_cell to it
+                            put it at the end of current_row
+                            make a <div/>
+                            put it at the end of current_cell
+                        end
+                    end
+                end
+                "></table>
+                <!-- <img src="/static/res/demo_map.png"> -->
             </div>
             <div id="entities">
                 <img src="/static/res/player/standing-r.png" id="hero">
