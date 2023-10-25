@@ -1,3 +1,4 @@
+{% import 'functions.html' as funcs %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,36 +69,37 @@
         </div>
     </div>
     <div id="messages"></div>
-    <dialog id="pause-menu">
-        <form method="dialog" class="dialog-window">
-            <div class="dialog-titlebar">
-                <div class="dialog-title">
-                    Menú
-                </div>
-                <div class="dialog-close"
-                _="on click
-                        set target to closest <form/>
-                        call target.requestSubmit()"
-                >
-                    <span class="material-icons">close</span>
-                </div>
-            </div>
-            <div class="dialog-body">
-                <div>
-                    <input type="checkbox" name="music" id="music" checked
-                    _="on change call set_audio('bgm', not my checked)">
-                    <label for="music">
-                        <span class="material-icons">music_note</span> <br>
-                        Musica
-                    </label>
-                </div>
-                <div>
-                    <input type="checkbox" name="sound" id="sound" checked
-                    _="on change call set_audio('sfx', not my checked)">
-                    <label for="sound">Sonido</label>
-                </div>
-            </div>
-        </form>
-    </dialog>
+
+<!-- #region Dialogs -->
+
+{%- call funcs.game_dialog("pause-menu", "Menú") -%}
+    <div>
+        <input type="checkbox" name="music" id="music" checked
+        _="on change call set_audio('bgm', not my checked)">
+        <label for="music">
+            <span class="material-icons">music_note</span> <br>
+            Musica
+        </label>
+    </div>
+    <div>
+        <input type="checkbox" name="sound" id="sound" checked
+        _="on change call set_audio('sfx', not my checked)">
+        <label for="sound">Sonido</label>
+    </div>
+    <div>
+        <button type="submit" _="
+        on click
+            call #how-to-play.showModal()
+        end
+        "
+        >Cómo jugar</button>
+    </div>
+{%- endcall -%}
+
+{%- call funcs.game_dialog("how-to-play", "Cómo jugar") -%}
+{%- endcall -%}
+
+<!-- #endregion Dialogs -->
+
 </body>
 </html>

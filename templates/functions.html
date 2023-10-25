@@ -69,3 +69,25 @@
 {%- set USER_LEVEL_ADMIN = 10 -%}
 {%- set USER_LEVEL_TESTER = 20 -%}
 {%- set USER_LEVEL_REGULAR = 30 -%}
+
+{%- macro game_dialog(id, title="Menú") -%}
+<dialog id="{{ id }}">
+    <form method="dialog" class="dialog-window">
+        <div class="dialog-titlebar">
+            <div class="dialog-title">
+                {{ title }}
+            </div>
+            <div class="dialog-close"
+            _="on click
+                    set target to closest <form/>
+                    call target.requestSubmit()"
+            >
+                <span class="material-icons">close</span>
+            </div>
+        </div>
+        <div class="dialog-body">
+            {{ caller() }}
+        </div>
+    </form>
+</dialog>
+{%- endmacro -%}
