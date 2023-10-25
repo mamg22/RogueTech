@@ -28,8 +28,12 @@
                 <div><span class="material-icons">health_and_safety</span> <br> 99/100</div>
             </div>
             <div>
-                <button _="on click call window.zoom(0.05)">+</button>
-                <button _="on click call window.zoom(-0.05)">-</button>
+                <div class="clickable" _="on click call window.zoom(0.05)">
+                    <span class="material-icons">add</span>
+                </div>
+                <div class="clickable" _="on click call window.zoom(-0.05)">
+                    <span class="material-icons">remove</span>
+                </div>
             </div>
             <div class='clickable'
             _="on click call #pause-menu.showModal()"
