@@ -40,15 +40,17 @@
             <div id="map">
                 <table id="map-table" _="
                 init
-                    repeat 17 times
+                    repeat 17 times index y
                         make a <tr/>
                         set current_row to it
                         put it at the end of me
-                        repeat 38 times
+                        repeat 38 times index x
                             make a <td/>
                             set current_cell to it
                             put it at the end of current_row
                             make a <div/>
+                            set its @x to x
+                            set its @y to y
                             put it at the end of current_cell
                         end
                     end
