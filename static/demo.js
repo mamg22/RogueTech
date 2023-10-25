@@ -455,8 +455,6 @@ function render() {
         entity.element.style.left = CSS.px(grid_to_world(entity.x));
         entity.element.style.top = CSS.px(grid_to_world(entity.y));
     }
-
-    map.element.style.transform = `scale(${scale})`;
 }
 
 window.addEventListener('keyup', function(e) {
