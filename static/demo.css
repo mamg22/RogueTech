@@ -55,12 +55,6 @@ img {
     display: block;
 }
 
-#map {
-    z-index: -5;
-    transform-origin: top left;
-    transform: scale(var(--scale));
-}
-
 #entities > * {
     z-index: 5;
     position: absolute;
@@ -213,6 +207,14 @@ dialog::backdrop {
 
 /* #endregion Dialog */
 
+/* #region Map */
+
+#map {
+    z-index: -5;
+    transform-origin: top left;
+    transform: scale(var(--scale));
+}
+
 #map-table {
     position: relative;
     border-collapse: collapse;
@@ -242,3 +244,13 @@ dialog::backdrop {
     background: rgba(0, 0, 0, 0.2);
 }
 
+/* #endregion Map */
+
+button {
+    appearance: none;
+    border: 0px solid whitesmoke;
+    padding: 0.5rem;
+    font-weight: bold;
+    color: white;
+    background-color: #444444;
+}
