@@ -228,7 +228,6 @@ let player = {
                 heuristic: astar.heuristics.diagonal,
                 closest: true
             });
-            console.log(result)
             
             if (entity) {
                 if (result.length == 0 || result.length == 1 && !entity.solid) {
@@ -435,9 +434,7 @@ let state = {
         return null;
     },
     remove_entity(entity) {
-        console.log(entity, this.entities)
         let idx = this.entities.indexOf(entity)
-        console.log(idx)
         // TODO? Remove element asociated with entity, maybe conditionally based on a NO_REMOVE or SELF_REMOVING flag
         this.entities.splice(idx, 1)
     }
