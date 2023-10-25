@@ -3,13 +3,13 @@ const VERSION = 1
 
 const sprites = {
     player: {
-        standing: "/static/res/player/standing-r.png",
-        moving: "/static/res/player/moving-r.png",
-        attack: "/static/res/player/attack-r.png",
+        standing: "/static/res/player/standing.png",
+        moving: "/static/res/player/moving.png",
+        attack: "/static/res/player/attack.png",
     },
     enemy: {
-        standing: "/static/res/npc/bot-1/standing-r.png",
-        attack: "/static/res/npc/bot-1/attack-r.png",
+        standing: "/static/res/npc/bot-1/standing.png",
+        attack: "/static/res/npc/bot-1/attack.png",
         exploding: "/static/res/npc/bot-1/exploding.png",
         dead: "/static/res/npc/bot-1/dead.png",
         dying: "/static/res/npc/bot-1/dying.gif"

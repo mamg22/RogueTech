@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v4"
+const CACHE_VERSION = "v5"
 
 self.addEventListener("install", event => {
     console.log("Service worker installed");
@@ -22,6 +22,7 @@ self.addEventListener("install", (event) => {
             '/static/res/sfx/booster.mp3',
             '/static/res/sfx/pickup.mp3',
             '/static/res/sfx/boom.mp3',
+            '/static/res/demo_map.png'
         ])
     );
 });
