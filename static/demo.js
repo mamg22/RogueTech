@@ -322,6 +322,7 @@ let player = {
         this.element.style.setProperty('--flip', this.facing)
     },
     async move(x, y) {
+        let playback_promise;
         try {
             if (this.moving) {
                 return;
@@ -348,8 +349,7 @@ let player = {
                 }
             }
             
-            audios.sfx.booster.currentTime = 0
-            audios.sfx.booster.play()
+            playback_promise = audios.sfx.booster.play()
             for (const step of result) {
                 state.player.set_facing(get_move_dir(this.x, step.x));
                 this.element.src = sprites.player.moving;
@@ -380,11 +380,13 @@ let player = {
                 })
             }
             this.element.src = sprites.player.standing;
-            audios.sfx.booster.pause()
         }
         finally {
             this.moving = false
-            audios.sfx.booster.pause()
+            if (playback_promise) {
+                audios.sfx.booster.pause()
+            }
+            audios.sfx.booster.currentTime = 0
         }
     },
     move_relative(x_delta, y_delta) {
