@@ -130,6 +130,110 @@ if (!CSS.px) {
     }
 }
 
+
+class Rectangle {
+    constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+    }
+    x;
+    y;
+    width;
+    height;
+
+    toString() {
+        return `Rectangle((${this.x}, ${this.y}), w: ${this.width}, h: ${this.height})`;
+    }
+}
+
+class Grid {
+    constructor(width, height, default_value=0) {
+        this.content = [];
+        for (let y = 0; y < height; y++) {
+            this.content[y] = Array(width).fill(default_value);
+        }
+        this.width = width;
+        this.height = height;
+    }
+
+    #check_bound(x, y) {
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+            throw Error(`Out of bound access at (${x}, ${y})`)
+        }
+    }
+
+    get(x, y) {
+        this.#check_bound(x, y)
+        return this.content[y][x];
+    }
+
+    set(x, y, value) {
+        this.#check_bound(x, y)
+        this.content[y][x] = value;
+    }
+
+    set_line(x0, y0, x1, y1, value) {
+        const dx = x1 - x0;
+        const dy = y1 - y0;
+        const x_dir = Math.sign(dx);
+        const y_dir = Math.sign(dy);
+
+        if (dx == 0 && dy == 0) {
+            return;
+        }
+        else if (dx != 0 && dy != 0) {
+            throw Error("Only horizontal and vertical lines supported");
+        }
+        
+        if (dx != 0) {
+            for (let i = 0; i <= dx; i++) {
+                this.set(x0 + (i * x_dir), y0, value);
+            }
+        }
+        else {
+            for (let i = 0; i <= dy; i++) {
+                this.set(x0, y0 + (i * y_dir), value);
+            }
+        }
+    }
+
+    set_rect(x0, y0, x1, y1, value) {
+        // Up side
+        this.set_line(x0, y0, x1, y0, value);
+        // Down side
+        this.set_line(x0, y1, x1, y1, value);
+        // Left side
+        this.set_line(x0, y0, x0, y1, value);
+        // Right side
+        this.set_line(x1, y0, x1, y1, value);
+    }
+
+    set_from_rectangle(rectangle, value) {
+        const rx = rectangle.x;
+        const ry = rectangle.y; 
+        this.set_rect(rx, ry, rx + rectangle.width - 1, ry + rectangle.height - 1, value)
+    }
+
+    set_filled_rect(x0, y0, x1, y1, value) {
+        const dy = y1 - y0;
+        const y_dir = Math.sign(dy);
+        for (let i = 0; i <= dy; i++) {
+            const target_y = y0 + (i * y_dir);
+            this.set_line(x0, target_y, x1, target_y, value);
+        }
+    }
+
+    set_filled_from_rectangle(rectangle, value) {
+        const rx = rectangle.x;
+        const ry = rectangle.y; 
+        this.set_filled_rect(rx, ry, rx + rectangle.width - 1, ry + rectangle.height - 1, value)
+    }
+
+    content;
+}
+
 const GRID_SIZE = 64;
 const MAP_STR = `
 ######################################
@@ -577,24 +681,6 @@ async function upload_score(scoredata) {
 }
 
 
-class Rectangle {
-    constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.width = w;
-        this.height = h;
-    }
-    x;
-    y;
-    width;
-    height;
-
-    tostring() {
-        return `Rect((${this.x}, ${this.y}), w: ${this.width}, h: ${this.height})`;
-    }
-}
-
-
 class BSPNode {
     constructor(id, rect) {
         this.id = id;
@@ -642,23 +728,32 @@ class BSPNode {
         }
     }
 
-    tostring() {
+    get_leaves() {
+        if (! this.left) {
+            return [this]
+        }
+        else {
+            return this.left.get_leaves().concat(this.right.get_leaves());
+        }
+    }
+
+    toString() {
         let depth = this.id.length - 1;
         let indent = ' '.repeat(depth*4);
         let children;
         if (this.left) {
             children =
 `{
-${this.left.tostring()}
-${this.right.tostring()}
+${this.left.toString()}
+${this.right.toString()}
 ${indent}}`
         }
-        return `${indent}BSPNode(${this.id}: ${this.rect.tostring()} ${children || "#"})`
+        return `${indent}BSPNode(${this.id}: ${this.rect.toString()} ${children || "#"})`
     }
 }
 
 function generate_map() {
-    const root = new BSPNode("0", new Rectangle(0, 0, 20, 20));
+    const root = new BSPNode("0", new Rectangle(0, 0, 22, 10));
 
     root.split("V", 8);
     root.left.split("H", 4);
@@ -666,6 +761,14 @@ function generate_map() {
     root.right.left.split("H", 6);
     root.right.left.right.split("V", 3);
     root.right.right.split("H", 6);
+
+    let grid = new Grid(22, 10);
+
+    for (const leaf of root.get_leaves()) {
+        grid.set_filled_from_rectangle(leaf.rect, 1);
+    }
+
+    console.log(grid);
 
     return root;
 }
