@@ -104,7 +104,8 @@ function push_msg(message, category) {
     const messages_elt = document.getElementById("messages");
 
     let message_elt = document.createElement("div");
-    message_elt.innerText = message
+    message_elt.innerText = message;
+    message_elt.classList.add(category || 'default');
     messages_elt.append(message_elt);
     setTimeout(function(e) {
         let m_anim = message_elt.animate([
