@@ -575,3 +575,97 @@ async function upload_score(scoredata) {
     // Return the newly generated id
     return result;
 }
+
+
+class Rectangle {
+    constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.width = w;
+        this.height = h;
+    }
+    x;
+    y;
+    width;
+    height;
+
+    tostring() {
+        return `Rect((${this.x}, ${this.y}), w: ${this.width}, h: ${this.height})`;
+    }
+}
+
+
+class BSPNode {
+    constructor(id, rect) {
+        this.id = id;
+        this.rect = rect;
+    }
+    id;
+    rect;
+
+    split_offset;
+    split_direction;
+
+    left;
+    right;
+
+    split(direction, offset) {
+        this.split_direction = direction;
+        this.split_offset = offset;
+        if (direction == "H" || direction == "h") {
+            this.left = new BSPNode(this.id + "0", new Rectangle(
+                this.rect.x,
+                this.rect.y,
+                this.rect.width,
+                offset
+            ));
+            this.right = new BSPNode(this.id + "1", new Rectangle(
+                this.rect.x,
+                this.rect.y + offset + 1,
+                this.rect.width,
+                this.rect.height - offset - 1
+            ));
+        }
+        else if (direction == "V" || direction == "v") {
+            this.left = new BSPNode(this.id + "0", new Rectangle(
+                this.rect.x,
+                this.rect.y,
+                offset,
+                this.rect.height
+            ));
+            this.right = new BSPNode(this.id + "1", new Rectangle(
+                this.rect.x + offset + 1,
+                this.rect.y,
+                this.rect.width - offset - 1,
+                this.rect.height
+            ));
+        }
+    }
+
+    tostring() {
+        let depth = this.id.length - 1;
+        let indent = ' '.repeat(depth*4);
+        let children;
+        if (this.left) {
+            children =
+`{
+${this.left.tostring()}
+${this.right.tostring()}
+${indent}}`
+        }
+        return `${indent}BSPNode(${this.id}: ${this.rect.tostring()} ${children || "#"})`
+    }
+}
+
+function generate_map() {
+    const root = new BSPNode("0", new Rectangle(0, 0, 20, 20));
+
+    root.split("V", 8);
+    root.left.split("H", 4);
+    root.right.split("V", 7);
+    root.right.left.split("H", 6);
+    root.right.left.right.split("V", 3);
+    root.right.right.split("H", 6);
+
+    return root;
+}
