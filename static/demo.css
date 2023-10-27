@@ -244,6 +244,10 @@ dialog::backdrop {
     background: rgba(0, 0, 0, 0.2);
 }
 
+#map-table div.solid {
+    background: rgba(255, 0, 0, 0.2) !important;
+}
+
 /* #endregion Map */
 
 button {
