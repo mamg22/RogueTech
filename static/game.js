@@ -158,6 +158,13 @@ class Rectangle {
     }
 }
 
+function random_point_in_rectangle(rng, rectangle) {
+    const x = rng.natural({min: rectangle.x, max: rectangle.x + rectangle.width - 1});
+    const y = rng.natural({min: rectangle.y, max: rectangle.y + rectangle.height - 1});
+
+    return new Point(x, y);
+}
+
 class Grid {
     constructor(width, height, default_value=0) {
         this.content = [];
@@ -533,44 +540,6 @@ let state = {
     map: map,
     player: player,
     entities: [
-        {
-            x: 9, y: 3,
-            health: 5,
-            solid: true,
-            interact: enemy_interact,
-            sprite: sprites.enemy.standing
-        },
-        {
-            x: 24,
-            y: 13,
-            description: "Botella de agua",
-            solid: false,
-            interact: item_interact,
-            sprite: sprites.items.water_bottle
-        },
-        {
-            x: 3,
-            y: 12,
-            description: "DVD",
-            solid: false,
-            interact: item_interact,
-            sprite: sprites.items.dvd
-        },
-        {
-            x: 29,
-            y: 7,
-            description: "Pendrive",
-            solid: false,
-            interact: item_interact,
-            sprite: sprites.items.pendrive
-        },
-        {
-            x: 20,
-            y: 2,
-            solid: true,
-            interact: () => push_msg("La maquina expendedora no parece funcionar"),
-            sprite: sprites.decoration.vending_machine
-        },
     ],
     scale: 1.0,
 
@@ -657,6 +626,7 @@ function is_click(start, end) {
 }
 
 function click_handler(e) {
+    console.log(e);
     state.player.move(
         world_to_grid(e.offsetX, false),
         world_to_grid(e.offsetY, false)
@@ -897,11 +867,71 @@ function render_map() {
     map_table.replaceWith(new_table);
 }
 
+function fill_entities(rng) {
+    const N_ENTITIES = 10;
+
+    const entities = [
+        {
+            x: 9, y: 3,
+            health: 5,
+            solid: true,
+            interact: enemy_interact,
+            sprite: sprites.enemy.standing
+        },
+        {
+            x: 24,
+            y: 13,
+            description: "Botella de agua",
+            solid: false,
+            interact: item_interact,
+            sprite: sprites.items.water_bottle
+        },
+        {
+            x: 3,
+            y: 12,
+            description: "DVD",
+            solid: false,
+            interact: item_interact,
+            sprite: sprites.items.dvd
+        },
+        {
+            x: 29,
+            y: 7,
+            description: "Pendrive",
+            solid: false,
+            interact: item_interact,
+            sprite: sprites.items.pendrive
+        },
+        {
+            x: 20,
+            y: 2,
+            solid: true,
+            interact: () => push_msg("La maquina expendedora no parece funcionar"),
+            sprite: sprites.decoration.vending_machine
+        },
+    ]
+
+    const rooms = state.map.tree.get_leaves();
+    for (let i = 0; i < N_ENTITIES; i++) {
+        const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
+        const room = rooms[room_idx];
+
+        const room_pos = random_point_in_rectangle(rng, room.rect);
+        const entity_idx = rng.integer({min: 0, max: entities.length - 1});
+        let entity = Object.assign({}, entities[entity_idx]);
+        entity.x = room_pos.x;
+        entity.y = room_pos.y;
+
+        state.entities.push(entity);
+    }
+}
+
 function init_game() {
     proc_gen = new Chance(1)
 
     generate_map(proc_gen);
     render_map();
+    fill_entities(proc_gen);
     render();
     load_audio_settings();
 }
