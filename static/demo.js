@@ -282,8 +282,6 @@ const map_height = map_data.length;
 let map = {
     data: map_data,
     element: document.getElementById("map"),
-    width: map_width,
-    height: map_height,
     get(x, y) {
         if (x < 0 || x >= map_width) {
             return null;
@@ -330,10 +328,8 @@ let player = {
             this.moving = true;
             state.player.set_facing(get_move_dir(this.x, x));
             let entity = state.get_entity(x, y);
-            if (entity) {
-            }
-            transpose_array(state.map.data)
-            let graph = new Graph(transpose_array(state.get_map_with_entities()), {
+
+            let graph = new Graph(transpose_array(state.get_collision_map()), {
                 diagonal: true
             });
             let start = graph.grid[this.x][this.y];
@@ -530,8 +526,8 @@ let state = {
             sprite: sprites.decoration.vending_machine
         },
     ],
-    get_map_with_entities() {
-        let map_data = structuredClone(this.map.data);
+    get_collision_map() {
+        let map_data = structuredClone(this.map.grid.content);
         for (let entity of this.entities) {
             if (entity.solid) {
                 map_data[entity.y][entity.x] = 0;
@@ -702,6 +698,7 @@ class BSPNode {
     split_direction;
     left;
     right;
+    hole_offset;
 
     static Direction = {
         horizontal: 'H',
@@ -901,6 +898,7 @@ function generate_map(splits) {
             
             if (ok_sides == 2) {
                 grid.set(hole_pos.x, hole_pos.y, 1);
+                branch.hole_offset = hole_offset;
                 break;
             }
             else {
@@ -922,11 +920,8 @@ function generate_map(splits) {
         catch {}
     }
 
-    map.data = grid.content;
-    map.width = grid.width;
-    map.height = grid.height;
-
-    console.log(root);
+    state.map.grid = grid;
+    state.map.tree = root;
 
     return grid;
 }
