@@ -364,7 +364,6 @@ const GRID_SIZE = 64;
 let map = {
     element: document.getElementById("map"),
 }
-generate_map(5);
 
 function transpose_array(arr) {
     out = []
@@ -910,3 +909,10 @@ function render_map() {
     const map_table = document.querySelector("#map-table");
     map_table.replaceWith(new_table);
 }
+
+function init_game() {
+    generate_map(5);
+    render_map();
+}
+
+document.addEventListener('load', init_game);
