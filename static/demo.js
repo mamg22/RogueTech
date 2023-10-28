@@ -82,21 +82,19 @@ function wait_for(obj, event) {
     })
 }
 
-scale = 1.0
-
 function world_to_grid(x, with_scale=true) {
-    let value_scale = with_scale ? scale : 1;
+    let value_scale = with_scale ? state.scale : 1;
     return Math.floor(x / (GRID_SIZE * value_scale));
 }
 
 function grid_to_world(x, with_scale=true) {
-    let value_scale = with_scale ? scale : 1;
+    let value_scale = with_scale ? state.scale : 1;
     return Math.floor(x * (GRID_SIZE * value_scale));
 }
 
 function zoom(delta) {
-    scale += delta;
-    document.body.style.setProperty("--scale", scale, "important");
+    state.scale += delta;
+    document.body.style.setProperty("--scale", state.scale, "important");
     render();
 }
 
@@ -529,6 +527,8 @@ let state = {
             sprite: sprites.decoration.vending_machine
         },
     ],
+    scale: 1.0,
+
     get_collision_map() {
         let map_data = structuredClone(this.map.grid.content);
         for (let entity of this.entities) {
