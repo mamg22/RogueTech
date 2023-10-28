@@ -243,45 +243,128 @@ class Grid {
     }
 }
 
-const GRID_SIZE = 64;
-const MAP_STR = `
-######################################
-######################################
-#####                       #### #####
-#####        #         #         #####
-#####        ###########    #### #####
-######## ###############    #### #####
-######## ###############       # #   #
-#####           ########       #     #
-##### ##        ########        #### #
-##### ##        ############    #### #
-#      #        ############         #
-# #### #        ############         #
-# #  # ##       ###########          #
-#      ##                   ##########
-######################################
-######################################
-######################################`.trim();
+class BSPNode {
+    constructor(id, rect) {
+        this.id = id;
+        this.rect = rect;
+    }
+    id;
+    rect;
+    split_offset;
+    split_direction;
+    left;
+    right;
+    hole_offset;
 
-let map_data = [];
-for (const line of MAP_STR.split('\n')) {
-    let line_array = Array.from(line).map(function (elem) {
-        if (elem == '#') {
-            return 0;
+    static Direction = {
+        horizontal: 'H',
+        vertical: 'V'
+    }
+
+    split(direction, offset) {
+        this.split_direction = direction;
+        this.split_offset = offset;
+        if (direction == BSPNode.Direction.horizontal) {
+            this.left = new BSPNode(this.id + "0", new Rectangle(
+                this.rect.x,
+                this.rect.y,
+                this.rect.width,
+                offset
+            ));
+            this.right = new BSPNode(this.id + "1", new Rectangle(
+                this.rect.x,
+                this.rect.y + offset + 1,
+                this.rect.width,
+                this.rect.height - offset - 1
+            ));
+        }
+        else if (direction == BSPNode.Direction.vertical) {
+            this.left = new BSPNode(this.id + "0", new Rectangle(
+                this.rect.x,
+                this.rect.y,
+                offset,
+                this.rect.height
+            ));
+            this.right = new BSPNode(this.id + "1", new Rectangle(
+                this.rect.x + offset + 1,
+                this.rect.y,
+                this.rect.width - offset - 1,
+                this.rect.height
+            ));
+        }
+    }
+
+    get_branches() {
+        if (this.left) {
+            return [this].concat(this.left.get_branches()).concat(this.right.get_branches());
         }
         else {
-            return 1;
+            return []
         }
-    })
-    map_data.push(line_array);
+    }
+
+    get_leaves() {
+        if (! this.left) {
+            return [this]
+        }
+        else {
+            return this.left.get_leaves().concat(this.right.get_leaves());
+        }
+    }
+
+    get_wall() {
+        if (this.split_direction == BSPNode.Direction.horizontal) {
+            return new Rectangle(
+                this.rect.x,
+                this.rect.y + this.split_offset,
+                this.rect.width,
+                1
+            );
+        }
+        else if (this.split_direction == BSPNode.Direction.vertical) {
+            return new Rectangle(
+                this.rect.x + this.split_offset,
+                this.rect.y,
+                1,
+                this.rect.height
+            );
+        }
+        else {
+            return null;
+        }
+    }
+
+    get_walls() {
+        if (! this.left) {
+            return [];
+        }
+
+        const my_wall = this.get_wall();
+
+        return [my_wall].concat(this.left.get_walls()).concat(this.right.get_walls())
+    }
+
+    toString() {
+        let depth = this.id.length - 1;
+        let indent = ' '.repeat(depth*4);
+        let children;
+        if (this.left) {
+            children =
+`{
+${this.left.toString()}
+${this.right.toString()}
+${indent}}`
+        }
+        return `${indent}BSPNode(${this.id}: ${this.rect.toString()} ${children || "#"})`
+    }
 }
-const map_width = map_data[0].length;
-const map_height = map_data.length;
+
+const GRID_SIZE = 64;
 
 let map = {
-    data: map_data,
     element: document.getElementById("map"),
 }
+generate_map(5);
 
 function transpose_array(arr) {
     out = []
@@ -687,121 +770,6 @@ async function upload_score(scoredata) {
 }
 
 
-class BSPNode {
-    constructor(id, rect) {
-        this.id = id;
-        this.rect = rect;
-    }
-    id;
-    rect;
-    split_offset;
-    split_direction;
-    left;
-    right;
-    hole_offset;
-
-    static Direction = {
-        horizontal: 'H',
-        vertical: 'V'
-    }
-
-    split(direction, offset) {
-        this.split_direction = direction;
-        this.split_offset = offset;
-        if (direction == BSPNode.Direction.horizontal) {
-            this.left = new BSPNode(this.id + "0", new Rectangle(
-                this.rect.x,
-                this.rect.y,
-                this.rect.width,
-                offset
-            ));
-            this.right = new BSPNode(this.id + "1", new Rectangle(
-                this.rect.x,
-                this.rect.y + offset + 1,
-                this.rect.width,
-                this.rect.height - offset - 1
-            ));
-        }
-        else if (direction == BSPNode.Direction.vertical) {
-            this.left = new BSPNode(this.id + "0", new Rectangle(
-                this.rect.x,
-                this.rect.y,
-                offset,
-                this.rect.height
-            ));
-            this.right = new BSPNode(this.id + "1", new Rectangle(
-                this.rect.x + offset + 1,
-                this.rect.y,
-                this.rect.width - offset - 1,
-                this.rect.height
-            ));
-        }
-    }
-
-    get_branches() {
-        if (this.left) {
-            return [this].concat(this.left.get_branches()).concat(this.right.get_branches());
-        }
-        else {
-            return []
-        }
-    }
-
-    get_leaves() {
-        if (! this.left) {
-            return [this]
-        }
-        else {
-            return this.left.get_leaves().concat(this.right.get_leaves());
-        }
-    }
-
-    get_wall() {
-        if (this.split_direction == BSPNode.Direction.horizontal) {
-            return new Rectangle(
-                this.rect.x,
-                this.rect.y + this.split_offset,
-                this.rect.width,
-                1
-            );
-        }
-        else if (this.split_direction == BSPNode.Direction.vertical) {
-            return new Rectangle(
-                this.rect.x + this.split_offset,
-                this.rect.y,
-                1,
-                this.rect.height
-            );
-        }
-        else {
-            return null;
-        }
-    }
-
-    get_walls() {
-        if (! this.left) {
-            return [];
-        }
-
-        const my_wall = this.get_wall();
-
-        return [my_wall].concat(this.left.get_walls()).concat(this.right.get_walls())
-    }
-
-    toString() {
-        let depth = this.id.length - 1;
-        let indent = ' '.repeat(depth*4);
-        let children;
-        if (this.left) {
-            children =
-`{
-${this.left.toString()}
-${this.right.toString()}
-${indent}}`
-        }
-        return `${indent}BSPNode(${this.id}: ${this.rect.toString()} ${children || "#"})`
-    }
-}
 
 function generate_map(splits) {
     let grid = new Grid(48, 24);
