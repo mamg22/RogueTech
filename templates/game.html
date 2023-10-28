@@ -7,7 +7,7 @@
     <title>Juego</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='main-icon.png') }}" type="image/x-icon">
     <script defer src="{{ url_for('static', filename='astar.js') }}"></script>
-    <script defer src="{{ url_for('static', filename='demo.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='game.js') }}"></script>
     
     {% if config.ENVIRONMENT == 'development' %}
         <script defer src="{{ url_for('web.node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
@@ -19,7 +19,7 @@
     {% endif %}
 
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='demo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='game.css') }}">
     <script src="{{ url_for('static', filename='main.js')}}"></script>
 </head>
 <body>
