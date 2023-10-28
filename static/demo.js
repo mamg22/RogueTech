@@ -281,15 +281,6 @@ const map_height = map_data.length;
 let map = {
     data: map_data,
     element: document.getElementById("map"),
-    get(x, y) {
-        if (x < 0 || x >= map_width) {
-            return null;
-        }
-        if (y < 0 || y >= map_height) {
-            return null;
-        }
-        return map_data[y][x];
-    },
 }
 
 function transpose_array(arr) {
