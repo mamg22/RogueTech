@@ -375,7 +375,7 @@ class TypedLocalStorage {
     }
 
     key(index) {
-        return localStorage.key();
+        return JSON.parse(localStorage.key(index));
     }
 
     removeItem(keyName) {
