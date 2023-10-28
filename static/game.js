@@ -814,7 +814,11 @@ function generate_map(splits) {
     const root = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
 
     const MIN_SIZE = 5;
-    const MAX_SIZE = 15;
+    const MAX_SIZE = 12;
+    const SPLIT_END_CHANCE = 25;
+    const WIDTH_THRESHOLD = 1.25;
+    const HEIGHT_THRESHOLD = 1.25;
+    const RANDOM_SPLIT_THRESHOLD = 0.5;
     const do_splits = function(node, n) {
         if (n <= 0) {
             return;
@@ -824,19 +828,19 @@ function generate_map(splits) {
         }
         if (node.rect.width <= MAX_SIZE &&
             node.rect.height <= MAX_SIZE &&
-            chance.bool({likelihhod: 25})) {
+            chance.bool({likelihhod: SPLIT_END_CHANCE})) {
             return
         }
 
         let split_dir;
-        if (node.rect.width / node.rect.height > 1.25) {
+        if (node.rect.width / node.rect.height > WIDTH_THRESHOLD) {
             split_dir = BSPNode.Direction.vertical;
         }
-        else if (node.rect.height / node.rect.width > 1.25) {
+        else if (node.rect.height / node.rect.width > HEIGHT_THRESHOLD) {
             split_dir = BSPNode.Direction.horizontal;
         }
         else {
-            split_dir = chance.bool() ? BSPNode.Direction.horizontal : BSPNode.Direction.vertical;
+            split_dir = chance.bool() >= RANDOM_SPLIT_THRESHOLD ? BSPNode.Direction.horizontal : BSPNode.Direction.vertical;
         }
 
         let max;
@@ -852,7 +856,7 @@ function generate_map(splits) {
         }
 
         node.split(split_dir, chance.integer({
-            min: MIN_SIZE + 1,
+            min: MIN_SIZE,
             max: max}
         ));
 
