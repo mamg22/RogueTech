@@ -745,16 +745,18 @@ async function upload_score(scoredata) {
 
 
 
-function generate_map(splits) {
+function generate_map(rng) {
     let grid = new Grid(48, 24);
     const root = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
 
+    const SPLITS = 5;
     const MIN_SIZE = 5;
     const MAX_SIZE = 12;
     const SPLIT_END_CHANCE = 25;
     const WIDTH_THRESHOLD = 1.25;
     const HEIGHT_THRESHOLD = 1.25;
     const RANDOM_SPLIT_THRESHOLD = 0.5;
+
     const do_splits = function(node, n) {
         if (n <= 0) {
             return;
@@ -764,7 +766,7 @@ function generate_map(splits) {
         }
         if (node.rect.width <= MAX_SIZE &&
             node.rect.height <= MAX_SIZE &&
-            chance.bool({likelihhod: SPLIT_END_CHANCE})) {
+            rng.bool({likelihhod: SPLIT_END_CHANCE})) {
             return
         }
 
@@ -776,7 +778,7 @@ function generate_map(splits) {
             split_dir = BSPNode.Direction.horizontal;
         }
         else {
-            split_dir = chance.bool() >= RANDOM_SPLIT_THRESHOLD ? BSPNode.Direction.horizontal : BSPNode.Direction.vertical;
+            split_dir = rng.bool() >= RANDOM_SPLIT_THRESHOLD ? BSPNode.Direction.horizontal : BSPNode.Direction.vertical;
         }
 
         let max;
@@ -791,7 +793,7 @@ function generate_map(splits) {
             return;
         }
 
-        node.split(split_dir, chance.integer({
+        node.split(split_dir, rng.integer({
             min: MIN_SIZE,
             max: max}
         ));
@@ -800,7 +802,7 @@ function generate_map(splits) {
         do_splits(node.right, n - 1);
     }
 
-    do_splits(root, splits);
+    do_splits(root, SPLITS);
 
     for (const leaf of root.get_leaves()) {
         grid.set_filled_from_rectangle(leaf.rect, 1);
@@ -818,13 +820,13 @@ function generate_map(splits) {
             let neighbor_deltas = [];
 
             if (branch.split_direction == BSPNode.Direction.horizontal) {
-                hole_offset = chance.natural({min: 0, max: wall.width, exclude: tried});
+                hole_offset = rng.natural({min: 0, max: wall.width, exclude: tried});
                 hole_pos.x = wall.x + hole_offset;
                 hole_pos.y = wall.y;
                 neighbor_deltas = [{x: 0, y: -1}, {x: 0, y: 1}];
             }
             else {
-                hole_offset = chance.natural({min: 0, max: wall.height, exclude: tried});
+                hole_offset = rng.natural({min: 0, max: wall.height, exclude: tried});
                 hole_pos.x = wall.x;
                 hole_pos.y = wall.y  + hole_offset;
                 neighbor_deltas = [{x: -1, y: 0}, {x: 1, y: 0}];
@@ -890,7 +892,9 @@ function render_map() {
 }
 
 function init_game() {
-    generate_map(5);
+    proc_gen = new Chance(1)
+
+    generate_map(proc_gen);
     render_map();
     render();
     load_audio_settings();
