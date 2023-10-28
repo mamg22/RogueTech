@@ -129,6 +129,12 @@ if (!CSS.px) {
     }
 }
 
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
 
 class Rectangle {
     constructor(x, y, w, h) {
