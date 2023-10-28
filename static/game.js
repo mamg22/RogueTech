@@ -913,6 +913,7 @@ function render_map() {
 function init_game() {
     generate_map(5);
     render_map();
+    render();
 }
 
-document.addEventListener('load', init_game);
+document.addEventListener('DOMContentLoaded', init_game);
