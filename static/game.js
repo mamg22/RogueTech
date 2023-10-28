@@ -744,10 +744,10 @@ imgs.forEach(function (img) {
 })
 
 window.addEventListener('click', function(e) {
-    audios.bgm.main.play()
+    if (! typedLocalStorage.getItem('mute-bgm')) {
+        audios.bgm.main.play()
+    }
 });
-
-window.addEventListener('DOMContentLoaded', render)
 
 function set_audio(category, mute) {
     if (! (category in audios)) {
