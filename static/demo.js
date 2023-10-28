@@ -656,9 +656,15 @@ function set_audio(category, mute) {
         const target = category_audios[name];
         if (mute) {
             target.volume = 0;
+            if (category == 'bgm') {
+                target.pause();
+            }
         }
         else {
             target.volume = target._volume
+            if (category == 'bgm') {
+                target.play();
+            }
         }
     }
 }
