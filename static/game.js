@@ -359,6 +359,36 @@ ${indent}}`
     }
 }
 
+class TypedLocalStorage {
+    setItem(keyName, keyValue) {
+        return localStorage.setItem(keyName, JSON.stringify(keyValue));
+    }
+
+    getItem(keyName) {
+        return JSON.parse(localStorage.getItem(keyName));
+    }
+
+    key(index) {
+        return localStorage.key();
+    }
+
+    removeItem(keyName) {
+        return localStorage.removeItem(keyName);
+    }
+
+    clear() {
+        return localStorage.clear();
+    }
+
+    get length() {
+        return localStorage.length;
+    }
+
+    static {
+        window.typedLocalStorage = new TypedLocalStorage();
+    }
+}
+
 const GRID_SIZE = 64;
 
 let map = {
@@ -723,6 +753,8 @@ function set_audio(category, mute) {
     if (! (category in audios)) {
         throw Error("Invalid audio category")
     }
+
+    typedLocalStorage.setItem(`mute-${category}`, mute)
     
     const category_audios = audios[category];
     for (const name in category_audios) {
@@ -739,6 +771,13 @@ function set_audio(category, mute) {
                 target.play();
             }
         }
+    }
+}
+
+function load_audio_settings() {
+    for (const category in audios) {
+        const stored_mute = typedLocalStorage.getItem(`mute-${category}`)
+        set_audio(category, stored_mute || false)
     }
 }
 
@@ -914,6 +953,7 @@ function init_game() {
     generate_map(5);
     render_map();
     render();
+    load_audio_settings();
 }
 
 document.addEventListener('DOMContentLoaded', init_game);
