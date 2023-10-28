@@ -907,21 +907,38 @@ function generate_map(splits) {
         }
     }
 
-    for (const children of document.querySelectorAll("#map-table div")) {
-        const attrs = children.attributes;
-        try {
-            if (grid.get(attrs.x.value, attrs.y.value) == 0) {
-                children.classList.add("solid");
-            }
-            else {
-                children.classList.remove("solid")
-            }
-        }
-        catch {}
-    }
-
     state.map.grid = grid;
     state.map.tree = root;
 
     return grid;
+}
+
+function render_map() {
+    const new_table = document.createElement("table");
+    new_table.id = "map-table";
+
+    for (let y = 0; y < state.map.grid.height; y++) {
+        let current_row = document.createElement("tr");
+
+        for (let x = 0; x < state.map.grid.width; x++) {
+            let current_cell = document.createElement("td");
+            let cell_contents = document.createElement("div");
+
+            cell_contents.setAttribute("x", x);
+            cell_contents.setAttribute("y", y);
+            cell_contents.classList.add("map-cell");
+
+            if (state.map.grid.get(x, y) == 0) {
+                cell_contents.classList.add("solid");
+            }
+
+            current_cell.appendChild(cell_contents);
+            current_row.appendChild(current_cell);
+        }
+
+        new_table.appendChild(current_row)
+    }
+
+    const map_table = document.querySelector("#map-table");
+    map_table.replaceWith(new_table);
 }
