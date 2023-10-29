@@ -651,18 +651,19 @@ function is_click(start, end) {
 }
 
 function click_handler(e) {
-    console.log(e);
     state.player.move(
         world_to_grid(e.offsetX, false),
         world_to_grid(e.offsetY, false)
         );
 }
 
-game_view.addEventListener('pointerdown', function(e) {
+map_elem = document.querySelector("#map");
+
+map_elem.addEventListener('pointerdown', function(e) {
     pointer_down = e;
 })
 
-game_view.addEventListener('pointerup', function(e) {
+map_elem.addEventListener('pointerup', function(e) {
     if (is_click(pointer_down, e)) {
         click_handler(e)
     }
