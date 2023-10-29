@@ -24,10 +24,12 @@
 <body>
     <div id="game-area">
         <div id="main-hud" class="hud">
-            <div class="health-indicator">
-                <div><span class="material-icons">health_and_safety</span> <br> 99/100</div>
+            <div class="hud-left">
+                <div class="health-indicator">
+                    <div><span class="material-icons">health_and_safety</span> <br> 99/100</div>
+                </div>    
             </div>
-            <div>
+            <div class="hud-middle">
                 <div class="clickable" _="on click call window.zoom(0.05)">
                     <span class="material-icons">zoom_in</span>
                 </div>
@@ -35,9 +37,13 @@
                     <span class="material-icons">zoom_out</span>
                 </div>
             </div>
-            <div class='clickable'
-            _="on click call #pause-menu.showModal()"
-            ><span class="material-icons md-36">menu</span></div>
+            <div class="hud-right">
+                <div class='clickable'
+                _="on click call #pause-menu.showModal()"
+                >
+                    <span class="material-icons md-36">menu</span>
+                </div>
+            </div>
     
         </div>
         <div id="game-view">
