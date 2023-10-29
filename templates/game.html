@@ -60,46 +60,50 @@
 <!-- #region Dialogs -->
 
 {%- call funcs.game_dialog("pause-menu", "Menú") -%}
-    <div>
-        <input type="checkbox" name="music" id="music" checked
-        _="
-        on change
-            call set_audio('bgm', not my checked)
-        end
-        on storage or gameload or load from window
-            add @checked when not typedLocalStorage.getItem('mute-bgm')
-        end
-        ">
-        <label for="music">
-            <span class="material-icons">music_note</span>
-            Musica
-        </label>
+    <div class="center column" >
+        <div>
+            <input type="checkbox" name="music" id="music" checked
+            _="
+            on change
+                call set_audio('bgm', not my checked)
+            end
+            on storage or gameload or load from window
+                add @checked when not typedLocalStorage.getItem('mute-bgm')
+            end
+            ">
+            <label for="music">
+                <span class="material-icons">music_note</span>
+                Musica
+            </label>
+        </div>
+        <div>
+            <input type="checkbox" name="sound" id="sound" checked
+            _="
+            on change
+                call set_audio('sfx', not my checked)
+            end
+            on storage or gameload or load from window
+                add @checked when not typedLocalStorage.getItem('mute-sfx')
+            end
+            ">
+            <label for="sound">
+                <span class="material-icons">volume_up</span>
+                Sonido
+            </label>
+        </div>
     </div>
-    <div>
-        <input type="checkbox" name="sound" id="sound" checked
-        _="
-        on change
-            call set_audio('sfx', not my checked)
-        end
-        on storage or gameload or load from window
-            add @checked when not typedLocalStorage.getItem('mute-sfx')
-        end
-        ">
-        <label for="sound">
-            <span class="material-icons">volume_up</span>
-            Sonido
-        </label>
-    </div>
-    <div>
-        <button type="submit" _="
+    <div class='center column'>
+        <button type="submit" class="block" _="
         on click
             call #how-to-play.showModal()
         end
         "
         >Cómo jugar</button>
+
     </div>
-    <div>
-        <button type="Submit" _="
+    <hr>
+    <div class="center">
+        <button type="Submit" class="block" _="
         on click
             call finish_run()
             call show_gameover()
@@ -107,6 +111,7 @@
         "
         >Terminar Partida</button>
     </div>
+
 {%- endcall -%}
 
 {%- call funcs.game_dialog("how-to-play", "Cómo jugar") -%}
@@ -125,6 +130,16 @@ Tiempo: <span id="gameover-time"></span>
     "
     >Subir puntuación</button>
 </div>
+{%- endcall -%}
+
+{%- call funcs.game_dialog("stats-dialog", "Información de la partida") -%}
+{%- endcall -%}
+
+{%- call funcs.game_dialog("entityinfo-dialog", "Información") -%}
+{%- endcall -%}
+
+
+{%- call funcs.game_dialog("inventory-dialog", "Inventario") -%}
 {%- endcall -%}
 
 

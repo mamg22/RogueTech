@@ -68,16 +68,12 @@ img {
     object-position: center center;
 }
 
-.hidden {
-    display: none;
-}
-
 /* #region Messages Box */
 
 #messages {
     position: fixed;
-    bottom: 0.5em;
-    left: 0.5em;
+    bottom: 0.0em;
+    left: 0.0em;
     max-width: 90dvw;
     width: fit-content;
     background-color: rgba(0, 0, 0, 60%);
@@ -91,11 +87,11 @@ img {
 }
 
 #messages > div {
-    font-family: monospace;
-    font-size: larger;
+    /* font-size: larger; */
     color: white;
     user-select: none;
     pointer-events: none;
+    font-weight: bold;
 }
 
 /* #endregion Message Box */
@@ -151,6 +147,7 @@ dialog {
     max-width: 95dvw;
     max-height: 90dvh;
     padding: 0rem;
+    line-height: 1.333;
 
     background-color: #222222;
     color: whitesmoke;
@@ -220,7 +217,6 @@ dialog::backdrop {
     border-collapse: collapse;
     border-spacing: 0px;
     z-index: -4;
-    /* background-image: url("/static/res/demo_map.png"); */
     background-color: #888;
 }
 
@@ -253,9 +249,77 @@ dialog::backdrop {
 
 button {
     appearance: none;
-    border: 0px solid whitesmoke;
-    padding: 0.5rem;
+    border: 0px;
+    padding: 0.5em 1em;
+    margin: 0.5em 0.1em;
     font-weight: bold;
     color: white;
     background-color: #444444;
+    cursor: pointer;
+}
+
+button:disabled {
+    color: #aaaaaa;
+    background: #333333;
+    cursor: default;
+}
+
+button.active {
+    background-color: #005555;
+}
+
+button:hover:not(:disabled) {
+    background-color: #226666;
+}
+
+.block {
+    display: block;
+}
+
+.inline {
+    display: inline;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+hr {
+    border-color: #777777;
+    width: 90%;
+    border-width: thin;
+    border-style: solid;
+}
+
+small, .small {
+    font-size: small;
+}
+
+big, .big {
+    font-size: larger;
+}
+
+.hidden {
+    display: none;
+}
+
+.mono-num {
+    font-family: monospace;
+    font-size: larger;
+    white-space: pre;
+}
+
+.center {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.centered {
+    text-align: center;
 }
