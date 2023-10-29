@@ -86,12 +86,35 @@ img {
     display: none;
 }
 
-#messages > div {
+.message {
     /* font-size: larger; */
     color: white;
     user-select: none;
     pointer-events: none;
     font-weight: bold;
+}
+
+.message.low {
+    color: #aaaaaa;
+}
+
+.message.warning,
+.message.yellow {
+    color: #ffff33;
+}
+
+.message.important,
+.message.red {
+    color: #ff6666;
+}
+
+.message.success,
+.message.green {
+    color: #66ff66;
+}
+
+.message.blue {
+    color: #6699ff;
 }
 
 /* #endregion Message Box */

@@ -123,12 +123,12 @@ function set_zoom(zoom, do_render=false) {
     }
 }
 
-function push_msg(message, category) {
+function push_msg(message, category='default') {
     const messages_elt = document.getElementById("messages");
 
     let message_elt = document.createElement("div");
     message_elt.innerText = message;
-    message_elt.classList.add(category || 'default');
+    message_elt.classList.add('message', category);
     messages_elt.append(message_elt);
     setTimeout(function(e) {
         let m_anim = message_elt.animate([
