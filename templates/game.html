@@ -63,6 +63,9 @@
     <div>
         <input type="checkbox" name="music" id="music"
         _="
+        init
+            set @checked to not typedLocalStorage.getItem('mute-bgm')
+        end
         on change
             call set_audio('bgm', not my checked)
         end
@@ -78,6 +81,9 @@
     <div>
         <input type="checkbox" name="sound" id="sound"
         _="
+        init
+            set @checked to not typedLocalStorage.getItem('mute-sfx')
+        end
         on change
             call set_audio('sfx', not my checked)
         end
