@@ -110,7 +110,8 @@ function grid_to_world(x, with_scale=true) {
     return Math.floor(x * (GRID_SIZE * value_scale));
 }
 
-function zoom(delta) {
+function zoom(direction) {
+    const delta = 0.0333333333333333333 * Math.sign(direction);
     set_zoom(state.scale + delta, true);
 }
 

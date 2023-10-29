@@ -31,12 +31,6 @@
                 </div>    
             </div>
             <div class="hud-middle">
-                <div class="clickable" _="on click call window.zoom(0.05)">
-                    <span class="material-icons">zoom_in</span>
-                </div>
-                <div class="clickable" _="on click call window.zoom(-0.05)">
-                    <span class="material-icons">zoom_out</span>
-                </div>
             </div>
             <div class="hud-right">
                 <div class='clickable'
@@ -60,58 +54,88 @@
 <!-- #region Dialogs -->
 
 {%- call funcs.game_dialog("pause-menu", "Menú") -%}
-    <div class="center column" >
-        <div>
-            <input type="checkbox" name="music" id="music" checked
-            _="
-            on change
-                call set_audio('bgm', not my checked)
-            end
-            on storage or gameload or load from window
-                add @checked when not typedLocalStorage.getItem('mute-bgm')
-            end
-            ">
-            <label for="music">
-                <span class="material-icons">music_note</span>
-                Musica
-            </label>
+    <div class="flex column with-gap">
+        <div class="center column with-gap" >
+            <div>
+                <input type="checkbox" name="music" id="music" checked
+                _="
+                on change
+                    call set_audio('bgm', not my checked)
+                    send change to next <span/>
+                end
+                on storage or gameload or load from window
+                    add @checked when not typedLocalStorage.getItem('mute-bgm')
+                    send change to next <span/>
+                end
+                ">
+                <label for="music">
+                    <span class="material-icons" _="
+                    on change
+                        if #music.checked
+                            set my innerText to 'music_note'
+                        else
+                            set my innerText to 'music_off'
+                        end
+                    end
+                    ">music_note</span>
+                    Música
+                </label>
+            </div>
+            <div>
+                <input type="checkbox" name="sound" id="sound" checked
+                _="
+                on change
+                    call set_audio('sfx', not my checked)
+                    send change to next <span/>
+                end
+                on storage or gameload or load from window
+                    add @checked when not typedLocalStorage.getItem('mute-sfx')
+                    send change to next <span/>
+                end
+                ">
+                <label for="sound">
+                    <span class="material-icons" _="
+                    on change
+                        if #sound.checked
+                            set my innerText to 'volume_up'
+                        else
+                            set my innerText to 'volume_off'
+                        end
+                    end
+                    "
+                    >volume_up</span>
+                    Sonido
+                </label>
+            </div>
         </div>
-        <div>
-            <input type="checkbox" name="sound" id="sound" checked
-            _="
-            on change
-                call set_audio('sfx', not my checked)
+        <div class="center with-gap">
+            <div class="clickable" _="on click call window.zoom(1)">
+                <span class="material-icons md-36">zoom_in</span>
+            </div>
+            Zoom
+            <div class="clickable" _="on click call window.zoom(-1)">
+                <span class="material-icons md-36">zoom_out</span>
+            </div>
+        </div>
+        <div class='center column'>
+            <button type="submit" class="block" _="
+            on click
+                call #how-to-play.showModal()
             end
-            on storage or gameload or load from window
-                add @checked when not typedLocalStorage.getItem('mute-sfx')
+            "
+            >Cómo jugar</button>
+        </div>
+        <hr>
+        <div class="center">
+            <button type="Submit" class="block" _="
+            on click
+                call finish_run()
+                call show_gameover()
             end
-            ">
-            <label for="sound">
-                <span class="material-icons">volume_up</span>
-                Sonido
-            </label>
+            "
+            >Terminar Partida</button>
         </div>
     </div>
-    <div class='center column'>
-        <button type="submit" class="block" _="
-        on click
-            call #how-to-play.showModal()
-        end
-        "
-        >Cómo jugar</button>
-
-    </div>
-    <hr>
-    <div class="center">
-        <button type="Submit" class="block" _="
-        on click
-            call finish_run()
-            call show_gameover()
-        end
-        "
-        >Terminar Partida</button>
-    </div>
-
 {%- endcall -%}
 
 {%- call funcs.game_dialog("how-to-play", "Cómo jugar") -%}
