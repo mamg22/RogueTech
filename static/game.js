@@ -111,9 +111,16 @@ function grid_to_world(x, with_scale=true) {
 }
 
 function zoom(delta) {
-    state.scale += delta;
+    set_zoom(state.scale + delta, true);
+}
+
+function set_zoom(zoom, do_render=false) {
+    state.scale = zoom;
+    typedLocalStorage.setItem("game-scale", state.scale);
     document.body.style.setProperty("--scale", state.scale, "important");
-    render();
+    if (do_render) {
+        render();
+    }
 }
 
 function push_msg(message, category) {
@@ -712,11 +719,12 @@ function set_audio(category, mute) {
     }
 }
 
-function load_audio_settings() {
+function load_settings() {
     for (const category in audios) {
         const stored_mute = typedLocalStorage.getItem(`mute-${category}`)
         set_audio(category, stored_mute || false)
     }
+    set_zoom(typedLocalStorage.getItem('game-scale') || 1.0);
 }
 
 function build_scoredata() {
@@ -991,7 +999,7 @@ function finish_run() {
 function init_game() {
     const proc_gen = new Chance(1)
 
-    load_audio_settings();
+    load_settings();
     generate_map(proc_gen);
     render_map();
     fill_entities(proc_gen);
