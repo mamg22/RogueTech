@@ -61,16 +61,13 @@
 
 {%- call funcs.game_dialog("pause-menu", "Menú") -%}
     <div>
-        <input type="checkbox" name="music" id="music"
+        <input type="checkbox" name="music" id="music" checked
         _="
-        init
-            set @checked to not typedLocalStorage.getItem('mute-bgm')
-        end
         on change
             call set_audio('bgm', not my checked)
         end
-        on storage
-            set @checked to not typedLocalStorage.getItem('mute-bgm')
+        on storage or gameload or load from window
+            add @checked when not typedLocalStorage.getItem('mute-bgm')
         end
         ">
         <label for="music">
@@ -79,16 +76,13 @@
         </label>
     </div>
     <div>
-        <input type="checkbox" name="sound" id="sound"
+        <input type="checkbox" name="sound" id="sound" checked
         _="
-        init
-            set @checked to not typedLocalStorage.getItem('mute-sfx')
-        end
         on change
             call set_audio('sfx', not my checked)
         end
-        on storage
-            set @checked to not typedLocalStorage.getItem('mute-sfx')
+        on storage or gameload or load from window
+            add @checked when not typedLocalStorage.getItem('mute-sfx')
         end
         ">
         <label for="sound">
