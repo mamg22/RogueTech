@@ -46,7 +46,7 @@ CREATE TABLE Calificacion (
     CONSTRAINT fk_calificacion_usuario
         FOREIGN KEY (usuario) REFERENCES Usuario(id),
     CONSTRAINT calificacion_unique
-        UNIQUE (semilla, version_juego, fecha, puntuacion, tiempo_ms, exito, detalles, usuario)
+        UNIQUE (semilla, version_juego, fecha, puntuacion, tiempo_ms, exito, usuario)
 );
 
 -- Poner inline el codigo para generar las columnas de tiempo
