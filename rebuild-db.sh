@@ -6,10 +6,14 @@ die() {
 }
 
 mysql() {
-    command mysql --host="$DB_HOST" --password="$DB_PASS" --user="$DB_USER" "$@"
+    command mysql --database="$DB_NAME" --host="$DB_HOST" --password="$DB_PASS" --user="$DB_USER""$@"
 }
 
-if ! [ "$DB_PASS" ]; then
+if [ -e ".env" ]; then
+    source ".env"
+fi
+
+if ! [ "$DB_NAME" ]; then
     die "Database configuration variables not defined"
 fi
 
@@ -29,17 +33,17 @@ while getopts dt name; do
 done
 
 if [ "$do_drop" ]; then
-    mysql <<<"DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME" ||
+    mysql <<<"DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME;" ||
         die "Failed dropping/creating"
     echo "Dropped and created database '$DB_NAME'"
 fi
 
-mysql --database="$DB_NAME" < schema.sql ||
+mysql < schema.sql ||
     die "Failed loading schema"
 echo "Loaded schema for database '$DB_NAME'"
 
 if [ "$use_test" ]; then
-    mysql -D "$DB_NAME" < test-data.sql ||
+    mysql < test-data.sql ||
         die "Failed adding test data"
     echo "Loaded test data for database '$DB_NAME'"
 fi
