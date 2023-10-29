@@ -91,10 +91,35 @@
         "
         >Cómo jugar</button>
     </div>
+    <div>
+        <button type="Submit" _="
+        on click
+            call finish_run()
+            call show_gameover()
+        end
+        "
+        >Terminar Partida</button>
+    </div>
 {%- endcall -%}
 
 {%- call funcs.game_dialog("how-to-play", "Cómo jugar") -%}
 {%- endcall -%}
+
+{%- call funcs.game_dialog("gameover-dialog", "Fin de la partida") -%}
+
+Puntución final: <span id="gameover-score"></span> <br>
+Tiempo: <span id="gameover-time"></span>
+
+<div>
+    <button _="
+    on click
+        window.upload_score()
+    end
+    "
+    >Subir puntuación</button>
+</div>
+{%- endcall -%}
+
 
 <!-- #endregion Dialogs -->
 

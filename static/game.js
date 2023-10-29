@@ -82,6 +82,24 @@ function wait_for(obj, event) {
     })
 }
 
+function format_ms(total_millis) {
+    const hours = Math.floor(total_millis / (1000 * 60 * 60));
+    const minutes = Math.floor((total_millis / (1000 * 60)) % 60);
+    const seconds = Math.floor((total_millis / 1000) % 60);
+    const millis = Math.floor(total_millis % 1000);
+
+    let out = "";
+    if (hours > 0) {
+        out += hours.toString() + ':';
+    }
+
+    out += minutes.toString().padStart(2, '0') + ":";
+    out += seconds.toString().padStart(2, '0') + ".";
+    out += millis.toString().padStart(3, '0');
+
+    return out;
+}
+
 function world_to_grid(x, with_scale=true) {
     let value_scale = with_scale ? state.scale : 1;
     return Math.floor(x / (GRID_SIZE * value_scale));
@@ -539,9 +557,16 @@ function item_interact() {
 let state = {
     map: map,
     player: player,
-    entities: [
-    ],
+    entities: [],
     scale: 1.0,
+
+    seed: 1,
+    start_time: new Date(),
+    end_time: null,
+    total_time: null,
+    score: 0,
+    success: false,
+    kills: 0,
 
     get_collision_map() {
         let map_data = structuredClone(this.map.grid.content);
@@ -693,7 +718,24 @@ function load_audio_settings() {
     }
 }
 
-async function upload_score(scoredata) {
+function build_scoredata() {
+    let scoredata = {};
+
+    scoredata.seed = state.seed;
+    scoredata.version = VERSION;
+    scoredata.time_ms = state.total_time;
+    scoredata.score = state.score;
+    scoredata.date = state.end_time.toISOString();
+    scoredata.success = state.success;
+    scoredata.details = {};
+
+    scoredata.details.kills = state.kills;
+
+    return scoredata;
+}
+
+async function upload_score() {
+    const scoredata = build_scoredata()
     const data_json = JSON.stringify(scoredata)
 
     const upload_result = await fetch(
@@ -926,14 +968,33 @@ function fill_entities(rng) {
     }
 }
 
-function init_game() {
-    proc_gen = new Chance(1)
+function show_gameover() {
+    const gameover_dialog = document.getElementById("gameover-dialog");
+    const score_field = document.getElementById("gameover-score");
+    const time_field = document.getElementById("gameover-time");
 
+    score_field.innerText = state.score;
+    time_field.innerText = format_ms(state.total_time);
+
+    gameover_dialog.showModal();
+}
+
+function finish_run() {
+    const end_time = new Date();
+    const total_playtime = end_time - state.start_time;
+
+    state.end_time = end_time;
+    state.total_time = total_playtime;
+}
+
+function init_game() {
+    const proc_gen = new Chance(1)
+
+    load_audio_settings();
     generate_map(proc_gen);
     render_map();
     fill_entities(proc_gen);
     render();
-    load_audio_settings();
 }
 
 document.addEventListener('DOMContentLoaded', init_game);
