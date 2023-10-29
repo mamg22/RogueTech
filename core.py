@@ -520,7 +520,7 @@ class Model:
                     tiempo_ms, exito, detalles, usuario
                 ) VALUES
                 %s
-                    
+                ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)
             """, ((seed, version, date, score, time_ms, success, details, self.get_session().uid),))
             row_id = cursor.connection.insert_id()
             cursor.connection.commit()

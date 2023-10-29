@@ -44,7 +44,9 @@ CREATE TABLE Calificacion (
     detalles JSON NOT NULL,
     usuario INTEGER NOT NULL,
     CONSTRAINT fk_calificacion_usuario
-        FOREIGN KEY (usuario) REFERENCES Usuario(id)
+        FOREIGN KEY (usuario) REFERENCES Usuario(id),
+    CONSTRAINT calificacion_unique
+        UNIQUE (semilla, version_juego, fecha, puntuacion, tiempo_ms, exito, detalles, usuario)
 );
 
 -- Poner inline el codigo para generar las columnas de tiempo
@@ -100,7 +102,6 @@ CREATE VIEW Usuario_detalles AS
         u.id as id,
         u.nombre as nombre,
         u.fecha_registro as fecha_registro,
-        u.eliminado as eliminado,
         pu.nivel as nivel_perfil,
         pu.nombre as nombre_perfil,
         us.puntuacion_total as puntuacion_total,
