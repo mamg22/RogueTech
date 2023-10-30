@@ -963,7 +963,9 @@ function fill_entities(rng) {
         },
     ]
 
-    const rooms = state.map.tree.get_leaves();
+    // Exclude the first room, which is all the way to the left in the tree
+    // So first in the array
+    const rooms = state.map.tree.get_leaves().slice(1);
     for (let i = 0; i < N_ENTITIES; i++) {
         const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
         const room = rooms[room_idx];
