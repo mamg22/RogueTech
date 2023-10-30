@@ -72,7 +72,7 @@
 
 {%- macro game_dialog(id, title="Menú") -%}
 <dialog id="{{ id }}">
-    <form method="dialog" class="dialog-window">
+    <form method="dialog" class="dialog-window" tabindex="-1">
         <div class="dialog-titlebar">
             <div class="dialog-title">
                 {{ title }}
