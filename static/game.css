@@ -158,10 +158,6 @@ img {
 
 /* #endregion Material Icons */
 
-.clickable {
-    cursor: pointer;
-}
-
 /* #region Dialog */
 
 dialog {
@@ -270,6 +266,8 @@ dialog::backdrop {
 
 /* #endregion Map */
 
+/* #region UI elements */
+
 button {
     appearance: none;
     border: 0px;
@@ -294,6 +292,15 @@ button.active {
 button:hover:not(:disabled) {
     background-color: #226666;
 }
+
+/* #endregion UI elements */
+
+/* #region Utility */
+
+.clickable {
+    cursor: pointer;
+}
+
 
 .block {
     display: block;
@@ -363,4 +370,26 @@ big, .big {
 
 .centered {
     text-align: center;
+}
+
+/* #endregion Utility */
+
+.bar {
+    height: var(--bar-height, 4px);
+    background-color: var(--bar-background, red);
+
+    border: var(--bar-border, 0px) solid var(--bar-border-color, #888888);
+}
+
+.bar > .bar-fill {
+    width: calc(100% * var(--bar-value));
+    max-width: 100%;
+    height: 100%;
+    background-color: var(--bar-color, limegreen);
+}
+
+.hp-bar {
+    --bar-background: red;
+    --bar-color: limegreen;
+    --bar-value: var(--hp);
 }
