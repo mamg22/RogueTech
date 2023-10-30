@@ -9,14 +9,22 @@
     <script defer src="{{ url_for('static', filename='astar.js') }}"></script>
     
     {% if config.ENVIRONMENT == 'development' %}
-        <script defer src="{{ url_for('web.node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
         <script defer src="{{ url_for('web.node_modules', filename='chance/dist/chance.min.js') }}"></script>
         <link href="/static/material-icons/material-icons.css" rel="stylesheet">
     {% else %}
-        <script defer src="https://unpkg.com/hyperscript.org@0.9.11"></script>
         <script defer src="https://unpkg.com/chance@1.1.11"></script>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {% endif %}
+
+    <script defer src="{{ url_for('static', filename='libs/_hyperscript+template.js') }}"></script>
+
+    <script type="application/json" id="server-info">
+        {{ 
+        {
+            'has_session' : 'user_session' in session
+        } | tojson
+        }}
+    </script>
 
     <script defer src="{{ url_for('static', filename='game.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='game.css') }}">
@@ -148,11 +156,30 @@ Tiempo: <span id="gameover-time"></span>
 
 <div>
     <button _="
+    def setup()
+        if server_info exists
+            set logged_in to server_info.has_session
+            add @disabled when not logged_in
+            add .hidden to next <div/> when logged_in
+        end
+    end
+    init
+        call setup()
+    end
     on click
         window.upload_score()
     end
+    on mutation of @open from closest <dialog/>
+        call setup()
+    end
+    on load
+        setup()
+    end
     "
     >Subir puntuación</button>
+    <div class="small">
+        No has iniciado sesión. Ingresa o crea una cuenta para compartir tus puntuaciones.
+    </div>
 </div>
 {%- endcall -%}
 
