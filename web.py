@@ -251,7 +251,8 @@ def change_pin():
 
 @web.route('/cerrar-sesion')
 def logout():
-    del session['user_session']
+    if session.get('user_session'):
+        del session['user_session']
     return redirect('/')
 
 @web.route('/mi-perfil')
