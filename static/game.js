@@ -478,7 +478,6 @@ let player = {
             let end = graph.grid[x][y];
             let result = astar.search(graph, start, end, {
                 heuristic: astar.heuristics.diagonal,
-                closest: true
             });
             
             if (entity) {
