@@ -589,6 +589,7 @@ class GameState {
 
 let state = {
     levels: [],
+    level: null,
     map: {},
     player: null,
     entities: [],
@@ -935,7 +936,7 @@ function fill_entities(rng, map) {
         [ 24, 13, "Botella de agua", "X", false, sprites.items.water_bottle, 1],
         [ 3, 12, "DVD", "X", false, sprites.items.dvd, 1],
         [29, 7, "Pendrive", "X", false, sprites.items.pendrive, 1],
-        [ 20, 2, "Maquina", true, sprites.decoration.vending_machine, 1],
+        [ 20, 2, "Maquina", "X", true, sprites.decoration.vending_machine, 1],
     ];
 
     let entities = [];
@@ -988,7 +989,7 @@ function generate_level(rng, level) {
 }
 
 function init_game() {
-    const proc_gen = new Chance(1)
+    const proc_gen = new Chance()
 
     state.player = new Entity(5, 3, "Jugador", "El jugador", true, sprites.player.standing, 1)
     load_settings();
@@ -996,6 +997,11 @@ function init_game() {
     render_map();
     state.entities = fill_entities(proc_gen, state.map);
     render();
+    for (let i = 0; i < 5; i++) {
+        const level = generate_level(proc_gen, i+1);
+        state.levels.push(level)
+    }
+
 }
 
 // Disable any media keys
