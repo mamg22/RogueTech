@@ -55,6 +55,10 @@ img {
     display: block;
 }
 
+#entities {
+    pointer-events: none;
+}
+
 #entities > * {
     z-index: 5;
     position: absolute;
@@ -62,10 +66,15 @@ img {
     height: calc(64px * var(--scale));
     pointer-events: none;
     display: block;
-    /* transform-origin: top left; */
-    transform: scaleX(var(--flip, 1)) scale(max(var(--scale), 1));
-    object-fit: scale-down;
+}
+
+#entities > * > img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    /* object-fit: scale-down; */
     object-position: center center;
+    transform: scaleX(var(--flip, 1));
 }
 
 /* #region Messages Box */

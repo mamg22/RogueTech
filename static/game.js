@@ -649,10 +649,12 @@ function render() {
         const elem_id = "entity-" + entity.id;
         let elem = document.getElementById(elem_id);
         if (!elem) {
-            elem = document.createElement("img");
+            elem = document.createElement("div");
             elem.id = elem_id
             elem.setAttribute('entity-id', entity.id)
-            elem.src = entity.sprite;
+            elem_img = document.createElement("img");
+            elem_img.src = entity.sprite;
+            elem.append(elem_img);
             entities_elt.append(elem);
         }
         elem.style.left = CSS.px(grid_to_world(entity.x));
