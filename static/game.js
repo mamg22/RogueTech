@@ -428,11 +428,26 @@ class TypedLocalStorage {
     }
 }
 
-const GRID_SIZE = 64;
+class Entity {
+    constructor(x, y, name, description, solid, sprite, facing, components) {
+        this.id = Entity.id_counter++;
 
-let map = {
-    element: document.getElementById("map"),
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.descritpion = description;
+        this.solid = solid;
+        this.sprite = sprite;
+
+        for (const component in components) {
+            this[component] = components[component];
+        }
+    }
+    
+    static id_counter = 0;
 }
+
+const GRID_SIZE = 64;
 
 function transpose_array(arr) {
     out = []
@@ -452,7 +467,6 @@ function get_move_dir(old_x, new_x) {
 let player = {
     x: 5,
     y: 3,
-    element: document.getElementById("hero"),
     moving: false,
     facing: +1,
     set_facing(dir) {
@@ -561,8 +575,17 @@ function item_interact() {
     this.element.remove()
 }
 
+class Level {
+    constructor(number, map, entities) {
+        this.number = number;
+        this.map = map;
+        this.entities = entities;
+    }
+}
+
 let state = {
-    map: map,
+    levels: [],
+    map: {},
     player: player,
     entities: [],
     scale: 1.0,
@@ -600,15 +623,11 @@ let state = {
 }
 
 function render() {
-    if (! state.player.element) {
-        let entity_img = document.createElement("img");
-        entity_img.src = sprites.player.standing;
-        state.player.element = entity_img;
-        entities_elt.append(entity_img);
+    const entities_elt = document.querySelector("#entities");
+
+    if (state.entities.indexOf(state.player) == -1) {
+        state.entities.push(state.player);
     }
-    let player_elt = state.player.element;
-    player_elt.style.left = CSS.px(grid_to_world(state.player.x));
-    player_elt.style.top = CSS.px(grid_to_world(state.player.y));
     
     for (const entity of state.entities) {
         if (!entity.element) {
@@ -622,24 +641,7 @@ function render() {
     }
 }
 
-window.addEventListener('keyup', function(e) {
-    e.preventDefault();
-    if (e.key == 'ArrowUp') {
-        state.player.move_relative(0, -1)
-    }
-    else if (e.key == 'ArrowDown') {
-        state.player.move_relative(0, +1)
-    }
-    else if (e.key == 'ArrowLeft') {
-        state.player.move_relative(-1, 0)
-    }
-    else if (e.key == 'ArrowRight') {
-        state.player.move_relative(+1, 0)
-    }
-});
-
 let game_view = document.querySelector("#game-view");
-let entities_elt = document.querySelector("#entities");
 
 game_view.addEventListener('pointermove', function(e) {
     if (e.buttons == 1) {
@@ -654,7 +656,8 @@ function is_click(start, end) {
     const max_dist = 5;
     const x_delta = Math.abs(start.pageX - end.pageX);
     const y_delta = Math.abs(start.pageY - end.pageY);
-    return x_delta < max_dist && y_delta < max_dist;
+    const time_delta = end.timeStamp - start.timeStamp;
+    return x_delta < max_dist && y_delta < max_dist && time_delta < 2000;
 }
 
 function click_handler(e) {
@@ -664,7 +667,7 @@ function click_handler(e) {
         );
 }
 
-map_elem = document.querySelector("#map");
+let map_elem = document.querySelector("#map");
 
 map_elem.addEventListener('pointerdown', function(e) {
     pointer_down = e;
@@ -675,17 +678,6 @@ map_elem.addEventListener('pointerup', function(e) {
         click_handler(e)
     }
     pointer_down = null
-})
-
-let imgs = document.querySelectorAll("img");
-
-imgs.forEach(function (img) {
-    img.addEventListener('dragstart', function (e) {
-        e.preventDefault();
-    });
-    img.addEventListener('click', function (e) {
-        e.preventDefault();
-    })
 })
 
 window.addEventListener('click', function(e) {
@@ -769,8 +761,6 @@ async function upload_score() {
     // Return the newly generated id
     return result;
 }
-
-
 
 function generate_map(rng) {
     let grid = new Grid(48, 24);
