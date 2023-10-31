@@ -91,7 +91,8 @@ img {
     color: white;
     user-select: none;
     pointer-events: none;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 15px;
 }
 
 .message.low {
@@ -129,6 +130,12 @@ img {
     padding: 0.1em 0.25em;
 }
 
+.hud > div {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
 .health-indicator {
     color: limegreen;
     text-align: center;
@@ -161,8 +168,8 @@ img {
 
 dialog {
     border: 1px solid grey;
-    width: min(95dvw, 20em);
-    max-width: 95dvw;
+    min-width: min(95dvw, 20em);
+    max-width: min(95dvw, 40em);
     max-height: 90dvh;
     padding: 0rem;
     line-height: 1.333;
@@ -373,6 +380,8 @@ big, .big {
 
 /* #endregion Utility */
 
+/* #region Bars */
+
 .bar {
     height: var(--bar-height, 4px);
     background-color: var(--bar-background, red);
@@ -391,4 +400,21 @@ big, .big {
     --bar-background: red;
     --bar-color: limegreen;
     --bar-value: var(--hp);
+}
+
+/* #endregion Bars */
+
+.inventory-card {
+    margin: 0.2rem 0rem;
+    padding: 0.2rem;
+    border: 1px solid #888888;
+    border-radius: 0.5rem;
+}
+
+.inventory-header {
+}
+
+.info-icon {
+    width: 5em;
+    margin: 0.5rem;
 }

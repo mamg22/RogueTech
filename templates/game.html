@@ -41,6 +41,11 @@
             <div class="hud-middle">
             </div>
             <div class="hud-right">
+                <div class="clickable"
+                _="on click call #inventory-dialog.showModal()"
+                >
+                    <span class="material-icons md-36">backpack</span>
+                </div>
                 <div class='clickable'
                 _="on click call #pause-menu.showModal()"
                 >
@@ -72,8 +77,10 @@
                     send change to next <span/>
                 end
                 on storage or gameload or load from window
-                    add @checked when not typedLocalStorage.getItem('mute-bgm')
-                    send change to next <span/>
+                    if typedLocalStorage exists
+                        add @checked when not typedLocalStorage.getItem('mute-bgm')
+                        send change to next <span/>
+                    end
                 end
                 ">
                 <label for="music">
@@ -97,8 +104,10 @@
                     send change to next <span/>
                 end
                 on storage or gameload or load from window
-                    add @checked when not typedLocalStorage.getItem('mute-sfx')
-                    send change to next <span/>
+                    if typedLocalStorage exists
+                        add @checked when not typedLocalStorage.getItem('mute-sfx')
+                        send change to next <span/>
+                    end
                 end
                 ">
                 <label for="sound">
@@ -126,12 +135,27 @@
             </div>
         </div>
         <div class='center column'>
-            <button type="submit" class="block" _="
+            <button type="submit" _="
             on click
                 call #how-to-play.showModal()
             end
             "
             >Cómo jugar</button>
+            <button type="button" class="" _="
+            on gameload from window
+                if server_info.has_session
+                    hide
+                end
+            end
+            on click
+                go to url '/iniciar-sesion'
+            end
+            ">Iniciar sesión</button>
+            <button type="button" class="" _="
+            on click
+                go to url '/'
+            end
+            ">Menú Principal</button>
         </div>
         <hr>
         <div class="center">
@@ -172,7 +196,7 @@ Tiempo: <span id="gameover-time"></span>
     on mutation of @open from closest <dialog/>
         call setup()
     end
-    on load
+    on load or gameload from window
         setup()
     end
     "
@@ -187,10 +211,56 @@ Tiempo: <span id="gameover-time"></span>
 {%- endcall -%}
 
 {%- call funcs.game_dialog("entityinfo-dialog", "Información") -%}
+<div class="center">
+    <img src="/static/res/player/standing.png" alt="" class="info-icon">
+    <div>
+        <div>Enemigo</div>
+        <div class="bar hp-bar">
+            <div class="bar-fill"></div>
+        </div>
+    </div>
+</div>
+
+{{ lipsum(1)}} 
 {%- endcall -%}
 
 
 {%- call funcs.game_dialog("inventory-dialog", "Inventario") -%}
+<div class="big inventory-header">Equipado 0 / 4</div>
+<div>
+    <div class="inventory-card">Objeto de prueba </div>
+    <div class="inventory-card">Objeto de prueba </div>
+    <div class="inventory-card">Objeto de prueba </div>
+    <div class="inventory-card">Objeto de prueba </div>
+</div>
+<div class="big inventory-header">Inventario 0 / 20</div>
+    <div _="
+    on click from <div/> in me
+        call #entityinfo-dialog.showModal()
+    end
+    ">
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+        <div class="inventory-card">Objeto de prueba </div>
+    </div>
+<div>
+
+</div>
 {%- endcall -%}
 
 
