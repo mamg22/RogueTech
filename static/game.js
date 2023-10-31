@@ -548,13 +548,6 @@ function get_move_dir(old_x, new_x) {
     return Math.sign(new_x - old_x);
 }
 
-let player = {
-    x: 5,
-    y: 3,
-    moving: false,
-    facing: +1,
-}
-
 async function enemy_interact() {
     this.health -= 1;
     state.player.element.src = sprites.player.attack;
@@ -789,64 +782,66 @@ async function upload_score() {
     return result;
 }
 
+function do_map_splits(rng, node, n, config) {
+    if (n <= 0) {
+        return;
+    }
+    if (node.rect.width <= config.MIN_SIZE && node.rect.height <= config.MIN_SIZE) {
+        return;
+    }
+    if (node.rect.width <= config.MAX_SIZE &&
+        node.rect.height <= config.MAX_SIZE &&
+        rng.bool({likelihhod: config.SPLIT_END_CHANCE})) {
+        return
+    }
+
+    let split_dir;
+    if (node.rect.width / node.rect.height > config.WIDTH_THRESHOLD) {
+        split_dir = BSPNode.Direction.vertical;
+    }
+    else if (node.rect.height / node.rect.width > config.HEIGHT_THRESHOLD) {
+        split_dir = BSPNode.Direction.horizontal;
+    }
+    else {
+        split_dir = rng.bool() >= config.RANDOM_SPLIT_THRESHOLD ? BSPNode.Direction.horizontal : BSPNode.Direction.vertical;
+    }
+
+    let max;
+    if (split_dir == BSPNode.Direction.horizontal) {
+        max = node.rect.height - config.MIN_SIZE;
+    }
+    else {
+        max = node.rect.width - config.MIN_SIZE;
+    }
+
+    if (max <= config.MIN_SIZE) {
+        return;
+    }
+
+    node.split(split_dir, rng.integer({
+        min: config.MIN_SIZE,
+        max: max}
+    ));
+
+    do_map_splits(rng, node.left, n - 1, config);
+    do_map_splits(rng, node.right, n - 1, config);
+}
+
 function generate_map(rng) {
     let grid = new Grid(48, 24);
     const root = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
 
     const SPLITS = 5;
-    const MIN_SIZE = 5;
-    const MAX_SIZE = 12;
-    const SPLIT_END_CHANCE = 25;
-    const WIDTH_THRESHOLD = 1.25;
-    const HEIGHT_THRESHOLD = 1.25;
-    const RANDOM_SPLIT_THRESHOLD = 0.5;
+    const split_config = {
+        MIN_SIZE: 5,
+        MAX_SIZE: 12,
+        SPLIT_END_CHANCE: 25,
+        WIDTH_THRESHOLD: 1.25,
+        HEIGHT_THRESHOLD: 1.25,
+        RANDOM_SPLIT_THRESHOLD: 0.5,
+    };
 
-    const do_splits = function(node, n) {
-        if (n <= 0) {
-            return;
-        }
-        if (node.rect.width <= MIN_SIZE && node.rect.height <= MIN_SIZE) {
-            return;
-        }
-        if (node.rect.width <= MAX_SIZE &&
-            node.rect.height <= MAX_SIZE &&
-            rng.bool({likelihhod: SPLIT_END_CHANCE})) {
-            return
-        }
-
-        let split_dir;
-        if (node.rect.width / node.rect.height > WIDTH_THRESHOLD) {
-            split_dir = BSPNode.Direction.vertical;
-        }
-        else if (node.rect.height / node.rect.width > HEIGHT_THRESHOLD) {
-            split_dir = BSPNode.Direction.horizontal;
-        }
-        else {
-            split_dir = rng.bool() >= RANDOM_SPLIT_THRESHOLD ? BSPNode.Direction.horizontal : BSPNode.Direction.vertical;
-        }
-
-        let max;
-        if (split_dir == BSPNode.Direction.horizontal) {
-            max = node.rect.height - MIN_SIZE;
-        }
-        else {
-            max = node.rect.width - MIN_SIZE;
-        }
-
-        if (max <= MIN_SIZE) {
-            return;
-        }
-
-        node.split(split_dir, rng.integer({
-            min: MIN_SIZE,
-            max: max}
-        ));
-
-        do_splits(node.left, n - 1);
-        do_splits(node.right, n - 1);
-    }
-
-    do_splits(root, SPLITS);
+    do_map_splits(rng, root, SPLITS, split_config);
 
     for (const leaf of root.get_leaves()) {
         grid.set_filled_from_rectangle(leaf.rect, 1);
@@ -932,7 +927,7 @@ function render_map() {
     map_table.replaceWith(new_table);
 }
 
-function fill_entities(rng) {
+function fill_entities(rng, map) {
     const N_ENTITIES = 10;
 
     const entity_templates = [
@@ -947,7 +942,7 @@ function fill_entities(rng) {
 
     // Exclude the first room, which is all the way to the left in the tree
     // So first in the array
-    const rooms = state.map.tree.get_leaves().slice(1);
+    const rooms = map.tree.get_leaves().slice(1);
     for (let i = 0; i < N_ENTITIES; i++) {
         const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
         const room = rooms[room_idx];
@@ -985,6 +980,13 @@ function finish_run() {
     state.total_time = total_playtime;
 }
 
+function generate_level(rng, level) {
+    const game_map = generate_map(rng);
+    const entities = fill_entities(rng, game_map)
+
+    return new Level(level, game_map, entities);
+}
+
 function init_game() {
     const proc_gen = new Chance(1)
 
@@ -992,7 +994,7 @@ function init_game() {
     load_settings();
     state.map = generate_map(proc_gen);
     render_map();
-    state.entities = fill_entities(proc_gen);
+    state.entities = fill_entities(proc_gen, state.map);
     render();
 }
 
