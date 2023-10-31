@@ -1,3 +1,8 @@
+import Chance from 'chance';
+var chance = new Chance();
+
+import {astar, Graph} from '../static/astar';
+
 const VERSION = 1
 
 
@@ -428,110 +433,16 @@ class TypedLocalStorage {
     }
 }
 
-class Entity {
-    constructor(x, y, name, description, solid, sprite, facing, interact=null, components={}) {
-        this.id = Entity.id_counter++;
-
-        this.x = x;
-        this.y = y;
-        this.name = name;
-        this.descritpion = description;
-        this.solid = solid;
-        this.sprite = sprite;
-        this.facing = 1;
-        this.interact = interact;
-
-        for (const component in components) {
-            this[component] = components[component];
-        }
-    }
-
-    set_facing(dir) {
-        this.facing = Math.sign(dir);
-        if (this.facing == 0 ) {
-            this.facing = 1;
-        }
-    }
+// class Entity {
+//     x, y
     
-    async move(x, y) {
-        let playback_promise;
-        try {
-            if (this.moving) {
-                return;
-            }
-            this.moving = true;
-            state.player.set_facing(get_move_dir(this.x, x));
-            let entity = state.get_entity(x, y);
-
-            let graph = new Graph(transpose_array(state.get_collision_map()), {
-                diagonal: true
-            });
-            let start = graph.grid[this.x][this.y];
-            let end = graph.grid[x][y];
-            let result = astar.search(graph, start, end, {
-                heuristic: astar.heuristics.diagonal,
-            });
-            
-            if (entity) {
-                if (result.length == 0 || result.length == 1 && !entity.solid) {
-                    entity.interact()
-                    this.moving = false
-                    return;
-                }
-            }
-            
-            playback_promise = audios.sfx.booster.play()
-            for (const step of result) {
-                state.player.set_facing(get_move_dir(this.x, step.x));
-                /*
-                this.element.src = sprites.player.moving;
-                let anim = this.element.animate(
-                    [
-                        {
-                            left: CSS.px(grid_to_world(this.x)),
-                            top: CSS.px(grid_to_world(this.y))
-                        },
-                        {
-                            left: CSS.px(grid_to_world(step.x)),
-                            top: CSS.px(grid_to_world(step.y))
-                        }
-                    ],
-                    {
-                        duration: 125,
-                        iterations: 1
-                    }
-                );
-                */
-                this.x = step.x;
-                this.y = step.y;
-                // await wait_for(anim, 'finish');
-                render();
-                /*
-                this.element.scrollIntoView({
-                    block: 'center',
-                    inline: 'center',
-                    behavior: 'smooth'
-                })
-                */
-            }
-            // this.element.src = sprites.player.standing;
-        }
-        finally {
-            this.moving = false
-            if (playback_promise) {
-                audios.sfx.booster.pause()
-            }
-            audios.sfx.booster.currentTime = 0
-        }
-    }
-    move_relative(x_delta, y_delta) {
-        this.move(this.x + x_delta, this.y + y_delta)
-    }
-
-    static id_counter = 0;
-}
+// }
 
 const GRID_SIZE = 64;
+
+let map = {
+    element: document.getElementById("map"),
+}
 
 function transpose_array(arr) {
     out = []
@@ -551,8 +462,86 @@ function get_move_dir(old_x, new_x) {
 let player = {
     x: 5,
     y: 3,
+    element: document.getElementById("hero"),
     moving: false,
     facing: +1,
+    set_facing(dir) {
+        if (Math.abs(dir) == 1) {
+            this.facing = dir
+        }
+        this.element.style.setProperty('--flip', this.facing)
+    },
+    async move(x, y) {
+        let playback_promise;
+        try {
+            if (this.moving) {
+                return;
+            }
+            this.moving = true;
+            state.player.set_facing(get_move_dir(this.x, x));
+            let entity = state.get_entity(x, y);
+
+            let graph = new Graph(transpose_array(state.get_collision_map()), {
+                diagonal: true
+            });
+            let start = graph.grid[this.x][this.y];
+            let end = graph.grid[x][y];
+            let result = astar.search(graph, start, end, {
+                heuristic: astar.heuristics.diagonal,
+                closest: true
+            });
+            
+            if (entity) {
+                if (result.length == 0 || result.length == 1 && !entity.solid) {
+                    entity.interact()
+                    this.moving = false
+                    return;
+                }
+            }
+            
+            playback_promise = audios.sfx.booster.play()
+            for (const step of result) {
+                state.player.set_facing(get_move_dir(this.x, step.x));
+                this.element.src = sprites.player.moving;
+                let anim = this.element.animate(
+                    [
+                        {
+                            left: CSS.px(grid_to_world(this.x)),
+                            top: CSS.px(grid_to_world(this.y))
+                        },
+                        {
+                            left: CSS.px(grid_to_world(step.x)),
+                            top: CSS.px(grid_to_world(step.y))
+                        }
+                    ],
+                    {
+                        duration: 125,
+                        iterations: 1
+                    }
+                );
+                this.x = step.x;
+                this.y = step.y;
+                await wait_for(anim, 'finish');
+                render();
+                this.element.scrollIntoView({
+                    block: 'center',
+                    inline: 'center',
+                    behavior: 'smooth'
+                })
+            }
+            this.element.src = sprites.player.standing;
+        }
+        finally {
+            this.moving = false
+            if (playback_promise) {
+                audios.sfx.booster.pause()
+            }
+            audios.sfx.booster.currentTime = 0
+        }
+    },
+    move_relative(x_delta, y_delta) {
+        this.move(this.x + x_delta, this.y + y_delta)
+    }
 }
 
 async function enemy_interact() {
@@ -583,21 +572,9 @@ function item_interact() {
     this.element.remove()
 }
 
-class Level {
-    constructor(number, map, entities) {
-        this.number = number;
-        this.map = map;
-        this.entities = entities;
-    }
-}
-
-class GameState {
-}
-
 let state = {
-    levels: [],
-    map: {},
-    player: null,
+    map: map,
+    player: player,
     entities: [],
     scale: 1.0,
 
@@ -634,40 +611,46 @@ let state = {
 }
 
 function render() {
-    const entities_elt = document.querySelector("#entities");
-    const entity_elements = entities_elt.children;
-    const entity_ids = state.entities.map(function(entity){
-        return entity.id;
-    });
-
-    for (const entity_element of entity_elements) {
-        const entity_id = +entity_element.getAttribute("entity-id")
-        if (! entity_ids.includes(entity_id)) {
-            entity_element.remove()
-        }
+    if (! state.player.element) {
+        let entity_img = document.createElement("img");
+        entity_img.src = sprites.player.standing;
+        state.player.element = entity_img;
+        entities_elt.append(entity_img);
     }
-
-    if (state.entities.indexOf(state.player) == -1) {
-        state.entities.push(state.player);
-    }
+    let player_elt = state.player.element;
+    player_elt.style.left = CSS.px(grid_to_world(state.player.x));
+    player_elt.style.top = CSS.px(grid_to_world(state.player.y));
     
     for (const entity of state.entities) {
-        const elem_id = "entity-" + entity.id;
-        let elem = document.getElementById(elem_id);
-        if (!elem) {
-            elem = document.createElement("img");
-            elem.id = elem_id
-            elem.setAttribute('entity-id', entity.id)
-            elem.src = entity.sprite;
-            entities_elt.append(elem);
+        if (!entity.element) {
+            let entity_img = document.createElement("img");
+            entity_img.src = entity.sprite;
+            entity.element = entity_img;
+            entities_elt.append(entity_img);
         }
-        elem.style.left = CSS.px(grid_to_world(entity.x));
-        elem.style.top = CSS.px(grid_to_world(entity.y));
-        elem.style.setProperty('--flip', entity.facing)
+        entity.element.style.left = CSS.px(grid_to_world(entity.x));
+        entity.element.style.top = CSS.px(grid_to_world(entity.y));
     }
 }
 
+window.addEventListener('keyup', function(e) {
+    e.preventDefault();
+    if (e.key == 'ArrowUp') {
+        state.player.move_relative(0, -1)
+    }
+    else if (e.key == 'ArrowDown') {
+        state.player.move_relative(0, +1)
+    }
+    else if (e.key == 'ArrowLeft') {
+        state.player.move_relative(-1, 0)
+    }
+    else if (e.key == 'ArrowRight') {
+        state.player.move_relative(+1, 0)
+    }
+});
+
 let game_view = document.querySelector("#game-view");
+let entities_elt = document.querySelector("#entities");
 
 game_view.addEventListener('pointermove', function(e) {
     if (e.buttons == 1) {
@@ -682,9 +665,7 @@ function is_click(start, end) {
     const max_dist = 5;
     const x_delta = Math.abs(start.pageX - end.pageX);
     const y_delta = Math.abs(start.pageY - end.pageY);
-    const time_delta = end.timeStamp - start.timeStamp;
-    const is_primary_button = start.buttons == 1;
-    return x_delta < max_dist && y_delta < max_dist && time_delta < 2000 && is_primary_button;
+    return x_delta < max_dist && y_delta < max_dist;
 }
 
 function click_handler(e) {
@@ -694,7 +675,7 @@ function click_handler(e) {
         );
 }
 
-let map_elem = document.querySelector("#map");
+map_elem = document.querySelector("#map");
 
 map_elem.addEventListener('pointerdown', function(e) {
     pointer_down = e;
@@ -705,6 +686,17 @@ map_elem.addEventListener('pointerup', function(e) {
         click_handler(e)
     }
     pointer_down = null
+})
+
+let imgs = document.querySelectorAll("img");
+
+imgs.forEach(function (img) {
+    img.addEventListener('dragstart', function (e) {
+        e.preventDefault();
+    });
+    img.addEventListener('click', function (e) {
+        e.preventDefault();
+    })
 })
 
 window.addEventListener('click', function(e) {
@@ -788,6 +780,8 @@ async function upload_score() {
     // Return the newly generated id
     return result;
 }
+
+
 
 function generate_map(rng) {
     let grid = new Grid(48, 24);
@@ -899,7 +893,10 @@ function generate_map(rng) {
         }
     }
 
-    return {grid: grid, tree: root};
+    state.map.grid = grid;
+    state.map.tree = root;
+
+    return grid;
 }
 
 function render_map() {
@@ -935,35 +932,60 @@ function render_map() {
 function fill_entities(rng) {
     const N_ENTITIES = 10;
 
-    const entity_templates = [
-        [ 9, 3, "Robot", "X", true, sprites.enemy.standing, -1],
-        [ 24, 13, "Botella de agua", "X", false, sprites.items.water_bottle, 1],
-        [ 3, 12, "DVD", "X", false, sprites.items.dvd, 1],
-        [29, 7, "Pendrive", "X", false, sprites.items.pendrive, 1],
-        [ 20, 2, "Maquina", true, sprites.decoration.vending_machine, 1],
-    ];
+    const entities = [
+        {
+            x: 9, y: 3,
+            health: 5,
+            solid: true,
+            interact: enemy_interact,
+            sprite: sprites.enemy.standing
+        },
+        {
+            x: 24,
+            y: 13,
+            description: "Botella de agua",
+            solid: false,
+            interact: item_interact,
+            sprite: sprites.items.water_bottle
+        },
+        {
+            x: 3,
+            y: 12,
+            description: "DVD",
+            solid: false,
+            interact: item_interact,
+            sprite: sprites.items.dvd
+        },
+        {
+            x: 29,
+            y: 7,
+            description: "Pendrive",
+            solid: false,
+            interact: item_interact,
+            sprite: sprites.items.pendrive
+        },
+        {
+            x: 20,
+            y: 2,
+            solid: true,
+            interact: () => push_msg("La maquina expendedora no parece funcionar"),
+            sprite: sprites.decoration.vending_machine
+        },
+    ]
 
-    let entities = [];
-
-    // Exclude the first room, which is all the way to the left in the tree
-    // So first in the array
-    const rooms = state.map.tree.get_leaves().slice(1);
+    const rooms = state.map.tree.get_leaves();
     for (let i = 0; i < N_ENTITIES; i++) {
         const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
         const room = rooms[room_idx];
 
         const room_pos = random_point_in_rectangle(rng, room.rect);
-        const entity_idx = rng.integer({min: 0, max: entity_templates.length - 1});
-        let template = entity_templates[entity_idx]
-        let entity = new Entity(
-            room_pos.x, room_pos.y,
-            template[2], template[3], template[4], template[5]
-        );
+        const entity_idx = rng.integer({min: 0, max: entities.length - 1});
+        let entity = Object.assign({}, entities[entity_idx]);
+        entity.x = room_pos.x;
+        entity.y = room_pos.y;
 
-        entities.push(entity);
+        state.entities.push(entity);
     }
-
-    return entities;
 }
 
 function show_gameover() {
@@ -988,11 +1010,10 @@ function finish_run() {
 function init_game() {
     const proc_gen = new Chance(1)
 
-    state.player = new Entity(5, 3, "Jugador", "El jugador", true, sprites.player.standing, 1)
     load_settings();
-    state.map = generate_map(proc_gen);
+    generate_map(proc_gen);
     render_map();
-    state.entities = fill_entities(proc_gen);
+    fill_entities(proc_gen);
     render();
 }
 
