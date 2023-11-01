@@ -990,10 +990,15 @@ function switch_level(direction) {
         return item.number == current_level_number + direction;
     });
 
+    let level_info = document.getElementsByClassName('floor-indicator-value');
+
     if (new_level) {
         state.level = new_level;
         render_map();
         render();
+        for (const indicator of level_info) {
+            indicator.innerText = new_level.number; 
+        }
         return true;
     }
     else {

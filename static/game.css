@@ -41,6 +41,7 @@ body {
     max-width: 100svw;
 }
 
+
 #game-view {
     background-color: black;
     /* min-height: 100dvh; */
@@ -136,20 +137,26 @@ img {
     align-items: center;
     background-color: #222222;
     color: white;
-    padding: 0.1em 0.25em;
+    padding: 0.25em 0.3em;
 }
 
 .hud > div {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
+}
+
+.indicator {
+    text-align: center;
+    font-weight: bold;
 }
 
 .health-indicator {
     color: limegreen;
-    text-align: center;
-    font-weight: bold;
 }
+
+
 
 /* #region Material Icons */
 
@@ -428,3 +435,12 @@ big, .big {
     width: 5em;
     margin: 0.5rem;
 }
+
+@media (orientation: landscape) {
+    #game-area {
+      flex-direction: row;
+    }
+    .hud, .hud > div {
+        flex-direction: column;
+    }
+}  

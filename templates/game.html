@@ -34,18 +34,16 @@
     <div id="game-area">
         <div id="main-hud" class="hud">
             <div class="hud-left">
-                <div class="health-indicator">
+                <div class="indicator health-indicator">
                     <div><span class="material-icons">health_and_safety</span> <br> 99/100</div>
-                </div>    
+                </div>
+                <div class="indicator floor-indicator">
+                    <div>Piso <br> <span class="floor-indicator-value">1</span></div>
+                </div>
             </div>
             <div class="hud-middle">
             </div>
             <div class="hud-right">
-                <div class="clickable"
-                _="on click call #inventory-dialog.showModal()"
-                >
-                    <span class="material-icons md-36">backpack</span>
-                </div>
                 <div class='clickable'
                 _="on click call #pause-menu.showModal()"
                 >
@@ -61,6 +59,24 @@
             <div id="entities">
             </div>
         </div>
+        <div id="alt-hud" class="hud">
+            <div class="hud-left">
+                <div class="wait-button clickable">
+                    <div><span class="material-icons md-36">schedule</span></div>
+                </div>    
+            </div>
+            <div class="hud-middle">
+            </div>
+            <div class="hud-right">
+                <div class="clickable"
+                _="on click call #inventory-dialog.showModal()"
+                >
+                    <span class="material-icons md-36">backpack</span>
+                </div>
+            </div>
+    
+        </div>
+
     </div>
     <div id="messages"></div>
 
