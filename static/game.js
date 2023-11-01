@@ -1106,7 +1106,6 @@ function pinch_remove_event(ev) {
 }
 
 window.addEventListener('wheel', function(e) {
-    console.log(e.deltaY);
     if (Math.abs(e.deltaY) > 3){
         zoom(Math.sign(e.deltaY))
     }
