@@ -100,6 +100,13 @@ function format_ms(total_millis) {
     return out;
 }
 
+function clamp(value, min, max) {
+    if (min > max) {
+        throw Error("min cannot be greater than max")
+    }
+    return Math.min(Math.max(value, min), max);
+}
+
 function world_to_grid(x, with_scale=true) {
     let value_scale = with_scale ? state.scale : 1;
     return Math.floor(x / (GRID_SIZE * value_scale));
@@ -111,13 +118,23 @@ function grid_to_world(x, with_scale=true) {
 }
 
 function zoom(direction) {
-    const delta = 0.0333333333333333333 * Math.sign(direction);
+    let base_delta = 0.05;
+    if (state.scale < 0.50) {
+        base_delta = 0.0125;
+    }
+    else if (state.scale < 0.75) {
+        base_delta = 0.025;
+    }
+    const delta = base_delta * Math.sign(direction);
     set_zoom(state.scale + delta, true);
 }
 
 function set_zoom(zoom, do_render=false) {
-    state.scale = zoom;
+    zoom_delta = zoom - state.scale;
+    state.scale = clamp(zoom, 0.2, 2);
     typedLocalStorage.setItem("game-scale", state.scale);
+    game_view.scrollLeft *= 1 + zoom_delta;
+    game_view.scrollTop *= 1 + zoom_delta;
     document.body.style.setProperty("--scale", state.scale, "important");
     if (do_render) {
         render();
@@ -937,7 +954,7 @@ function fill_entities(rng, map) {
         [ 9, 3, "Robot", "X", true, sprites.enemy.standing, -1],
         [ 24, 13, "Botella de agua", "X", false, sprites.items.water_bottle, 1],
         [ 3, 12, "DVD", "X", false, sprites.items.dvd, 1],
-        [29, 7, "Pendrive", "X", false, sprites.items.pendrive, 1],
+        [ 29, 7, "Pendrive", "X", false, sprites.items.pendrive, 1],
         [ 20, 2, "Maquina", "X", true, sprites.decoration.vending_machine, 1],
     ];
 
@@ -1007,13 +1024,13 @@ function init_game() {
 }
 
 // Disable any media keys
-function null_media_handler() {}
-navigator.mediaSession.setActionHandler('play', null_media_handler);
-navigator.mediaSession.setActionHandler('pause', null_media_handler);
-navigator.mediaSession.setActionHandler('seekbackward', null_media_handler);
-navigator.mediaSession.setActionHandler('seekforward', null_media_handler);
-navigator.mediaSession.setActionHandler('previoustrack', null_media_handler);
-navigator.mediaSession.setActionHandler('nexttrack', null_media_handler);
+// function null_media_handler() {}
+// navigator.mediaSession.setActionHandler('play', null_media_handler);
+// navigator.mediaSession.setActionHandler('pause', null_media_handler);
+// navigator.mediaSession.setActionHandler('seekbackward', null_media_handler);
+// navigator.mediaSession.setActionHandler('seekforward', null_media_handler);
+// navigator.mediaSession.setActionHandler('previoustrack', null_media_handler);
+// navigator.mediaSession.setActionHandler('nexttrack', null_media_handler);
 
 server_info = JSON.parse(
     document.getElementById('server-info').text
@@ -1021,3 +1038,68 @@ server_info = JSON.parse(
 
 document.addEventListener('DOMContentLoaded', init_game);
 window.dispatchEvent(new Event('gameload'))
+
+
+// Global vars to cache event state
+const evCache = [];
+let prevDiff = -1;
+
+
+function init_pinch_handler() {
+    const el = document.getElementById("game-view");
+    el.addEventListener('pointerdown', pinch_pointerdown_handler);
+    el.addEventListener('pointermove', pinch_pointermove_handler);
+    el.addEventListener('pointerup', pinch_pointerup_handler);
+    el.addEventListener('pointercancel', pinch_pointerup_handler);
+    el.addEventListener('pointerout', pinch_pointerup_handler);
+    el.addEventListener('pointerleave', pinch_pointerup_handler);
+}
+
+init_pinch_handler()
+
+function pinch_pointerdown_handler(ev) {
+    evCache.push(ev);
+}
+function pinch_pointermove_handler(ev) {
+    const index = evCache.findIndex(
+      (cachedEv) => cachedEv.pointerId === ev.pointerId,
+    );
+    evCache[index] = ev;
+  
+    if (evCache.length === 2) {
+      const curDiff = Math.abs(evCache[0].clientX - evCache[1].clientX)
+                    + Math.abs(evCache[0].clientY - evCache[1].clientY);
+  
+      if (prevDiff > 0) {
+        const delta = Math.abs(curDiff - prevDiff);
+        const dir = Math.sign(curDiff - prevDiff)
+        if (delta > 7) {
+            zoom(delta * dir)
+        }
+      }
+  
+      prevDiff = curDiff;
+    }
+}
+
+function pinch_pointerup_handler(ev) {
+    pinch_remove_event(ev);
+  
+    if (evCache.length < 2) {
+      prevDiff = -1;
+    }
+}
+  
+function pinch_remove_event(ev) {
+    const index = evCache.findIndex(
+      (cachedEv) => cachedEv.pointerId === ev.pointerId,
+    );
+    evCache.splice(index, 1);
+}
+
+window.addEventListener('wheel', function(e) {
+    console.log(e.deltaY);
+    if (Math.abs(e.deltaY) > 3){
+        zoom(Math.sign(e.deltaY))
+    }
+})
