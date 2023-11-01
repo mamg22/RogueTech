@@ -621,8 +621,8 @@ let state = {
     kills: 0,
 
     get_collision_map() {
-        let map_data = structuredClone(this.map.grid.content);
-        for (let entity of this.entities) {
+        let map_data = structuredClone(this.level.map.grid.content);
+        for (let entity of this.level.entities) {
             if (entity.solid) {
                 map_data[entity.y][entity.x] = 0;
             }
@@ -630,7 +630,7 @@ let state = {
         return map_data;
     },
     get_entity(x, y) {
-        for (const entity of this.entities) {
+        for (const entity of this.level.entities) {
             if (entity.x == x && entity.y == y) {
                 return entity;
             }
@@ -638,31 +638,31 @@ let state = {
         return null;
     },
     remove_entity(entity) {
-        let idx = this.entities.indexOf(entity)
+        let idx = this.level.entities.indexOf(entity)
         // TODO? Remove element asociated with entity, maybe conditionally based on a NO_REMOVE or SELF_REMOVING flag
-        this.entities.splice(idx, 1)
+        this.level.entities.splice(idx, 1)
     }
 }
 
 function render() {
     const entities_elt = document.querySelector("#entities");
     const entity_elements = entities_elt.children;
-    const entity_ids = state.entities.map(function(entity){
+    const entity_ids = state.level.entities.map(function(entity){
         return entity.id;
     });
 
-    for (const entity_element of entity_elements) {
+    for (const entity_element of Array.from(entity_elements)) {
         const entity_id = +entity_element.getAttribute("entity-id")
         if (! entity_ids.includes(entity_id)) {
             entity_element.remove()
         }
     }
 
-    if (state.entities.indexOf(state.player) == -1) {
-        state.entities.push(state.player);
+    if (state.level.entities.indexOf(state.player) == -1) {
+        state.level.entities.push(state.player);
     }
     
-    for (const entity of state.entities) {
+    for (const entity of state.level.entities) {
         const elem_id = "entity-" + entity.id;
         let elem = document.getElementById(elem_id);
         if (!elem) {
@@ -676,6 +676,7 @@ function render() {
         }
         elem.style.left = CSS.px(grid_to_world(entity.x));
         elem.style.top = CSS.px(grid_to_world(entity.y));
+        const facing = entity.facing;
         elem.style.setProperty('--flip', entity.facing)
     }
 }
@@ -921,10 +922,10 @@ function render_map() {
     const new_table = document.createElement("table");
     new_table.id = "map-table";
 
-    for (let y = 0; y < state.map.grid.height; y++) {
+    for (let y = 0; y < state.level.map.grid.height; y++) {
         let current_row = document.createElement("tr");
 
-        for (let x = 0; x < state.map.grid.width; x++) {
+        for (let x = 0; x < state.level.map.grid.width; x++) {
             let current_cell = document.createElement("td");
             let cell_contents = document.createElement("div");
 
@@ -932,7 +933,7 @@ function render_map() {
             cell_contents.setAttribute("y", y);
             cell_contents.classList.add("map-cell");
 
-            if (state.map.grid.get(x, y) == 0) {
+            if (state.level.map.grid.get(x, y) == 0) {
                 cell_contents.classList.add("solid");
             }
 
@@ -981,6 +982,25 @@ function fill_entities(rng, map) {
     return entities;
 }
 
+function switch_level(direction) {
+    direction = Math.sign(direction);
+    const current_level_number = state.level.number;
+
+    const new_level = state.levels.find(function (item) {
+        return item.number == current_level_number + direction;
+    });
+
+    if (new_level) {
+        state.level = new_level;
+        render_map();
+        render();
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 function show_gameover() {
     const gameover_dialog = document.getElementById("gameover-dialog");
     const score_field = document.getElementById("gameover-score");
@@ -1012,15 +1032,13 @@ function init_game() {
 
     state.player = new Entity(5, 3, "Jugador", "El jugador", true, sprites.player.standing, 1)
     load_settings();
-    state.map = generate_map(proc_gen);
-    render_map();
-    state.entities = fill_entities(proc_gen, state.map);
-    render();
     for (let i = 0; i < 5; i++) {
         const level = generate_level(proc_gen, i+1);
         state.levels.push(level)
     }
-
+    state.level = state.levels[0];
+    render_map();
+    render();
 }
 
 server_info = JSON.parse(
