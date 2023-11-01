@@ -598,6 +598,11 @@ class Level {
         this.number = number;
         this.map = map;
         this.entities = entities;
+        this.last_player_pos = null
+    }
+
+    set_last_pos(x, y) {
+        this.last_player_pos = new Point(x, y)
     }
 }
 
@@ -993,7 +998,13 @@ function switch_level(direction) {
     let level_info = document.getElementsByClassName('floor-indicator-value');
 
     if (new_level) {
+        state.level.set_last_pos(state.player.x, state.player.y);
         state.level = new_level;
+        const new_pos = state.level.last_player_pos;
+        if (new_pos) {
+            state.player.x = new_pos.x;
+            state.player.y = new_pos.y;
+        }
         render_map();
         render();
         for (const indicator of level_info) {
