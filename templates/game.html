@@ -69,8 +69,8 @@
 {%- call funcs.game_dialog("pause-menu", "Menú") -%}
     <div class="flex column with-gap">
         <div class="center column with-gap" >
-            <div>
-                <input type="checkbox" name="music" id="music" checked
+            <div class="clickable">
+                <input type="checkbox" class="hidden" name="music" id="music" checked
                 _="
                 on change
                     call set_audio('bgm', not my checked)
@@ -83,7 +83,7 @@
                     end
                 end
                 ">
-                <label for="music">
+                <label for="music" class="clickable">
                     <span class="material-icons" _="
                     on change
                         if #music.checked
@@ -96,8 +96,8 @@
                     Música
                 </label>
             </div>
-            <div>
-                <input type="checkbox" name="sound" id="sound" checked
+            <div class="clickable">
+                <input type="checkbox" class="hidden" name="sound" id="sound" checked
                 _="
                 on change
                     call set_audio('sfx', not my checked)
@@ -110,7 +110,7 @@
                     end
                 end
                 ">
-                <label for="sound">
+                <label for="sound" class="clickable">
                     <span class="material-icons" _="
                     on change
                         if #sound.checked
