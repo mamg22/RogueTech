@@ -1023,15 +1023,6 @@ function init_game() {
 
 }
 
-// Disable any media keys
-// function null_media_handler() {}
-// navigator.mediaSession.setActionHandler('play', null_media_handler);
-// navigator.mediaSession.setActionHandler('pause', null_media_handler);
-// navigator.mediaSession.setActionHandler('seekbackward', null_media_handler);
-// navigator.mediaSession.setActionHandler('seekforward', null_media_handler);
-// navigator.mediaSession.setActionHandler('previoustrack', null_media_handler);
-// navigator.mediaSession.setActionHandler('nexttrack', null_media_handler);
-
 server_info = JSON.parse(
     document.getElementById('server-info').text
 );
@@ -1040,7 +1031,6 @@ document.addEventListener('DOMContentLoaded', init_game);
 window.dispatchEvent(new Event('gameload'))
 
 
-// Global vars to cache event state
 const evCache = [];
 let prevDiff = -1;
 
