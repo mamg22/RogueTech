@@ -386,7 +386,7 @@ function init_game() {
 }
 globalThis.init_game = init_game;
 
-async function inspect_entity(x, y) {
+async function process_inspect(x, y) {
     const dialog = document.getElementById('entityinfo-dialog');
 
     for (const entity of state.level.get_entities(x, y)) {
@@ -400,7 +400,7 @@ async function inspect_entity(x, y) {
     }
     state.state = State.player_turn;
 }
-globalThis.inspect_entity = inspect_entity;
+globalThis.process_inspect = process_inspect;
 
 
 function handle_input(x, y) {
@@ -411,7 +411,7 @@ function handle_input(x, y) {
             // usar checkeo basico de colision al tocar
             break;
         case State.inspect:
-            inspect_entity(x, y);
+            process_inspect(x, y);
             break;
         default:
             break;
