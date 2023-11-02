@@ -710,7 +710,11 @@ function click_handler(e) {
     state.player.move(
         world_to_grid(e.offsetX, false),
         world_to_grid(e.offsetY, false)
-        );
+    )
+    handle_input(
+        world_to_grid(e.offsetX, false),
+        world_to_grid(e.offsetY, false)
+    );
 }
 
 let map_elem = document.querySelector("#map");
