@@ -12,6 +12,12 @@ class Grid {
         this.height = height;
     }
 
+    clone() {
+        let clone = new Grid(this.width, this.height);
+        clone.content = structuredClone(this.content);
+        return clone;
+    }
+
     check_bound(x, y) {
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
             throw Error(`Out of bound access at (${x}, ${y})`)
@@ -400,7 +406,7 @@ export class Level {
         return map_collide || entity_collide;
     }
     get_collision_map() {
-        let map_data = structuredClone(this.map_collisions);
+        let map_data = this.map_collisions.clone();
         for (let entity of this.entities) {
             if (entity.solid) {
                 map_data.set(entity.x, entity.y, 0);
