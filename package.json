@@ -1,14 +1,15 @@
 {
+	"scripts": {
+		"build": "esbuild src/main.js --outfile=static/main-compiled.js --bundle",
+		"watch": "esbuild src/main.js --outfile=static/main-compiled.js --bundle --watch"
+	},
 	"dependencies": {
 		"chance": "^1.1.11",
 		"htmx.org": "^1.9.2",
 		"hyperscript.org": "^0.9.11"
 	},
 	"devDependencies": {
-		"browserify": "^17.0.0",
 		"esbuild": "^0.19.5",
-		"uglify-js": "^3.17.4",
-		"webpack": "^5.89.0",
-		"webpack-cli": "^5.1.4"
+		"uglify-js": "^3.17.4"
 	}
 }
