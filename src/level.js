@@ -2,20 +2,6 @@ import { Rectangle } from './common';
 import { sprites } from './resources';
 import { Entity } from './main';
 
-class Level {
-    constructor(number, map, entities) {
-        this.number = number;
-        this.map = map;
-        this.entities = entities;
-        this.last_player_pos = null
-    }
-
-    set_last_pos(x, y) {
-        this.last_player_pos = new Point(x, y)
-    }
-}
-
-
 class Grid {
     constructor(width, height, default_value=0) {
         this.content = [];
@@ -371,6 +357,19 @@ function place_entities(rng, map) {
     }
 
     return entities;
+}
+
+export class Level {
+    constructor(number, map, entities) {
+        this.number = number;
+        this.map = map;
+        this.entities = entities;
+        this.last_player_pos = null
+    }
+
+    set_last_pos(x, y) {
+        this.last_player_pos = new Point(x, y)
+    }
 }
 
 export function generate_level(rng, level) {

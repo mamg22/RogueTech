@@ -18,7 +18,10 @@ map_elem.addEventListener('pointerdown', function(e) {
 
 map_elem.addEventListener('pointerup', function(e) {
     if (is_click(pointer_down, e)) {
-        click_handler(e)
+        handle_input(
+            world_to_grid(e.offsetX, false),
+            world_to_grid(e.offsetY, false)
+        );
     }
     pointer_down = null
 })
@@ -37,19 +40,6 @@ function is_click(start, end) {
     const is_primary_button = start.buttons == 1;
     return x_delta < max_dist && y_delta < max_dist && time_delta < 2000 && is_primary_button;
 }
-
-function click_handler(e) {
-    state.player.move(
-        world_to_grid(e.offsetX, false),
-        world_to_grid(e.offsetY, false)
-    )
-
-    handle_input(
-        world_to_grid(e.offsetX, false),
-        world_to_grid(e.offsetY, false)
-    );
-}
-
 
 
 const evCache = [];
