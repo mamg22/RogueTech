@@ -64,6 +64,22 @@
                 <div class="wait-button clickable">
                     <div><span class="material-icons md-36">schedule</span></div>
                 </div>    
+                <div class="inspect-button clickable" _="
+                init
+                    remove .active
+                end
+                on click
+                    if I do not match .active
+                        add .active
+                        set state.state to 2
+                    else
+                        remove .active
+                        set state.state to 1
+                    end
+                end
+                ">
+                    <div><span class="material-icons md-36">search</span></div>
+                </div>    
             </div>
             <div class="hud-middle">
             </div>

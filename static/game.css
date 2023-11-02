@@ -156,7 +156,9 @@ img {
     color: limegreen;
 }
 
-
+.inspect-button.active {
+    text-shadow: #eeeeee 0px 0px 5px;
+}
 
 /* #region Material Icons */
 

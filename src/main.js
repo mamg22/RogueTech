@@ -76,7 +76,7 @@ function push_msg(message, category='default') {
 
 
 export class Entity {
-    constructor(x, y, name, description, solid, sprite, facing, interact=null, components={}) {
+    constructor(x, y, name, description, solid, sprite, facing=1, interact=null, components={}) {
         this.id = Entity.id_counter++;
 
         this.x = x;
@@ -85,7 +85,7 @@ export class Entity {
         this.descritpion = description;
         this.solid = solid;
         this.sprite = sprite;
-        this.facing = 1;
+        this.facing = this.facing;
         this.interact = interact;
 
         for (const component in components) {
@@ -100,48 +100,34 @@ export class Entity {
         }
     }
     
-    async move(x, y) {
-        let playback_promise;
-        try {
-            if (this.moving) {
-                return;
-            }
-            this.moving = true;
-            this.set_facing(get_move_dir(this.x, x));
-            let entity = state.get_entity(x, y);
+    move(x, y) {
+        this.set_facing(get_move_dir(this.x, x));
 
-            let graph = new Graph(transpose_array(state.get_collision_map()), {
-                diagonal: true
-            });
-            let start = graph.grid[this.x][this.y];
-            let end = graph.grid[x][y];
-            let result = astar.search(graph, start, end, {
-                heuristic: astar.heuristics.diagonal,
-            });
-            
-            if (entity) {
-                if (result.length == 0 || result.length == 1 && !entity.solid) {
-                    entity.interact()
-                    this.moving = false
-                    return;
-                }
-            }
-            
-            playback_promise = audios.sfx.booster.play()
-            for (const step of result) {
-                this.set_facing(get_move_dir(this.x, step.x));
-                this.x = step.x;
-                this.y = step.y;
-                render();
-            }
+        // let graph = new Graph(transpose_array(state.level.get_collision_map()), {
+        //     diagonal: true
+        // });
+        // let start = graph.grid[this.x][this.y];
+        // let end = graph.grid[x][y];
+        // let result = astar.search(graph, start, end, {
+        //     heuristic: astar.heuristics.diagonal,
+        // });
+        
+        // if (entity) {
+        //     if (result.length == 0 || result.length == 1 && !entity.solid) {
+        //         entity.interact()
+        //         return;
+        //     }
+        // }
+        if (state.level.get_collision_at(x, y)) {
+            return false;
         }
-        finally {
-            this.moving = false
-            if (playback_promise) {
-                audios.sfx.booster.pause()
-            }
-            audios.sfx.booster.currentTime = 0
-        }
+
+        this.set_facing(get_move_dir(this.x, x));
+        this.x = x;
+        this.y = y;
+        render();
+
+        return true;
     }
     move_relative(x_delta, y_delta) {
         this.move(this.x + x_delta, this.y + y_delta)
@@ -151,16 +137,17 @@ export class Entity {
 }
 
 
-class GameState {
-}
+const State = Object.freeze({
+    player_turn: 1,
+    inspect: 2,
+})
 
 let state = {
     levels: [],
     level: null,
-    map: {},
     player: null,
-    entities: [],
     scale: 1.0,
+    state: State.player_turn,
 
     seed: 1,
     start_time: new Date(),
@@ -170,27 +157,18 @@ let state = {
     success: false,
     kills: 0,
 
-    get_collision_map() {
-        let map_data = structuredClone(this.level.map.grid.content);
-        for (let entity of this.level.entities) {
-            if (entity.solid) {
-                map_data[entity.y][entity.x] = 0;
-            }
-        }
-        return map_data;
-    },
     get_entity(x, y) {
+        // TODO: Generalizar a get_entities, devolviendo una lista de entidades.
+        // Organizado por el peso
+        // [ Solidos ] > [ No solidos ]
+        // [ Jugador, Enemigo ] > [ Otros ]
+        // Devolviendo siempre una lista
         for (const entity of this.level.entities) {
             if (entity.x == x && entity.y == y) {
                 return entity;
             }
         }
         return null;
-    },
-    remove_entity(entity) {
-        let idx = this.level.entities.indexOf(entity)
-        // TODO? Remove element asociated with entity, maybe conditionally based on a NO_REMOVE or SELF_REMOVING flag
-        this.level.entities.splice(idx, 1)
     }
 }
 
@@ -403,9 +381,37 @@ function init_game() {
     render();
 }
 
-server_info = JSON.parse(
+function inspect_entity(x, y) {
+    const dialog = document.getElementById('entityinfo-dialog');
+
+    for (const entity of state.level.get_entities(x, y)) {
+        dialog.showModal();
+        state.state = State.player_turn;
+    }
+}
+globalThis.inspect_entity = inspect_entity;
+
+
+function handle_input(x, y) {
+    switch (state.state) {
+        case State.player_turn:
+            console.log(state.player.move(x, y));
+            // TODO: No usar A* para movimiento basico de r=1, solo para distancias x,y > 1 e IA
+            // usar checkeo basico de colision al tocar
+            break;
+        case State.inspect:
+            inspect_entity(x, y);
+            break;
+        default:
+            break;
+    }
+}
+globalThis.handle_input = handle_input;
+
+const server_info = JSON.parse(
     document.getElementById('server-info').text
 );
+globalThis.server_info = server_info
 
 document.addEventListener('DOMContentLoaded', init_game);
 window.dispatchEvent(new Event('gameload'))
