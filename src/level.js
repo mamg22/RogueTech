@@ -12,19 +12,19 @@ class Grid {
         this.height = height;
     }
 
-    #check_bound(x, y) {
+    check_bound(x, y) {
         if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
             throw Error(`Out of bound access at (${x}, ${y})`)
         }
     }
 
     get(x, y) {
-        this.#check_bound(x, y)
+        this.check_bound(x, y)
         return this.content[y][x];
     }
 
     set(x, y, value) {
-        this.#check_bound(x, y)
+        this.check_bound(x, y)
         this.content[y][x] = value;
     }
 
@@ -364,11 +364,62 @@ export class Level {
         this.number = number;
         this.map = map;
         this.entities = entities;
-        this.last_player_pos = null
+        this.last_player_pos = null;
+
+        const map_collisions = new Grid(map.grid.width, map.grid.height);
+        for (let y = 0; y < map_collisions.height; y++) {
+            for (let x = 0; x < map_collisions.width; x++) {
+                const tile = map.grid.get(x, y);
+                if (tile == 0) {
+                    map_collisions.set(x, y, 0);
+                }
+                else {
+                    map_collisions.set(x, y, 1)
+                }
+            }
+        }
+        this.map_collisions = map_collisions;
+
     }
 
     set_last_pos(x, y) {
         this.last_player_pos = new Point(x, y)
+    }
+    get_entity_collision(x, y) {
+        for (let entity of this.entities) {
+            if (entity.x == x && entity.y == y && entity.solid) {
+                return true;
+            }
+        }
+        return false;
+    }
+    get_collision_at(x, y) {
+        const map_collide = this.map_collisions.get(x, y) == 0;
+        const entity_collide = this.get_entity_collision(x, y);
+
+        return map_collide || entity_collide;
+    }
+    get_collision_map() {
+        let map_data = structuredClone(this.map_collisions);
+        for (let entity of this.entities) {
+            if (entity.solid) {
+                map_data.set(entity.x, entity.y, 0);
+            }
+        }
+        return map_data;
+    }
+    get_entities(x, y) {
+        let found = [];
+        for (const entity of this.entities) {
+            if (entity.x == x && entity.y == y) {
+                found.push(entity);
+            }
+        }
+        return found;
+    }
+    remove_entity(entity) {
+        let idx = this.entities.indexOf(entity)
+        this.entities.splice(idx, 1)
     }
 }
 
