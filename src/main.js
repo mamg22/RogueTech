@@ -118,6 +118,9 @@ export class Entity {
         //         return;
         //     }
         // }
+        if (this.x == x && this.y == y) {
+            return false;
+        }
         if (state.level.get_collision_at(x, y)) {
             return false;
         }
@@ -381,13 +384,19 @@ function init_game() {
     render();
 }
 
-function inspect_entity(x, y) {
+async function inspect_entity(x, y) {
     const dialog = document.getElementById('entityinfo-dialog');
 
     for (const entity of state.level.get_entities(x, y)) {
         dialog.showModal();
-        state.state = State.player_turn;
+        let wait_promise = new Promise(function (resolve, reject){
+            dialog.addEventListener('close', function(){
+                resolve();
+            })
+        });
+        await wait_promise;
     }
+    state.state = State.player_turn;
 }
 globalThis.inspect_entity = inspect_entity;
 
