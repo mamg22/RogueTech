@@ -16,3 +16,5 @@ servidor.bak/
 .env
 
 dist/
+static/main-compiled.js
+static/main-compiled.js.map
