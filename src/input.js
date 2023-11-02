@@ -98,7 +98,7 @@ function pinch_remove_event(ev) {
     evCache.splice(index, 1);
 }
 
-window.addEventListener('wheel', function(e) {
+game_view.addEventListener('wheel', function(e) {
     if (Math.abs(e.deltaY) > 3){
         zoom(Math.sign(e.deltaY))
     }
