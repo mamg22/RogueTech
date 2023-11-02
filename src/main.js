@@ -371,18 +371,20 @@ function finish_run() {
 
 
 function init_game() {
-    const proc_gen = new Chance()
+    let proc_gen = new Chance()
 
     state.player = new Entity(5, 3, "Jugador", "El jugador", true, sprites.player.standing, 1)
     load_settings();
+    state.levels = [];
     for (let i = 0; i < 5; i++) {
-        const level = generate_level(proc_gen, i+1);
+        let level = generate_level(proc_gen, i+1);
         state.levels.push(level)
     }
     state.level = state.levels[0];
     render_map();
     render();
 }
+globalThis.init_game = init_game;
 
 async function inspect_entity(x, y) {
     const dialog = document.getElementById('entityinfo-dialog');
