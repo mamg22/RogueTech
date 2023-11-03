@@ -416,12 +416,12 @@ export class Level {
         }
         return map_data;
     }
-    get_all_entities() {
+    get_entities() {
         return this.entities.toSorted(function (a, b) {
             return a.type - b.type;
         });
     }
-    get_entities(x, y) {
+    get_entities_at(x, y) {
         let found = [];
         for (const entity of this.entities) {
             if (entity.x == x && entity.y == y) {
