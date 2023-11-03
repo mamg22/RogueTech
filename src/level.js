@@ -262,13 +262,13 @@ function do_map_splits(rng, node, n, config) {
 }
 
 function generate_map(rng) {
-    let grid = new Grid(48, 24);
+    let grid = new Grid(40, 30);
     const root = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
 
-    const SPLITS = 5;
+    const SPLITS = 6;
     const split_config = {
         MIN_SIZE: 5,
-        MAX_SIZE: 12,
+        MAX_SIZE: 10,
         SPLIT_END_CHANCE: 25,
         WIDTH_THRESHOLD: 1.25,
         HEIGHT_THRESHOLD: 1.25,
@@ -335,11 +335,11 @@ function place_entities(rng, map) {
     const N_ENTITIES = 10;
 
     const entity_templates = [
-        [ 9, 3, "Robot", "X", true, sprites.enemy.standing, -1],
-        [ 24, 13, "Botella de agua", "X", false, sprites.items.water_bottle, 1],
-        [ 3, 12, "DVD", "X", false, sprites.items.dvd, 1],
-        [ 29, 7, "Pendrive", "X", false, sprites.items.pendrive, 1],
-        [ 20, 2, "Maquina", "X", true, sprites.decoration.vending_machine, 1],
+        ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1],
+        ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1],
+        ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1],
+        ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1],
+        ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1],
     ];
 
     let entities = [];
@@ -356,7 +356,7 @@ function place_entities(rng, map) {
         let template = entity_templates[entity_idx]
         let entity = new Entity(
             room_pos.x, room_pos.y,
-            template[2], template[3], template[4], template[5]
+            ...template
         );
 
         entities.push(entity);
