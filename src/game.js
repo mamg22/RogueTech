@@ -1,9 +1,11 @@
 import Chance from 'chance';
 
-import { wait_for, clamp, world_to_grid, grid_to_world } from './utility';
+import { wait_for, clamp, world_to_grid, grid_to_world, transpose_array } from './utility';
+import { Point } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
 import { sprites, audios } from './resources';
+import { astar, Graph } from './libs/astar';
 
 export class Game {
     static State = Object.freeze({
@@ -19,7 +21,7 @@ export class Game {
         this.player = new Entity(
             3, 3,
             "Jugador", "El jugador",
-            true, sprites.player.standing, 1);
+            true, sprites.player.standing, Entity.Type.player, 1);
 
         this.levels = [];
         for (let i = 0; i < 5; i++) {
@@ -32,9 +34,10 @@ export class Game {
         this.state = Game.State.player_turn;
         this.scale = 1.0;
         this.start_time = null;
+        this.turn = 1;
     }
 
-    render() {
+    async render() {
         const entities_elt = document.querySelector("#entities");
         const entity_elements = entities_elt.children;
         const entity_ids = this.level.entities.map(function(entity){
@@ -52,6 +55,7 @@ export class Game {
             this.level.entities.push(this.player);
         }
         
+        let animations = [];
         for (const entity of this.level.entities) {
             const elem_id = "entity-" + entity.id;
             let elem = document.getElementById(elem_id);
@@ -64,11 +68,30 @@ export class Game {
                 elem.append(elem_img);
                 entities_elt.append(elem);
             }
+            let anim = elem.animate([
+                {left: elem.style.left,
+                top:  elem.style.top},
+                {left: CSS.px(grid_to_world(entity.x)),
+                 top:  CSS.px(grid_to_world(entity.y))}
+                ],
+                {
+                    duration: 125
+                }
+            );
+            animations.push(wait_for(anim, 'finish'));
             elem.style.left = CSS.px(grid_to_world(entity.x));
             elem.style.top = CSS.px(grid_to_world(entity.y));
             const facing = entity.facing;
             elem.style.setProperty('--flip', entity.facing)
         }
+        await Promise.all(animations);
+        const player_elem_id = "entity-" + this.player.id;
+        const player_elem = document.getElementById(player_elem_id);
+        player_elem.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center"
+        });
     }
     
 
@@ -133,13 +156,37 @@ export class Game {
     }
 
     handle_input(x, y) {
+        let action_list = []
         switch (this.state) {
             case Game.State.player_turn:
-                if (! this.level.get_collision_at(x, y)) {
-                    this.player.move(x, y);
+                if (Math.abs(this.player.x - x) > 1 || Math.abs(this.player.y - y) > 1) {
+                    let graph = new Graph(transpose_array(this.level.get_collision_map().content), {
+                        diagonal: true
+                    });
+                    let start = graph.grid[this.player.x][this.player.y];
+                    let end = graph.grid[x][y];
+                    let result = astar.search(graph, start, end, {
+                        heuristic: astar.heuristics.diagonal,
+                    });
+                    for (let move of result) {
+                        action_list.push({move: new Point(move.x, move.y)})
+                    }
+                    this.push_msg("Eso esta muy lejos");
+                    break;
                 }
-                if (this.level.get_entities(x, y).length > 0) {
-                    this.push_msg("Atacas al ")
+                if (! this.level.get_collision_at(x, y)) {
+                    action_list.push({move: new Point(x, y)})
+                    break;
+                }
+                let entities = this.level.get_entities(x, y);
+                if (entities.length > 0) {
+                    const target = entities[0];
+                    if (target.solid) {
+                        this.push_msg("Atacas: " + entities[0].name)
+                    }
+                    else {
+                        this.push_msg("Recoges: " + entities[0].name)
+                    }
                 }
                 // TODO: No usar A* para movimiento basico de r=1, solo para distancias x,y > 1 e IA
                 // usar checkeo basico de colision al tocar
@@ -150,10 +197,28 @@ export class Game {
             default:
                 break;
         }
-        this.render();
+        this.tick_turns(action_list);
     }
 
-    tick_turns() {
+    async tick_turns(actions) {
+        for (const action of actions) {
+            console.log(this.turn + " ",action);
+            if (action.move) {
+                const point = action.move;
+                this.player.move(point.x, point.y)
+            }
+            let ch = Chance();
+            for (const entity of this.level.entities) {
+                if (entity.type != Entity.Type.player) {
+                    entity.move_relative(
+                        ch.integer({min: -1, max: 1}),
+                        ch.integer({min: -1, max: 1}),
+                    )
+                }
+            }
+            await this.render();
+            this.turn++;
+        }
     }
 
     async process_inspect(x, y) {
