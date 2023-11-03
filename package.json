@@ -1,7 +1,7 @@
 {
 	"scripts": {
-		"build": "esbuild src/main.js --outfile=static/main-compiled.js --bundle",
-		"watch": "esbuild src/main.js --outfile=static/main-compiled.js --bundle --watch"
+		"build": "esbuild src/main.js --outfile=static/main-compiled.js --bundle --sourcemap",
+		"watch": "esbuild src/main.js --outfile=static/main-compiled.js --bundle --watch --sourcemap"
 	},
 	"dependencies": {
 		"chance": "^1.1.11",
