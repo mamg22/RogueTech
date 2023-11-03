@@ -9,6 +9,8 @@ import { astar, Graph } from './libs/astar';
 
 export class Game {
     static State = Object.freeze({
+        cancel: -1,
+        processing: 0,
         player_turn: 1,
         inspect: 2, 
     });
@@ -159,6 +161,10 @@ export class Game {
     handle_input(x, y) {
         let action_list = []
         switch (this.state) {
+            case Game.State.processing:
+                this.state = Game.State.cancel;
+                // Cannot handle input while busy
+                return;
             case Game.State.player_turn:
                 if (Math.abs(this.player.x - x) > 1 || Math.abs(this.player.y - y) > 1) {
                     let graph = new Graph(transpose_array(this.level.get_collision_map().content), {
@@ -172,7 +178,6 @@ export class Game {
                     for (let move of result) {
                         action_list.push({move: new Point(move.x, move.y)})
                     }
-                    this.push_msg("Eso esta muy lejos");
                     break;
                 }
                 if (! this.level.get_collision_at(x, y)) {
@@ -189,8 +194,6 @@ export class Game {
                         this.push_msg("Recoges: " + entities[0].name)
                     }
                 }
-                // TODO: No usar A* para movimiento basico de r=1, solo para distancias x,y > 1 e IA
-                // usar checkeo basico de colision al tocar
                 break;
             case Game.State.inspect:
                 this.process_inspect(x, y);
@@ -202,7 +205,11 @@ export class Game {
     }
 
     async tick_turns(actions) {
+        this.state = Game.State.processing;
         for (const action of actions) {
+            if (this.state === Game.State.cancel) {
+                break;
+            }
             console.log(this.turn + " ",action);
             if (action.move) {
                 const point = action.move;
@@ -220,6 +227,7 @@ export class Game {
             await this.render();
             this.turn++;
         }
+        this.state = Game.State.player_turn;
     }
 
     async process_inspect(x, y) {
