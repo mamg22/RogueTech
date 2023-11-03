@@ -421,6 +421,10 @@ export class Level {
                 found.push(entity);
             }
         }
+        // Sort by priotity
+        found.sort(function (a, b) {
+            return a.type - b.type;
+        })
         return found;
     }
     remove_entity(entity) {
