@@ -6,9 +6,10 @@ export class Entity {
         npc: 2,
         item: 3,
         stair: 4,
+        decoration: 5,
     })
 
-    constructor(x, y, name, description, solid, sprite, facing=1, components={}) {
+    constructor(x, y, name, description, solid, sprite, type, facing=1, components={}) {
         this.id = Entity.id_counter++;
 
         this.x = x;
@@ -17,6 +18,7 @@ export class Entity {
         this.descritpion = description;
         this.solid = solid;
         this.sprite = sprite;
+        this.type = type;
         this.facing = this.facing;
 
         for (const component in components) {
