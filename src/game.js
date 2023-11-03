@@ -66,6 +66,7 @@ export class Game {
                 let elem_img = document.createElement("img");
                 elem_img.src = entity.sprite;
                 elem.append(elem_img);
+                elem.style.zIndex = 25 - entity.type;
                 entities_elt.append(elem);
             }
             let anim = elem.animate([
