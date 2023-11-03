@@ -385,11 +385,13 @@ export class Level {
             }
         }
         this.map_collisions = map_collisions;
-
     }
 
     set_last_pos(x, y) {
         this.last_player_pos = new Point(x, y)
+    }
+    get_map_collision(x, y) {
+        return this.map_collisions.get(x, y) == 0;
     }
     get_entity_collision(x, y) {
         for (let entity of this.entities) {
@@ -413,6 +415,11 @@ export class Level {
             }
         }
         return map_data;
+    }
+    get_all_entities() {
+        return this.entities.toSorted(function (a, b) {
+            return a.type - b.type;
+        });
     }
     get_entities(x, y) {
         let found = [];
