@@ -1,6 +1,6 @@
 import { Rectangle } from './common';
 import { sprites } from './resources';
-import { Entity } from './main';
+import { Entity } from './entity';
 
 class Grid {
     constructor(width, height, default_value=0) {

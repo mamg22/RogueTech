@@ -53,12 +53,12 @@ export function get_move_dir(old_x, new_x) {
 }
 
 export function world_to_grid(x, with_scale=true) {
-    let value_scale = with_scale ? state.scale : 1;
+    let value_scale = with_scale ? globalThis.game.scale : 1;
     return Math.floor(x / (GRID_SIZE * value_scale));
 }
 
 export function grid_to_world(x, with_scale=true) {
-    let value_scale = with_scale ? state.scale : 1;
+    let value_scale = with_scale ? globalThis.game.scale : 1;
     return Math.floor(x * (GRID_SIZE * value_scale));
 }
 
