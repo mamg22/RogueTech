@@ -128,12 +128,11 @@ export class Game {
         map_table.replaceWith(new_table);
     }
 
-    switch_level(direction) {
-        direction = Math.sign(direction);
+    switch_level(target_level) {
         const current_level_number = this.level.number;
     
         const new_level = this.levels.find(function (item) {
-            return item.number == current_level_number + direction;
+            return item.number == target_level;
         });
     
         let level_info = document.getElementsByClassName('floor-indicator-value');
@@ -144,7 +143,7 @@ export class Game {
             const new_pos = this.level.last_player_pos;
             if (new_pos) {
                 this.player.x = new_pos.x;
-                this .player.y = new_pos.y;
+                this.player.y = new_pos.y;
             }
             this.render_map();
             this.render();
