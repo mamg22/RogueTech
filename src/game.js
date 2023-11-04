@@ -138,6 +138,12 @@ export class Game {
         const health_indicator = document.getElementById('health-indicator-value');
         const player_fighter = this.player.fighter;
         health_indicator.innerText = `${player_fighter.hp}/${player_fighter.max_hp}`
+
+        let level_info = document.getElementsByClassName('floor-indicator-value');
+        for (const indicator of level_info) {
+            indicator.innerText = this.level.number; 
+        }
+
     }
 
     switch_level(target_level) {
@@ -146,8 +152,6 @@ export class Game {
         const new_level = this.levels.find(function (item) {
             return item.number == target_level;
         });
-    
-        let level_info = document.getElementsByClassName('floor-indicator-value');
     
         if (new_level) {
             this.level.set_last_pos(this.player.x, this.player.y);
@@ -158,10 +162,6 @@ export class Game {
                 this.player.y = new_pos.y;
             }
             this.render_map();
-            this.render();
-            for (const indicator of level_info) {
-                indicator.innerText = new_level.number; 
-            }
             return true;
         }
         else {
@@ -177,27 +177,32 @@ export class Game {
             // Cannot handle input while busy
             return;
         case Game.State.player_turn:
-            if (this.player.x == x && this.player.y == y) {
-                return;
-            }
-            if (! this.player.can_reach(x, y)) {
-                let result = find_path(this.level.get_collision_map().content,
-                    this.player.x, this.player.y, x, y);
-                for (let move of result) {
-                    this.player.handler.push_action({move: new Point(move.x, move.y)})
+            if (! (this.player.x == x && this.player.y == y)) {
+                if (! this.player.can_reach(x, y)) {
+                    let result = find_path(this.level.get_collision_map().content,
+                        this.player.x, this.player.y, x, y);
+                    for (let move of result) {
+                        this.player.handler.push_action({move: new Point(move.x, move.y)})
+                    }
+                    break;
                 }
-                break;
-            }
-            if (!this.level.get_collision_at(x, y)) {
-                this.player.handler.push_action({move: new Point(x, y)})
-                break;
+                if (!this.level.get_collision_at(x, y)) {
+                    this.player.handler.push_action({move: new Point(x, y)})
+                    break;
+                }
             }
             let entities = this.level.get_entities_at(x, y);
+            const is_targeting_self = entities[0]?.type == Entity.Type.player;
+            if (is_targeting_self) {
+                entities.shift();
+            }
             if (entities.length > 0) {
                 const target = entities[0];
                 if (target.type == Entity.Type.npc) {
                     this.player.handler.push_action({attack: target})
-                    // this.player.fighter.attack(target);
+                }
+                else if (target.type == Entity.Type.stair) {
+                    this.player.handler.push_action({switch_level: target.stair.target_floor})
                 }
                 else {
                     this.push_msg("Recoges: " + entities[0].name)
@@ -222,6 +227,7 @@ export class Game {
             for (const entity of this.level.get_entities()) {
                 if (entity.handler) {
                     const action = entity.handler.next_action(this.player, this.level);
+                    console.log(action)
                     if (action.move) {
                         const point = action.move;
                         entity.move(point.x, point.y);
@@ -233,6 +239,11 @@ export class Game {
                     else if (action.attack) {
                         const target = action.attack;
                         entity.fighter.attack(target)
+                    }
+                    else if (action.switch_level) {
+                        const target_floor = action.switch_level;
+                        this.switch_level(target_floor);
+                        return
                     }
                 }
             }

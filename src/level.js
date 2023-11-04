@@ -1,8 +1,9 @@
-import { Rectangle } from './common';
+import { Point, Rectangle } from './common';
 import { sprites } from './resources';
 import { Entity } from './entity';
 import { RandomWalkHandler } from './components/handler';
 import { Fighter } from './components/fighter';
+import { Stair } from './components/stair';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -344,7 +345,7 @@ function place_entities(rng, map, level) {
 
     // Exclude the first room, which is all the way to the left in the tree
     // So first in the array
-    const rooms = map.tree.get_leaves().slice(1);
+    const rooms = map.tree.get_leaves();
     for (let i = 0; i < N_ENTITIES; i++) {
         const entity_templates = [
             ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
@@ -357,7 +358,7 @@ function place_entities(rng, map, level) {
             // ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1],
         ];
     
-        const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
+        const room_idx = rng.integer({ min: 1, max: rooms.length - 1 });
         const room = rooms[room_idx];
 
         const room_pos = room.rect.get_random_point(rng);
@@ -369,6 +370,34 @@ function place_entities(rng, map, level) {
         );
 
         entities.push(entity);
+    }
+
+    if (level < 5) {
+        const room_idx = rng.integer({ min: rooms.length - 4, max: rooms.length - 1 });
+        const room = rooms[room_idx];
+        const center_pos = new Point(
+            room.rect.x + Math.round(room.rect.width / 2),
+            room.rect.y + Math.round(room.rect.height / 2),
+        );
+        entities.push(new Entity(center_pos.x, center_pos.y,
+            "Escalera", "Escalera hacia arriba",
+            false, sprites.decoration.stair_up, Entity.Type.stair,
+            1, {
+                stair: new Stair(level, 1)
+            }))
+    }
+    if (level > 1) {
+        const room = rooms[1];
+        const center_pos = new Point(
+            room.rect.x + Math.round(room.rect.width / 2),
+            room.rect.y + Math.round(room.rect.height / 2),
+        );
+        entities.push(new Entity(center_pos.x, center_pos.y,
+            "Escalera", "Escalera hacia abajo",
+            false, sprites.decoration.stair_down, Entity.Type.stair,
+            1, {
+                stair: new Stair(level, -1)
+            }))
     }
 
     return entities;

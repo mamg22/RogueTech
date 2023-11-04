@@ -18,7 +18,9 @@ export const sprites = {
     },
     decoration: {
         vending_machine: "/static/res/decoration/vending_machine.png",
-        boom: "/static/res/etc/boom.gif"
+        boom: "/static/res/etc/boom.gif",
+        stair_up: "/static/res/decoration/stair-up.png",
+        stair_down: "/static/res/decoration/stair-down.png",
     },
     etc: {
         boom: "/static/res/etc/boom.gif"
