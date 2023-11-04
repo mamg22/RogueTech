@@ -1,4 +1,4 @@
-import { get_move_dir } from './utility';
+import { get_move_dir, find_path } from './utility';
 
 export class Entity {
     static Type = Object.freeze({
@@ -45,6 +45,13 @@ export class Entity {
 
         if (! level.get_collision_at(this.x + movement_x, this.y + movement_y)) {
             this.move_relative(movement_x, movement_y);
+        }
+    }
+
+    move_astar(target_x, target_y, level) {
+        const path = find_path(level.get_collision_map().content, this.x, this.y, target_x, target_y, true);
+        if (path.length > 0) {
+            this.move(path[0].x, path[0].y);
         }
     }
 
