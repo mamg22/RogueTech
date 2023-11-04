@@ -35,6 +35,28 @@ export class Entity {
         }
     }
 
+    can_see(target, level, max_distance) {
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+
+        const distance = Math.sqrt(dx ** 2 + dy ** 2);
+        const max_orth_dist = Math.max(Math.abs(dx), Math.abs(dy));
+
+        if (distance > max_distance) {
+            return false;
+        }
+
+        for (let i = 1; i <= max_orth_dist; i++) {
+            const dist_frac = i / max_orth_dist;
+            const x = this.x + Math.round(dx * dist_frac);
+            const y = this.y + Math.round(dy * dist_frac);
+            if (level.get_map_collision(x, y)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     can_move(x, y) {
         
     }
