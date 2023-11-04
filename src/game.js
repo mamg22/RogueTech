@@ -1,11 +1,12 @@
 import Chance from 'chance';
 
-import { wait_for, clamp, world_to_grid, grid_to_world, transpose_array } from './utility';
+import { wait_for, clamp, world_to_grid, grid_to_world, find_path } from './utility';
 import { Point } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
 import { sprites, audios } from './resources';
 import { astar, Graph } from './libs/astar';
+import { PlayerHandler } from './components/handler';
 
 export class Game {
     static State = Object.freeze({
@@ -23,7 +24,10 @@ export class Game {
         this.player = new Entity(
             3, 3,
             "Jugador", "El jugador",
-            true, sprites.player.standing, Entity.Type.player, 1);
+            true, sprites.player.standing, Entity.Type.player, 1,
+            {
+                handler: new PlayerHandler(),
+            });
 
         this.levels = [];
         for (let i = 0; i < 5; i++) {
@@ -158,32 +162,26 @@ export class Game {
     }
 
     handle_input(x, y) {
-        let action_list = []
         switch (this.state) {
             case Game.State.processing:
                 this.state = Game.State.cancel;
+                this.player.handler.clear_actions();
                 // Cannot handle input while busy
                 return;
             case Game.State.player_turn:
                 if (Math.abs(this.player.x - x) > 1 || Math.abs(this.player.y - y) > 1) {
-                    let graph = new Graph(transpose_array(this.level.get_collision_map().content), {
-                        diagonal: true
-                    });
-                    let start = graph.grid[this.player.x][this.player.y];
-                    let end = graph.grid[x][y];
-                    let result = astar.search(graph, start, end, {
-                        heuristic: astar.heuristics.diagonal,
-                    });
+                    let result = find_path(this.level.get_collision_map().content,
+                        this.player.x, this.player.y, x, y);
                     for (let move of result) {
-                        action_list.push({move: new Point(move.x, move.y)})
+                        this.player.handler.push_action({move: new Point(move.x, move.y)})
                     }
                     break;
                 }
                 if (! this.level.get_collision_at(x, y)) {
-                    action_list.push({move: new Point(x, y)})
+                    this.player.handler.push_action({move: new Point(x, y)})
                     break;
                 }
-                let entities = this.level.get_entities(x, y);
+                let entities = this.level.get_entities_at(x, y);
                 if (entities.length > 0) {
                     const target = entities[0];
                     if (target.solid) {
@@ -200,39 +198,58 @@ export class Game {
             default:
                 break;
         }
-        this.tick_turns(action_list);
+        this.tick_turns();
     }
 
     async tick_turns(actions) {
         this.state = Game.State.processing;
-        for (const action of actions) {
+        while (this.player.handler.has_action()) {
             if (this.state === Game.State.cancel) {
                 break;
             }
-            console.log(this.turn + " ",action);
-            if (action.move) {
-                const point = action.move;
-                this.player.move(point.x, point.y)
-            }
-            let ch = Chance();
-            for (const entity of this.level.entities) {
-                if (entity.type != Entity.Type.player) {
-                    entity.move_relative(
-                        ch.integer({min: -1, max: 1}),
-                        ch.integer({min: -1, max: 1}),
-                    )
+            for (const entity of this.level.get_entities()) {
+                if (entity.handler) {
+                    const action = entity.handler.next_action(this.player, this.level);
+                    if (action.move) {
+                        const point = action.move;
+                        entity.move(point.x, point.y);
+                    }
+                    else if (action.move_rel) {
+                        const point = action.move_rel;
+                        entity.move_relative(point.x, point.y);
+                    }
                 }
             }
             await this.render();
             this.turn++;
         }
+        // for (const action of actions) {
+        //     if (this.state === Game.State.cancel) {
+        //         break;
+        //     }
+        //     if (action.move) {
+        //         const point = action.move;
+        //         this.player.move(point.x, point.y)
+        //     }
+        //     let ch = Chance();
+        //     for (const entity of this.level.get_entities()) {
+        //         if (entity.type != Entity.Type.player) {
+        //             entity.move_relative(
+        //                 ch.integer({min: -1, max: 1}),
+        //                 ch.integer({min: -1, max: 1}),
+        //             )
+        //         }
+        //     }
+        //     await this.render();
+        //     this.turn++;
+        // }
         this.state = Game.State.player_turn;
     }
 
     async process_inspect(x, y) {
         const dialog = document.getElementById('entityinfo-dialog');
     
-        for (const entity of this.level.get_entities(x, y)) {
+        for (const entity of this.level.get_entities_at(x, y)) {
             dialog.showModal();
             await wait_for(dialog, 'close');
         }

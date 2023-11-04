@@ -1,6 +1,7 @@
 import { Rectangle } from './common';
 import { sprites } from './resources';
 import { Entity } from './entity';
+import { RandomWalkHandler } from './components/handler';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -334,13 +335,6 @@ function generate_map(rng) {
 function place_entities(rng, map) {
     const N_ENTITIES = 10;
 
-    const entity_templates = [
-        ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1],
-        ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1],
-        ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1],
-        ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1],
-        ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1],
-    ];
 
     let entities = [];
 
@@ -348,6 +342,16 @@ function place_entities(rng, map) {
     // So first in the array
     const rooms = map.tree.get_leaves().slice(1);
     for (let i = 0; i < N_ENTITIES; i++) {
+        const entity_templates = [
+            ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
+                handler: new RandomWalkHandler()
+            }],
+            // ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1],
+            // ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1],
+            // ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1],
+            // ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1],
+        ];
+    
         const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
         const room = rooms[room_idx];
 
