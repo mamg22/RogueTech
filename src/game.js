@@ -179,11 +179,11 @@ export class Game {
         case Game.State.player_turn:
             if (! (this.player.x == x && this.player.y == y)) {
                 if (! this.player.can_reach(x, y)) {
-                    let result = find_path(this.level.get_collision_map().content,
-                        this.player.x, this.player.y, x, y);
-                    for (let move of result) {
-                        this.player.handler.push_action({move: new Point(move.x, move.y)})
-                    }
+                    // let result = find_path(this.level.get_collision_map().content,
+                    //     this.player.x, this.player.y, x, y);
+                    // for (let move of result) {
+                    this.player.handler.push_action({move_astar: new Point(x, y)})
+                    // }
                     break;
                 }
                 if (!this.level.get_collision_at(x, y)) {
@@ -235,6 +235,10 @@ export class Game {
                     else if (action.move_rel) {
                         const point = action.move_rel;
                         entity.move_relative(point.x, point.y);
+                    }
+                    else if (action.move_astar) {
+                        const target = action.move_astar;
+                        entity.move_astar(target.x, target.y, this.level, true);
                     }
                     else if (action.attack) {
                         const target = action.attack;

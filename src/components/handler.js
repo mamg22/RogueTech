@@ -4,8 +4,20 @@ import { find_path } from '../utility';
 export class PlayerHandler {
     constructor() {
         this.action_queue = [];
+        this.astar_target = null;
     }
     next_action() {
+        const action = this.action_queue[0];
+        console.log(this.action_queue);
+        if (action) {
+            if (action.move_astar) {
+                const target = action.move_astar;
+                this.astar_target = target;
+                if (! this.owner.can_reach(this.astar_target.x, this.astar_target.y)) {
+                    this.action_queue.push(action);
+                }
+            }
+        }
         return this.action_queue.shift();
     }
     has_action() {
@@ -44,8 +56,7 @@ export class RandomWalkHandler {
         }
         const route = find_path(map, owner.x, owner.y, this.last_known_pos.x, this.last_known_pos.y, true);
         if (route.length > 0 && route.length < 6) {
-            const step = route[0];
-            return {move: new Point(step.x, step.y)};
+            return {move_astar: new Point(this.last_known_pos.x, this.last_known_pos.y)};
         }
         return {}
     }
