@@ -227,7 +227,7 @@ function do_map_splits(rng, node, n, config) {
     }
     if (node.rect.width <= config.MAX_SIZE &&
         node.rect.height <= config.MAX_SIZE &&
-        rng.bool({likelihhod: config.SPLIT_END_CHANCE})) {
+        rng.bool({likelihood: config.SPLIT_END_CHANCE})) {
         return
     }
 
@@ -263,7 +263,7 @@ function do_map_splits(rng, node, n, config) {
     do_map_splits(rng, node.right, n - 1, config);
 }
 
-function generate_map(rng) {
+function generate_map(rng, level) {
     let grid = new Grid(40, 30);
     const root = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
 
@@ -322,7 +322,10 @@ function generate_map(rng) {
             if (ok_sides == 2) {
                 grid.set(hole_pos.x, hole_pos.y, 1);
                 branch.hole_offset = hole_offset;
-                break;
+                // 20% chance to make another hole
+                if (rng.bool({likelihood: 80})) {
+                    break;
+                }
             }
             else {
                 tried.push(hole_offset);
@@ -333,7 +336,7 @@ function generate_map(rng) {
     return {grid: grid, tree: root};
 }
 
-function place_entities(rng, map) {
+function place_entities(rng, map, level) {
     const N_ENTITIES = 10;
 
 
@@ -447,8 +450,8 @@ export class Level {
 }
 
 export function generate_level(rng, level) {
-    const game_map = generate_map(rng);
-    const entities = place_entities(rng, game_map)
+    const game_map = generate_map(rng, level);
+    const entities = place_entities(rng, game_map, level)
 
     return new Level(level, game_map, entities);
 }
