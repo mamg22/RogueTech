@@ -21,8 +21,10 @@ export class Entity {
         this.type = type;
         this.facing = this.facing;
 
-        for (const component in components) {
-            this[component] = components[component];
+        for (const component_name in components) {
+            const component = components[component_name];
+            this[component_name] = component;
+            component.owner = this;
         }
     }
 
