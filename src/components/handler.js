@@ -6,15 +6,16 @@ export class PlayerHandler {
         this.action_queue = [];
         this.astar_target = null;
     }
-    next_action() {
+    next_action(player, level) {
         const action = this.action_queue[0];
-        console.log(this.action_queue);
+        const owner = this.owner;        
+        
         if (action) {
             if (action.move_astar) {
-                const target = action.move_astar;
-                this.astar_target = target;
-                if (! this.owner.can_reach(this.astar_target.x, this.astar_target.y)) {
-                    this.action_queue.push(action);
+                const map = level.get_collision_map().content
+                const route = find_path(map, owner.x, owner.y, action.move_astar.x, action.move_astar.y, false);
+                if (route.length != 0) {
+                    this.action_queue.unshift(action);
                 }
             }
         }

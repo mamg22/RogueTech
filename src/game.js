@@ -222,12 +222,12 @@ export class Game {
         this.state = Game.State.processing;
         while (this.player.handler.has_action()) {
             if (this.state === Game.State.cancel) {
+                this.player.handler.clear_actions()
                 break;
             }
             for (const entity of this.level.get_entities()) {
                 if (entity.handler) {
                     const action = entity.handler.next_action(this.player, this.level);
-                    console.log(action)
                     if (action.move) {
                         const point = action.move;
                         entity.move(point.x, point.y);
@@ -238,7 +238,10 @@ export class Game {
                     }
                     else if (action.move_astar) {
                         const target = action.move_astar;
-                        entity.move_astar(target.x, target.y, this.level, true);
+                        const result = entity.move_astar(target.x, target.y, this.level, entity.type != Entity.Type.player)
+                        if (result.moved == 0) {
+                            entity.clear_actions();
+                        };
                     }
                     else if (action.attack) {
                         const target = action.attack;
