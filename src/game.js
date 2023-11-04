@@ -237,6 +237,7 @@ export class Game {
                 }
             }
             await this.render();
+            this.render_ui();
             this.turn++;
         }
         // for (const action of actions) {

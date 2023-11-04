@@ -59,6 +59,7 @@ function init_game() {
     game.load_settings();
     game.render_map();
     game.render();
+    game.render_ui();
 }
 
 const server_info = JSON.parse(
