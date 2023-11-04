@@ -35,6 +35,19 @@ export class Entity {
         }
     }
 
+    move_towards(target_x, target_y, level) {
+        const dx = target_x - this.x;
+        const dy = target_y - this.y;
+        const distance = Math.sqrt(dx ** 2 + dy ** 2);
+
+        const movement_x = Math.round(dx / distance) || 0;
+        const movement_y = Math.round(dy / distance) || 0;
+
+        if (! level.get_collision_at(this.x + movement_x, this.y + movement_y)) {
+            this.move_relative(movement_x, movement_y);
+        }
+    }
+
     can_see(target, level, max_distance) {
         const dx = target.x - this.x;
         const dy = target.y - this.y;
@@ -55,6 +68,12 @@ export class Entity {
             }
         }
         return true;
+    }
+
+    can_reach(x, y) {
+        const dx = Math.abs(this.x - x);
+        const dy = Math.abs(this.y - y);
+        return dx <= 1 && dy <= 1;
     }
 
     can_move(x, y) {
