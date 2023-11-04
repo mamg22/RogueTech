@@ -240,26 +240,6 @@ export class Game {
             this.render_ui();
             this.turn++;
         }
-        // for (const action of actions) {
-        //     if (this.state === Game.State.cancel) {
-        //         break;
-        //     }
-        //     if (action.move) {
-        //         const point = action.move;
-        //         this.player.move(point.x, point.y)
-        //     }
-        //     let ch = Chance();
-        //     for (const entity of this.level.get_entities()) {
-        //         if (entity.type != Entity.Type.player) {
-        //             entity.move_relative(
-        //                 ch.integer({min: -1, max: 1}),
-        //                 ch.integer({min: -1, max: 1}),
-        //             )
-        //         }
-        //     }
-        //     await this.render();
-        //     this.turn++;
-        // }
         this.state = Game.State.player_turn;
     }
 
