@@ -28,17 +28,16 @@ export class RandomWalkHandler {
         const owner = this.owner
         const map = level.get_collision_map().content
         if (this.owner.can_reach(player.x, player.y)) {
-            this.owner.fighter.attack(player);
             return {attack: player};
         }
         if (this.owner.can_see(player, level, 5)) {
-            this.sight_count = Math.min(this.sight_count + 1, 2);
+            this.sight_count = Math.min(this.sight_count + 1, 10);
             if (this.sight_count >= 2) {
                 this.last_known_pos = new Point(player.x, player.y);
             }
         }
         else {
-            this.sight_count = Math.max (this.sight_count - 1, 0);
+            this.sight_count = Math.max (this.sight_count - 0.5, 0);
         }
         if (! this.last_known_pos) {
             return {};
