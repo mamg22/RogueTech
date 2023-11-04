@@ -2,6 +2,7 @@ import { Rectangle } from './common';
 import { sprites } from './resources';
 import { Entity } from './entity';
 import { RandomWalkHandler } from './components/handler';
+import { Fighter } from './components/fighter';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -344,7 +345,8 @@ function place_entities(rng, map) {
     for (let i = 0; i < N_ENTITIES; i++) {
         const entity_templates = [
             ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
-                handler: new RandomWalkHandler()
+                handler: new RandomWalkHandler(),
+                fighter: new Fighter(5, 2, 2)
             }],
             // ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1],
             // ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1],

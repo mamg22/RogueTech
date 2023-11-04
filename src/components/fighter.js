@@ -1,4 +1,4 @@
-class Fighter {
+export class Fighter {
     constructor(hp, power, defense) {
         this.max_hp = hp;
         this.hp = hp;
@@ -7,12 +7,16 @@ class Fighter {
     }
 
     take_damage(amount) {
-        self.hp -= amount;
+        this.hp -= amount;
+        if (this.hp <= 0) {
+            console.log(this, "Murio")
+        }
     }
 
-    def attack(target) {
-        const damage = self.power - target.fighter.defense;
+    attack(target) {
+        const damage = this.power - target.fighter.defense;
 
+        console.log(`${this.owner.name}${this.owner.id} attacks ${target.name}${target.id} for ${damage} damage`)
         if (damage > 0) {
             target.fighter.take_damage(damage);
         }

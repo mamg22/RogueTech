@@ -7,6 +7,7 @@ import { generate_level } from './level';
 import { sprites, audios } from './resources';
 import { astar, Graph } from './libs/astar';
 import { PlayerHandler } from './components/handler';
+import { Fighter } from './components/fighter';
 
 export class Game {
     static State = Object.freeze({
@@ -27,6 +28,7 @@ export class Game {
             true, sprites.player.standing, Entity.Type.player, 1,
             {
                 handler: new PlayerHandler(),
+                fighter: new Fighter(10, 4, 4)
             });
 
         this.levels = [];
@@ -163,40 +165,44 @@ export class Game {
 
     handle_input(x, y) {
         switch (this.state) {
-            case Game.State.processing:
-                this.state = Game.State.cancel;
-                this.player.handler.clear_actions();
-                // Cannot handle input while busy
+        case Game.State.processing:
+            this.state = Game.State.cancel;
+            this.player.handler.clear_actions();
+            // Cannot handle input while busy
+            return;
+        case Game.State.player_turn:
+            if (this.player.x == x && this.player.y == y) {
                 return;
-            case Game.State.player_turn:
-                if (Math.abs(this.player.x - x) > 1 || Math.abs(this.player.y - y) > 1) {
-                    let result = find_path(this.level.get_collision_map().content,
-                        this.player.x, this.player.y, x, y);
-                    for (let move of result) {
-                        this.player.handler.push_action({move: new Point(move.x, move.y)})
-                    }
-                    break;
-                }
-                if (! this.level.get_collision_at(x, y)) {
-                    this.player.handler.push_action({move: new Point(x, y)})
-                    break;
-                }
-                let entities = this.level.get_entities_at(x, y);
-                if (entities.length > 0) {
-                    const target = entities[0];
-                    if (target.solid) {
-                        this.push_msg("Atacas: " + entities[0].name)
-                    }
-                    else {
-                        this.push_msg("Recoges: " + entities[0].name)
-                    }
+            }
+            if (! this.player.can_reach(x, y)) {
+                let result = find_path(this.level.get_collision_map().content,
+                    this.player.x, this.player.y, x, y);
+                for (let move of result) {
+                    this.player.handler.push_action({move: new Point(move.x, move.y)})
                 }
                 break;
-            case Game.State.inspect:
-                this.process_inspect(x, y);
+            }
+            if (!this.level.get_collision_at(x, y)) {
+                this.player.handler.push_action({move: new Point(x, y)})
                 break;
-            default:
-                break;
+            }
+            let entities = this.level.get_entities_at(x, y);
+            if (entities.length > 0) {
+                const target = entities[0];
+                if (target.type == Entity.Type.npc) {
+                    this.player.handler.push_action({attack: target})
+                    // this.player.fighter.attack(target);
+                }
+                else {
+                    this.push_msg("Recoges: " + entities[0].name)
+                }
+            }
+            break;
+        case Game.State.inspect:
+            this.process_inspect(x, y);
+            break;
+        default:
+            break;
         }
         this.tick_turns();
     }
@@ -217,6 +223,10 @@ export class Game {
                     else if (action.move_rel) {
                         const point = action.move_rel;
                         entity.move_relative(point.x, point.y);
+                    }
+                    else if (action.attack) {
+                        const target = action.attack;
+                        entity.fighter.attack(target)
                     }
                 }
             }
