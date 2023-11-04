@@ -134,6 +134,12 @@ export class Game {
         map_table.replaceWith(new_table);
     }
 
+    render_ui() {
+        const health_indicator = document.getElementById('health-indicator-value');
+        const player_fighter = this.player.fighter;
+        health_indicator.innerText = `${player_fighter.hp}/${player_fighter.max_hp}`
+    }
+
     switch_level(target_level) {
         const current_level_number = this.level.number;
     
