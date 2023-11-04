@@ -71,10 +71,10 @@
                 on click
                     if I do not match .active
                         add .active
-                        set state.state to 2
+                        set game.state to 2
                     else
                         remove .active
-                        set state.state to 1
+                        set game.state to 1
                     end
                 end
                 ">
@@ -105,7 +105,7 @@
                 <input type="checkbox" class="hidden" name="music" id="music" checked
                 _="
                 on change
-                    call set_audio('bgm', not my checked)
+                    call game.set_audio('bgm', not my checked)
                     send change to next <span/>
                 end
                 on storage or gameload or load from window
@@ -132,7 +132,7 @@
                 <input type="checkbox" class="hidden" name="sound" id="sound" checked
                 _="
                 on change
-                    call set_audio('sfx', not my checked)
+                    call game.set_audio('sfx', not my checked)
                     send change to next <span/>
                 end
                 on storage or gameload or load from window
@@ -158,11 +158,11 @@
             </div>
         </div>
         <div class="center with-gap">
-            <div class="clickable" _="on click call window.zoom(1)">
+            <div class="clickable" _="on click call game.zoom(1)">
                 <span class="material-icons md-36">zoom_in</span>
             </div>
             Zoom
-            <div class="clickable" _="on click call window.zoom(-1)">
+            <div class="clickable" _="on click call game.zoom(-1)">
                 <span class="material-icons md-36">zoom_out</span>
             </div>
         </div>
@@ -193,8 +193,8 @@
         <div class="center">
             <button type="Submit" class="block" _="
             on click
-                call finish_run()
-                call show_gameover()
+                call game.finish_run()
+                call game.show_gameover()
             end
             "
             >Terminar Partida</button>
@@ -223,7 +223,7 @@ Tiempo: <span id="gameover-time"></span>
         call setup()
     end
     on click
-        window.upload_score()
+        game.upload_score()
     end
     on mutation of @open from closest <dialog/>
         call setup()

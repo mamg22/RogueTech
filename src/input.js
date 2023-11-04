@@ -1,4 +1,5 @@
 import { world_to_grid, grid_to_world } from './utility';
+import { audios } from './resources';
 
 const game_view = document.querySelector("#game-view");
 
@@ -75,7 +76,7 @@ function pinch_pointermove_handler(ev) {
         const delta = Math.abs(curDiff - prevDiff);
         const dir = Math.sign(curDiff - prevDiff)
         if (delta > 7) {
-            zoom(delta * dir)
+            game.zoom(delta * dir)
         }
       }
   
@@ -100,6 +101,6 @@ function pinch_remove_event(ev) {
 
 game_view.addEventListener('wheel', function(e) {
     if (Math.abs(e.deltaY) > 3){
-        zoom(Math.sign(e.deltaY))
+        game.zoom(Math.sign(e.deltaY))
     }
 })
