@@ -1,3 +1,5 @@
+import { astar, Graph } from './libs/astar';
+
 export const GRID_SIZE = 64;
 
 export function delay(ms) {
@@ -90,3 +92,17 @@ class TypedLocalStorage {
 
 export let typedLocalStorage = new TypedLocalStorage();
 globalThis.typedLocalStorage = typedLocalStorage;
+
+export function find_path(map, from_x, from_y, to_x, to_y, closest=false) {
+    let graph = new Graph(transpose_array(map), {
+        diagonal: true
+    });
+    let start = graph.grid[from_x][from_y];
+    let end = graph.grid[to_x][to_y];
+    let result = astar.search(graph, start, end, {
+        heuristic: astar.heuristics.diagonal,
+        closest: closest,
+    });
+
+    return result;
+}
