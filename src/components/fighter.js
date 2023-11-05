@@ -9,7 +9,12 @@ export class Fighter {
     }
 
     take_damage(amount) {
+        let results = [];
         this.hp -= amount;
+        if (this.hp <= 0) {
+            results.push({dead: this.owner})
+        }
+        return results
     }
 
     attack(target) {
@@ -21,7 +26,8 @@ export class Fighter {
             results.push({
                 message: new Message(`${this.owner.name} ataca ${target.name} por ${damage} de daño`)
             });
-            target.fighter.take_damage(damage);
+            const damage_result = target.fighter.take_damage(damage);
+            results.push(...damage_result);
         }
         else {
             results.push({

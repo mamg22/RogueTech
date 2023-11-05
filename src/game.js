@@ -256,9 +256,13 @@ export class Game {
                     }
                 }
                 for (const result of results) {
-                    if (result.message) {
+                    if ('message' in result) {
                         const msg = result.message;
                         this.push_msg(msg.text, msg.category);
+                    }
+                    if ('dead' in result) {
+                        const dead = result.dead;
+                        this.push_msg(`${dead.name} ha sido derrotado`);
                     }
                     if (entity.type == Entity.Type.player) {
                         if (result?.consumed === 0) {
