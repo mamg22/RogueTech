@@ -33,6 +33,7 @@ export class PlayerHandler {
     }
     clear_actions() {
         this.action_queue = [];
+        this.astar_mode = false;
     }
 }
 
