@@ -45,26 +45,22 @@ export class RandomWalkHandler {
     next_action(player, level) {
         const owner = this.owner
         const map = level.get_collision_map().content
+        let action = {};
         if (this.owner.can_reach(player.x, player.y)) {
-            return {attack: player};
+            action = {attack: player};
         }
-        if (this.owner.can_see(player, level, 5)) {
-            this.sight_count = Math.min(this.sight_count + 1, 10);
-            if (this.sight_count >= 2) {
-                this.last_known_pos = new Point(player.x, player.y);
+        else if (this.owner.can_see(player, level, 5) ||
+            Math.abs(this.owner.x - this.last_known_pos?.x) <= 1 &&
+            Math.abs(this.owner.y - this.last_known_pos?.y) <= 1) {
+            if (this.last_known_pos) {
+                const route = find_path(map, owner.x, owner.y, this.last_known_pos.x, this.last_known_pos.y, true);
+                if (route.length > 0 && route.length < 6) {
+                    action = {move_astar: new Point(this.last_known_pos.x, this.last_known_pos.y)};
+                }    
             }
+            this.last_known_pos = new Point(player.x, player.y);
         }
-        else {
-            this.sight_count = Math.max (this.sight_count - 0.5, 0);
-        }
-        if (! this.last_known_pos) {
-            return {};
-        }
-        const route = find_path(map, owner.x, owner.y, this.last_known_pos.x, this.last_known_pos.y, true);
-        if (route.length > 0 && route.length < 6) {
-            return {move_astar: new Point(this.last_known_pos.x, this.last_known_pos.y)};
-        }
-        return {}
+        return action;
     }
     has_action() {
         return true;
