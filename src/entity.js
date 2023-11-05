@@ -52,7 +52,6 @@ export class Entity {
 
     move_astar(target_x, target_y, level, closest) {
         const path = find_path(level.get_collision_map().content, this.x, this.y, target_x, target_y, closest);
-        console.log(path)
         if (path.length > 0) {
             this.move(path[0].x, path[0].y);
             return [{consumed: 1, astar_moved: true}];

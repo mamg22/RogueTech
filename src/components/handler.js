@@ -4,7 +4,7 @@ import { find_path } from '../utility';
 export class PlayerHandler {
     constructor() {
         this.action_queue = [];
-        this.astar_target = null;
+        this.astar_mode = false;
     }
     next_action(player, level) {
         const action = this.action_queue[0];
@@ -14,15 +14,19 @@ export class PlayerHandler {
             if (action.move_astar) {
                 const map = level.get_collision_map().content
                 const route = find_path(map, owner.x, owner.y, action.move_astar.x, action.move_astar.y, false);
-                if (route.length != 0) {
+                if (route.length > 1) {
+                    this.astar_mode = true;
                     this.action_queue.unshift(action);
+                }
+                else {
+                    this.astar_mode = false
                 }
             }
         }
         return this.action_queue.shift();
     }
     has_action() {
-        return this.action_queue.length > 0;
+        return this.action_queue.length > 0 || this.astar_mode;
     }
     push_action(action) {
         return this.action_queue.push(action)
