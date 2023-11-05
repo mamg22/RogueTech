@@ -333,7 +333,7 @@ export class Game {
             }
         }
         else {
-            push_msg("No hay nada para inspeccionar ahí")
+            this.push_msg("No hay nada para inspeccionar ahí")
         }
         this.set_state(Game.State.player_turn);
     }
