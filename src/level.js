@@ -408,7 +408,6 @@ export class Level {
         this.number = number;
         this.map = map;
         this.entities = entities;
-        this.last_player_pos = null;
 
         const map_collisions = new Grid(map.grid.width, map.grid.height);
         for (let y = 0; y < map_collisions.height; y++) {
@@ -425,9 +424,6 @@ export class Level {
         this.map_collisions = map_collisions;
     }
 
-    set_last_pos(x, y) {
-        this.last_player_pos = new Point(x, y)
-    }
     get_map_collision(x, y) {
         return this.map_collisions.get(x, y) == 0;
     }
