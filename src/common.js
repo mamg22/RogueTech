@@ -29,3 +29,10 @@ export class Rectangle {
         return `Rectangle((${this.x}, ${this.y}), w: ${this.width}, h: ${this.height})`;
     }
 }
+
+export class Message {
+    constructor(text, category='default') {
+        this.text = text;
+        this.category = category;
+    }
+}
