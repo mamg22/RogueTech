@@ -170,15 +170,29 @@ export class Game {
         }
     }
 
+    set_state(state) {
+        // player_dead is a terminal state, cannot be left
+        if (this.state != Game.State.player_dead) {
+            this.state = state;
+        }
+    }
+
     handle_ui_input(data) {
         switch (this.state) {
+        case Game.State.player_dead:
+            return;
         case Game.State.processing:
-            this.state = Game.State.cancel;
+            this.set_state(Game.State.cancel);
             this.player.handler.clear_actions();
             return;
         case Game.State.player_turn:
             if ('wait' in data) {
                 this.player.handler.push_action({wait: true});
+            }
+            if ('inspect' in data) {
+                this.push_msg("Elige algo para inspeccionar");
+                this.set_state(Game.State.inspect);
+                return;
             }
             break;
         }
@@ -188,7 +202,7 @@ export class Game {
     handle_input(x, y) {
         switch (this.state) {
         case Game.State.processing:
-            this.state = Game.State.cancel;
+            this.set_state(Game.State.cancel);
             this.player.handler.clear_actions();
             // Cannot handle input while busy
             return;
@@ -238,7 +252,7 @@ export class Game {
     }
 
     async tick_turns(actions) {
-        this.state = Game.State.processing;
+        this.set_state(Game.State.processing);
         outer: 
         while (this.player.handler.has_action()) {
             if (this.state === Game.State.cancel) {
@@ -284,6 +298,7 @@ export class Game {
                     if ('dead' in result) {
                         const dead = result.dead;
                         if (dead === this.player) {}
+                        dead.handler = null;
                         this.push_msg(`${dead.name} ha sido derrotado`);
                     }
                     if ('render_map' in result && result.render_map) {
@@ -304,17 +319,23 @@ export class Game {
             this.render_ui();
             this.turn++;
         }
-        this.state = Game.State.player_turn;
+        this.set_state(Game.State.player_turn);
     }
 
     async process_inspect(x, y) {
         const dialog = document.getElementById('entityinfo-dialog');
     
-        for (const entity of this.level.get_entities_at(x, y)) {
-            dialog.showModal();
-            await wait_for(dialog, 'close');
+        const entities = this.level.get_entities_at(x, y);
+        if (entities.length > 0) {
+            for (const entity of entities) {
+                dialog.showModal();
+                await wait_for(dialog, 'close');
+            }
         }
-        this.state = State.player_turn;
+        else {
+            push_msg("No hay nada para inspeccionar ahí")
+        }
+        this.set_state(Game.State.player_turn);
     }
 
     zoom(direction) {

@@ -86,17 +86,8 @@
                     <div><span class="material-icons md-36">schedule</span></div>
                 </div>    
                 <div class="inspect-button clickable" _="
-                init
-                    remove .active
-                end
                 on click
-                    if I do not match .active
-                        add .active
-                        set game.state to 2
-                    else
-                        remove .active
-                        set game.state to 1
-                    end
+                    call game.handle_ui_input({inspect: true})
                 end
                 ">
                     <div><span class="material-icons md-36">search</span></div>
