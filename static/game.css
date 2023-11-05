@@ -81,15 +81,26 @@ img {
 /* #region Messages Box */
 
 #messages {
-    position: sticky;
-    bottom: 0.0em;
-    left: 0.0em;
+    position: fixed;
     max-width: 90dvw;
     width: fit-content;
     background-color: rgba(0, 0, 0, 60%);
     padding: 0.5em;
     pointer-events: none;
     z-index: 99;
+}
+
+@media (orientation: landscape) {
+    #messages {
+        left: var(--messages-offset, 0px);
+        bottom: 0px;
+    }
+}
+@media (orientation: portrait) {
+    #messages {
+        left: 0px;
+        bottom: var(--messages-offset, 0px);
+    }
 }
 
 #messages:empty {

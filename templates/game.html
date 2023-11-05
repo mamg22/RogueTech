@@ -59,8 +59,22 @@
             </div>
             <div id="entities">
             </div>
-            <div id="messages"></div>
         </div>
+        <div id="messages" _="
+        def setup()
+            measure #main-hud's width
+            measure #alt-hud's height
+            set offset to Math.min(width, height)
+            me.style.setProperty('--messages-offset', CSS.px(offset))
+        end
+        init
+            setup()
+        end
+        on DOMContentLoaded or gameload or resize from window
+            setup()
+        end
+        "
+        ></div>
         <div id="alt-hud" class="hud">
             <div class="hud-left">
                 <div class="wait-button clickable"

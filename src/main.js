@@ -69,4 +69,3 @@ globalThis.server_info = server_info
 
 document.addEventListener('DOMContentLoaded', init_game);
 window.dispatchEvent(new Event('gameload'))
-
