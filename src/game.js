@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import { wait_for, clamp, world_to_grid, grid_to_world, find_path } from './utility';
+import { wait_for, clamp, world_to_grid, grid_to_world, find_path, format_ms } from './utility';
 import { Point, Message, MessageLog } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
@@ -29,7 +29,7 @@ export class Game {
             true, sprites.player.standing, Entity.Type.player, 1,
             {
                 handler: new PlayerHandler(),
-                fighter: new Fighter(10, 4, 4)
+                fighter: new Fighter(10, 4, 2)
             });
 
         this.levels = [];
@@ -207,6 +207,7 @@ export class Game {
             // Cannot handle input while busy
             return;
         case Game.State.player_dead:
+            this.show_gameover();
             // Player is dead, nothing to do
             return;
         case Game.State.player_turn:
@@ -254,7 +255,7 @@ export class Game {
     async tick_turns(actions) {
         this.set_state(Game.State.processing);
         outer: 
-        while (this.player.handler.has_action()) {
+        while (this.player?.handler?.has_action()) {
             if (this.state === Game.State.cancel) {
                 this.player.handler.clear_actions()
                 break;
@@ -289,6 +290,9 @@ export class Game {
                         console.log(result);
                     }
                 }
+                else if (entity?.fighter?.hp <= 0) {
+                    this.level.remove_entity(entity);
+                }
                 for (const result of results) {
                     if ('message' in result) {
                         const msg = result.message;
@@ -297,7 +301,9 @@ export class Game {
                     }
                     if ('dead' in result) {
                         const dead = result.dead;
-                        if (dead === this.player) {}
+                        if (dead === this.player) {
+                            this.set_state(Game.State.player_dead);
+                        }
                         dead.handler = null;
                         this.push_msg(`${dead.name} ha sido derrotado`);
                     }
@@ -318,6 +324,9 @@ export class Game {
             await this.render();
             this.render_ui();
             this.turn++;
+            if (! ('handler' in this.player)) {
+                this.show_gameover();
+            }
         }
         this.set_state(Game.State.player_turn);
     }

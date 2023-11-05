@@ -350,7 +350,7 @@ function place_entities(rng, map, level) {
         const entity_templates = [
             ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
                 handler: new RandomWalkHandler(),
-                fighter: new Fighter(5, 2, 2)
+                fighter: new Fighter(5, 4, 2)
             }],
             // ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1],
             // ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1],
