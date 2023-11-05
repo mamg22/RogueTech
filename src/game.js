@@ -155,13 +155,15 @@ export class Game {
         });
     
         if (new_level) {
-            this.level.set_last_pos(this.player.x, this.player.y);
-            this.level = new_level;
-            const new_pos = this.level.last_player_pos;
-            if (new_pos) {
-                this.player.x = new_pos.x;
-                this.player.y = new_pos.y;
+            const new_level_entities = new_level.get_entities();
+            let target_pos = new Point(2, 2);
+            for (const entity of new_level_entities) {
+                if (entity.type == Entity.Type.stair && entity.stair.target_floor == this.level.number) {
+                    target_pos = new Point(entity.x, entity.y);
+                }
             }
+            this.level = new_level;
+            this.player.move(target_pos.x, target_pos.y);
             return [{render_map: true, consumed: 0,
                 message: new Message(`Entras al piso ${this.level.number} del edificio`)}];
         }
