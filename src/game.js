@@ -1,7 +1,7 @@
 import Chance from 'chance';
 
 import { wait_for, clamp, world_to_grid, grid_to_world, find_path } from './utility';
-import { Point } from './common';
+import { Point, Message } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
 import { sprites, audios } from './resources';
@@ -162,7 +162,8 @@ export class Game {
                 this.player.x = new_pos.x;
                 this.player.y = new_pos.y;
             }
-            return [{render_map: true, consumed: 0}];
+            return [{render_map: true, consumed: 0,
+                message: new Message(`Entras al piso ${this.level.number} del edificio`)}];
         }
         else {
             return [{render_map: false, consumed: 0}];
