@@ -162,11 +162,10 @@ export class Game {
                 this.player.x = new_pos.x;
                 this.player.y = new_pos.y;
             }
-            this.render_map();
-            return true;
+            return [{render_map: true, consumed: 0}];
         }
         else {
-            return false;
+            return [{render_map: false, consumed: 0}];
         }
     }
 
@@ -270,8 +269,9 @@ export class Game {
                     }
                     else if (action.switch_level) {
                         const target_floor = action.switch_level;
-                        this.switch_level(target_floor);
-                        return
+                        let result = this.switch_level(target_floor);
+                        results.push(...result);
+                        console.log(result);
                     }
                 }
                 for (const result of results) {
@@ -283,7 +283,11 @@ export class Game {
                         const dead = result.dead;
                         this.push_msg(`${dead.name} ha sido derrotado`);
                     }
+                    if ('render_map' in result && result.render_map) {
+                        this.render_map();
+                    }
                     if (entity.type == Entity.Type.player) {
+                        console.log(result);
                         if (result?.consumed === 0) {
                             no_turn = true;
                         }
@@ -293,9 +297,10 @@ export class Game {
                     }
                 }
                 if (no_turn) {
-                    break outer;
+                    break;
                 }
             }
+            console.log("END")
             await this.render();
             this.render_ui();
             this.turn++;
