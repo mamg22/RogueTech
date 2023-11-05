@@ -45,20 +45,19 @@ export class Entity {
 
         if (! level.get_collision_at(this.x + movement_x, this.y + movement_y)) {
             this.move_relative(movement_x, movement_y);
-            return [{moved: 1}];
+            return [{consumed: 1}];
         }
-        return [{moved: 0}];
+        return [{consumed: 0}];
     }
 
     move_astar(target_x, target_y, level, closest) {
         const path = find_path(level.get_collision_map().content, this.x, this.y, target_x, target_y, closest);
         console.log(path)
         if (path.length > 0) {
-            console.log("Moving")
             this.move(path[0].x, path[0].y);
-            return [{moved: 1}];
+            return [{consumed: 1, astar_moved: true}];
         }
-        return [{moved: 0}]
+        return [{consumed: 0, astar_moved: false}]
     }
 
     can_see(target, level, max_distance) {
@@ -98,7 +97,7 @@ export class Entity {
         this.x = x;
         this.y = y;
 
-        return [{moved: 1}];
+        return [{consumed: 1}];
     }
     move_relative(x_delta, y_delta) {
         return this.move(this.x + x_delta, this.y + y_delta)

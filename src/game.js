@@ -182,7 +182,7 @@ export class Game {
                     // let result = find_path(this.level.get_collision_map().content,
                     //     this.player.x, this.player.y, x, y);
                     // for (let move of result) {
-                    this.player.handler.push_action({move_astar: new Point(x, y)})
+                    // this.player.handler.push_action({move_astar: new Point(x, y)})
                     // }
                     break;
                 }
@@ -220,12 +220,14 @@ export class Game {
 
     async tick_turns(actions) {
         this.state = Game.State.processing;
+        outer: 
         while (this.player.handler.has_action()) {
             if (this.state === Game.State.cancel) {
                 this.player.handler.clear_actions()
                 break;
             }
             for (const entity of this.level.get_entities()) {
+                let results = [];
                 if (entity.handler) {
                     const action = entity.handler.next_action(this.player, this.level);
                     if (action.move) {
@@ -239,9 +241,10 @@ export class Game {
                     else if (action.move_astar) {
                         const target = action.move_astar;
                         const result = entity.move_astar(target.x, target.y, this.level, entity.type != Entity.Type.player)
-                        if (result.moved == 0) {
+                        if (result.astar_moved == 0) {
                             entity.clear_actions();
                         };
+                        results.concat(result);
                     }
                     else if (action.attack) {
                         const target = action.attack;
@@ -252,6 +255,20 @@ export class Game {
                         this.switch_level(target_floor);
                         return
                     }
+                }
+                let no_turn = false;
+                for (const result of results) {
+                    if (result.message) {
+                        this.push_msg(message.text, message.category);
+                    }
+                    if (entity.type == Entity.Type.player) {
+                        if (!result.consumed) {
+                            no_turn = true;
+                        }
+                    }
+                }
+                if (no_turn) {
+                    break;
                 }
             }
             await this.render();
