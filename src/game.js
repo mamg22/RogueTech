@@ -1,7 +1,7 @@
 import Chance from 'chance';
 
 import { wait_for, clamp, world_to_grid, grid_to_world, find_path } from './utility';
-import { Point, Message } from './common';
+import { Point, Message, MessageLog } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
 import { sprites, audios } from './resources';
@@ -44,6 +44,7 @@ export class Game {
         this.scale = 1.0;
         this.start_time = null;
         this.turn = 1;
+        this.message_log = new MessageLog();
     }
 
     async render(do_animation=true) {
@@ -278,6 +279,7 @@ export class Game {
                     if ('message' in result) {
                         const msg = result.message;
                         this.push_msg(msg.text, msg.category);
+                        this.message_log.add_message(this.turn, msg);
                     }
                     if ('dead' in result) {
                         const dead = result.dead;

@@ -36,3 +36,13 @@ export class Message {
         this.category = category;
     }
 }
+
+export class MessageLog {
+    constructor() {
+        this.messages = [];
+    }
+    add_message(turn, message) {
+        this.messages[turn] ??= [];
+        this.messages[turn].push(message);
+    }
+}
