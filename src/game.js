@@ -46,7 +46,7 @@ export class Game {
         this.turn = 1;
     }
 
-    async render() {
+    async render(do_animation=true) {
         const entities_elt = document.querySelector("#entities");
         const entity_elements = entities_elt.children;
         const entity_ids = this.level.entities.map(function(entity){
@@ -63,6 +63,8 @@ export class Game {
         if (this.level.entities.indexOf(this.player) == -1) {
             this.level.entities.push(this.player);
         }
+
+        const animation_speed = do_animation ? 125 : 0;
         
         let animations = [];
         for (const entity of this.level.entities) {
@@ -85,7 +87,7 @@ export class Game {
                  top:  CSS.px(grid_to_world(entity.y))}
                 ],
                 {
-                    duration: 125
+                    duration: animation_speed
                 }
             );
             animations.push(wait_for(anim, 'finish'));
@@ -342,7 +344,7 @@ export class Game {
         game_view.scrollTop *= 1 + zoom_delta;
         document.body.style.setProperty("--scale", this.scale, "important");
         if (do_render) {
-            this.render();
+            this.render(false);
         }
     }
 
