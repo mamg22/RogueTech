@@ -50,8 +50,8 @@ export class RandomWalkHandler {
             action = {attack: player};
         }
         else if (this.owner.can_see(player, level, 5) ||
-            Math.abs(this.owner.x - this.last_known_pos?.x) <= 1 &&
-            Math.abs(this.owner.y - this.last_known_pos?.y) <= 1) {
+            Math.abs(this.owner.x - this.last_known_pos?.x) <= 3 &&
+            Math.abs(this.owner.y - this.last_known_pos?.y) <= 3) {
             if (this.last_known_pos) {
                 const route = find_path(map, owner.x, owner.y, this.last_known_pos.x, this.last_known_pos.y, true);
                 if (route.length > 0 && route.length < 6) {
