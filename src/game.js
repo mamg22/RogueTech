@@ -169,6 +169,21 @@ export class Game {
         }
     }
 
+    handle_ui_input(data) {
+        switch (this.state) {
+        case Game.State.processing:
+            this.state = Game.State.cancel;
+            this.player.handler.clear_actions();
+            return;
+        case Game.State.player_turn:
+            if ('wait' in data) {
+                this.player.handler.push_action({wait: true});
+            }
+            break;
+        }
+        this.tick_turns();
+    }
+
     handle_input(x, y) {
         switch (this.state) {
         case Game.State.processing:

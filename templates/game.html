@@ -62,7 +62,12 @@
         </div>
         <div id="alt-hud" class="hud">
             <div class="hud-left">
-                <div class="wait-button clickable">
+                <div class="wait-button clickable"
+                _="
+                on click
+                    call game.handle_ui_input({wait: true})
+                end
+                ">
                     <div><span class="material-icons md-36">schedule</span></div>
                 </div>    
                 <div class="inspect-button clickable" _="
