@@ -81,7 +81,7 @@ img {
 /* #region Messages Box */
 
 #messages {
-    position: fixed;
+    position: sticky;
     bottom: 0.0em;
     left: 0.0em;
     max-width: 90dvw;
