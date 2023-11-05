@@ -146,7 +146,6 @@ export class Game {
         for (const indicator of level_info) {
             indicator.innerText = this.level.number; 
         }
-
     }
 
     switch_level(target_level) {
@@ -286,26 +285,23 @@ export class Game {
                     }
                     if ('dead' in result) {
                         const dead = result.dead;
+                        if (dead === this.player) {}
                         this.push_msg(`${dead.name} ha sido derrotado`);
                     }
                     if ('render_map' in result && result.render_map) {
                         this.render_map();
                     }
-                    if (entity.type == Entity.Type.player) {
-                        console.log(result);
-                        if (result?.consumed === 0) {
-                            no_turn = true;
-                        }
-                        if (result?.astar_moved === false) {
-                            entity.handler.clear_actions();
-                        };
+                    if (entity.type == Entity.Type.player && result?.consumed === 0) {
+                        no_turn = true;
                     }
+                    if (result?.astar_moved === false) {
+                        entity.handler.clear_actions();
+                    };
                 }
                 if (no_turn) {
                     break;
                 }
             }
-            console.log("END")
             await this.render();
             this.render_ui();
             this.turn++;
