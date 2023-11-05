@@ -60,10 +60,6 @@ export class Game {
             }
         }
     
-        if (this.level.entities.indexOf(this.player) == -1) {
-            this.level.entities.push(this.player);
-        }
-
         const animation_speed = do_animation ? 125 : 0;
         
         let animations = [];
