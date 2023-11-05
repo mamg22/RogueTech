@@ -14,7 +14,8 @@ export class Game {
         cancel: -1,
         processing: 0,
         player_turn: 1,
-        inspect: 2, 
+        inspect: 2,
+        player_dead: 3,
     });
 
     constructor(seed) {
@@ -191,6 +192,9 @@ export class Game {
             this.player.handler.clear_actions();
             // Cannot handle input while busy
             return;
+        case Game.State.player_dead:
+            // Player is dead, nothing to do
+            return;
         case Game.State.player_turn:
             if (! (this.player.x == x && this.player.y == y)) {
                 if (! this.player.can_reach(x, y)) {
@@ -226,7 +230,7 @@ export class Game {
             break;
         case Game.State.inspect:
             this.process_inspect(x, y);
-            break;
+            return;
         default:
             break;
         }
