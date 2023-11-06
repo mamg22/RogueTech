@@ -29,7 +29,7 @@ export class Game {
             true, sprites.player.standing, Entity.Type.player, 1,
             {
                 handler: new PlayerHandler(),
-                fighter: new Fighter(10, 4, 2)
+                fighter: new Fighter(999, 4, 2)
             });
 
         this.levels = [];
