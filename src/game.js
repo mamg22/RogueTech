@@ -8,6 +8,7 @@ import { sprites, audios } from './resources';
 import { astar, Graph } from './libs/astar';
 import { PlayerHandler } from './components/handler';
 import { Fighter } from './components/fighter';
+import { Inventory } from './components/inventory';
 
 export class Game {
     static State = Object.freeze({
@@ -29,7 +30,8 @@ export class Game {
             true, sprites.player.standing, Entity.Type.player, 1,
             {
                 handler: new PlayerHandler(),
-                fighter: new Fighter(999, 4, 2)
+                fighter: new Fighter(999, 4, 2),
+                inventory: new Inventory(5),
             });
 
         this.levels = [];
@@ -271,13 +273,13 @@ export class Game {
             if (entities.length > 0) {
                 const target = entities[0];
                 if (target.type == Entity.Type.npc) {
-                    this.player.handler.push_action({attack: target})
+                    this.player.handler.push_action({attack: target});
                 }
                 else if (target.type == Entity.Type.stair) {
-                    this.player.handler.push_action({switch_level: target.stair.target_floor})
+                    this.player.handler.push_action({switch_level: target.stair.target_floor});
                 }
-                else {
-                    this.push_msg("Recoges: " + entities[0].name)
+                else if (target.type == Entity.Type.item) {
+                    this.player.handler.push_action({pick_up: target});
                 }
             }
             break;
@@ -322,6 +324,11 @@ export class Game {
                         results.push(...result);
                         this.render_metadata.attacking.push(entity);
                     }
+                    else if (action.pick_up) {
+                        const target = action.pick_up;
+                        let result = entity.inventory.add_item(target);
+                        results.push(...result);
+                    }
                     else if (action.switch_level) {
                         const target_floor = action.switch_level;
                         let result = this.switch_level(target_floor);
@@ -349,6 +356,9 @@ export class Game {
                     }
                     if ('render_map' in result && result.render_map) {
                         this.render_map();
+                    }
+                    if ('item_added' in result && result.item_added) {
+                        this.level.remove_entity_by_id(result.item_added.id);
                     }
                     if (entity.type == Entity.Type.player && result?.consumed === 0) {
                         no_turn = true;

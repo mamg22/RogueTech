@@ -4,6 +4,7 @@ import { Entity } from './entity';
 import { RandomWalkHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
+import { Item } from './components/item';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -339,39 +340,14 @@ function generate_map(rng, level) {
 
 function place_entities(rng, map, level) {
     const N_ENTITIES = 10;
+    const N_ENEMIES = 10;
+    const N_ITEMS = 10;
 
+    const rooms = map.tree.get_leaves();
 
     let entities = [];
 
-    // Exclude the first room, which is all the way to the left in the tree
-    // So first in the array
-    const rooms = map.tree.get_leaves();
-    for (let i = 0; i < N_ENTITIES; i++) {
-        const entity_templates = [
-            ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
-                handler: new RandomWalkHandler(),
-                fighter: new Fighter(5, 4, 2)
-            }],
-            // ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1],
-            // ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1],
-            // ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1],
-            // ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1],
-        ];
-    
-        const room_idx = rng.integer({ min: 1, max: rooms.length - 1 });
-        const room = rooms[room_idx];
-
-        const room_pos = room.rect.get_random_point(rng);
-        const entity_idx = rng.integer({min: 0, max: entity_templates.length - 1});
-        let template = entity_templates[entity_idx]
-        let entity = new Entity(
-            room_pos.x, room_pos.y,
-            ...template
-        );
-
-        entities.push(entity);
-    }
-
+    // Required entities
     if (level < 5) {
         const room_idx = rng.integer({ min: rooms.length - 4, max: rooms.length - 1 });
         const room = rooms[room_idx];
@@ -387,7 +363,8 @@ function place_entities(rng, map, level) {
             }))
     }
     if (level > 1) {
-        const room = rooms[1];
+        const room_idx = rng.integer({min: 0, max: 4});
+        const room = rooms[room_idx];
         const center_pos = new Point(
             room.rect.x + Math.round(room.rect.width / 2),
             room.rect.y + Math.round(room.rect.height / 2),
@@ -399,6 +376,60 @@ function place_entities(rng, map, level) {
                 stair: new Stair(level, -1)
             }))
     }
+
+    for (let i = 0; i < N_ENEMIES; i++) {
+        const enemy_templates = [
+            ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
+                handler: new RandomWalkHandler(),
+                fighter: new Fighter(5, 4, 2)
+            }],
+        ];
+    
+        const room_idx = rng.integer({ min: 1, max: rooms.length - 1 });
+        const room = rooms[room_idx];
+
+        const room_pos = room.rect.get_random_point(rng);
+        const entity_idx = rng.integer({min: 0, max: enemy_templates.length - 1});
+        let template = enemy_templates[entity_idx]
+        let entity = new Entity(
+            room_pos.x, room_pos.y,
+            ...template
+        );
+
+        entities.push(entity);
+    }
+
+    for (let i = 0; i < N_ITEMS; i++) {
+        const item_templates = [
+            ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1, {
+                item: new Item(),
+            }],
+            ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1, {
+                item: new Item(),
+            }],
+            ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1, {
+                item: new Item(),
+            }],
+            ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1, {
+                item: new Item(),
+            }],
+        ];
+    
+        const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
+        const room = rooms[room_idx];
+
+        const room_pos = room.rect.get_random_point(rng);
+        const entity_idx = rng.integer({min: 0, max: item_templates.length - 1});
+        let template = item_templates[entity_idx]
+        let entity = new Entity(
+            room_pos.x, room_pos.y,
+            ...template
+        );
+
+        entities.push(entity);
+    }
+
+
 
     return entities;
 }
