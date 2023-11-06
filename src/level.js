@@ -468,6 +468,11 @@ export class Level {
         })
         return found;
     }
+    get_entity_by_id(id) {
+        return this.entities.find(function(elem) {
+            return elem.id === id;
+        });
+    }
     remove_entity(entity) {
         let idx = this.entities.indexOf(entity)
         this.entities.splice(idx, 1)
