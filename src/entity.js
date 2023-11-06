@@ -15,7 +15,7 @@ export class Entity {
         this.x = x;
         this.y = y;
         this.name = name;
-        this.descritpion = description;
+        this.description = description;
         this.solid = solid;
         this.sprite = sprite;
         this.type = type;
