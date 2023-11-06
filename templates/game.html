@@ -46,6 +46,11 @@
             </div>
             <div class="hud-right">
                 <div class='clickable'
+                _="on click call game.handle_ui_input({log: true})"
+                >
+                    <span class="material-icons md-36">view_timeline</span>
+                </div>
+                <div class='clickable'
                 _="on click call #pause-menu.showModal()"
                 >
                     <span class="material-icons md-36">menu</span>
@@ -307,6 +312,9 @@ Tiempo: <span id="gameover-time"></span>
 <div>
 
 </div>
+{%- endcall -%}
+
+{%- call funcs.game_dialog("log-dialog", "Registro de eventos") -%}
 {%- endcall -%}
 
 

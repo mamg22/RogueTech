@@ -229,6 +229,9 @@ export class Game {
                 this.set_state(Game.State.inspect);
                 return;
             }
+            if ('log' in data) {
+                this.show_log();
+            }
             break;
         }
         this.tick_turns();
@@ -526,6 +529,28 @@ export class Game {
     
         this.end_time = end_time;
         this.total_time = total_playtime;
+    }
+
+    show_log() {
+        const elem = document.querySelector('#log-dialog');
+        const elem_body = elem.querySelector('.dialog-body')
+        elem_body.replaceChildren();
+        for (const turn in this.message_log.messages) {
+            const turn_data = this.message_log.messages[turn];
+            const header = document.createElement("h4");
+            header.classList.add('centered')
+            header.innerText = `--- Turno ${turn} ---`;
+            elem_body.append(header);
+            for (const message of turn_data) {
+                const message_line = document.createElement('div');
+                message_line.classList.add('message', message.category);
+                message_line.innerText = message.text;
+                elem_body.append(message_line);
+            }
+        }
+        const last = elem_body.children[elem_body.children.length - 1];
+        elem.showModal();
+        last?.scrollIntoView(true);
     }
 }
 globalThis.Game = Game;
