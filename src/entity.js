@@ -6,7 +6,7 @@ export class Entity {
         npc: 5,
         item: 10,
         stair: 15,
-        decoration: 20s,
+        decoration: 20,
     })
 
     constructor(x, y, name, description, solid, sprite, type, facing=1, components={}) {
