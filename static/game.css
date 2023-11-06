@@ -116,7 +116,8 @@ img {
     font-size: 15px;
 }
 
-.message.low {
+.message.low,
+.message.gray {
     color: #aaaaaa;
 }
 
@@ -135,8 +136,9 @@ img {
     color: #66ff66;
 }
 
-.message.blue {
-    color: #6699ff;
+.message.blue,
+.message.other {
+    color: #33ffff;
 }
 
 /* #endregion Message Box */
