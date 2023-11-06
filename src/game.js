@@ -252,6 +252,11 @@ export class Game {
             if ('log' in data) {
                 this.show_log();
             }
+            if ('inventory' in data) {
+                this.show_inventory();
+            }
+            if ('inventory_item' in data) {
+            }
             break;
         }
         this.tick_turns();
@@ -406,7 +411,7 @@ export class Game {
         const entities = this.level.get_entities_at(x, y);
         if (entities.length > 0) {
             for (const entity of entities) {
-                dialog.showModal();
+                this.show_entityinfo(entity);
                 await wait_for(dialog, 'close');
             }
         }
@@ -593,7 +598,7 @@ export class Game {
                 elem.innerText = item.name;
                 const this_game = this;
                 elem.addEventListener('click', function(e) {
-                    this_game.handle_ui_input({inventory: item});
+                    this_game.handle_ui_input({inventory_item: item});
                 });
                 inventory_contents_elt.append(elem);
             }
@@ -604,6 +609,36 @@ export class Game {
             elem.innerText = "Tu inventario está vacío";
             inventory_contents_elt.append(elem);
         }
+    }
+
+    show_inventory() {
+        const inventory_dialog = document.getElementById('inventory-dialog');
+        inventory_dialog.showModal();
+    }
+
+    show_entityinfo(entity) {
+        const entityinfo_dialog = document.getElementById('entityinfo-dialog');
+        const entityinfo_image = document.getElementById('entityinfo-dialog-image');
+        const entityinfo_name = document.getElementById('entityinfo-dialog-name');
+        const entityinfo_description = document.getElementById('entityinfo-dialog-description');
+        const entityinfo_hp_bar = document.getElementById('entityinfo-dialog-hp-bar');
+
+        entityinfo_image.src = entity.sprite;
+        entityinfo_name.innerText = entity.name;
+        entityinfo_description.innerText = entity.description;
+
+        if (entity.fighter) {
+            const fig = entity.fighter
+            const health_proportion = fig.hp / fig.max_hp;
+            entityinfo_dialog.style.setProperty('--hp', health_proportion);
+            entityinfo_hp_bar.style.setProperty('display', 'block');
+        }
+        else {
+            entityinfo_dialog.style.removeProperty('--hp');
+            entityinfo_hp_bar.style.setProperty('display', 'none');
+        }
+
+        entityinfo_dialog.showModal();
     }
 }
 globalThis.Game = Game;

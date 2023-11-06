@@ -105,7 +105,7 @@
             </div>
             <div class="hud-right">
                 <div class="clickable"
-                _="on click call #inventory-dialog.showModal()"
+                _="on click call game.handle_ui_input({inventory: true})"
                 >
                     <span class="material-icons md-36">backpack</span>
                 </div>
@@ -262,17 +262,19 @@ Tiempo: <span id="gameover-time"></span>
 {%- endcall -%}
 
 {%- call funcs.game_dialog("entityinfo-dialog", "Información") -%}
-<div class="center">
-    <img src="/static/res/player/standing.png" alt="" class="info-icon">
+<div class="center column">
+    <img id="entityinfo-dialog-image" src="/static/res/player/standing.png" class="info-icon">
     <div>
-        <div>Enemigo</div>
-        <div class="bar hp-bar">
+        <div class="centered" id="entityinfo-dialog-name">Enemigo</div>
+        <div id="entityinfo-dialog-hp-bar" style="width: 200px" class="bar hp-bar">
             <div class="bar-fill"></div>
         </div>
     </div>
 </div>
 
-{{ lipsum(1)}} 
+<div id="entityinfo-dialog-description">
+</div>
+
 {%- endcall -%}
 
 
