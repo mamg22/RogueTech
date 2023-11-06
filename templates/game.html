@@ -70,7 +70,10 @@
         init
             setup()
         end
-        on DOMContentLoaded or gameload or resize from window
+        on DOMContentLoaded or gameload or load or resize from window
+            setup()
+        end
+        on mutation of childList
             setup()
         end
         "
