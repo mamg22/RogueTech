@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import { wait_for, delay, clamp, world_to_grid, grid_to_world, find_path, format_ms } from './utility';
+import { wait_for, delay, clamp, find_path, format_ms } from './utility';
 import { Point, Message, MessageLog } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
@@ -9,6 +9,8 @@ import { astar, Graph } from './libs/astar';
 import { PlayerHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Inventory } from './components/inventory';
+
+export const GRID_SIZE = 64;
 
 export class Game {
     static State = Object.freeze({
@@ -51,7 +53,23 @@ export class Game {
             attacking: [],
             dead: []
         };
+
+        this.load_settings();
+        this.render_map();
+        this.render_ui();
+        this.render();
+        this.update_inventory();
     }
+
+    world_to_grid(x, with_scale=true) {
+        let value_scale = with_scale ? this.scale : 1;
+        return Math.floor(x / (GRID_SIZE * value_scale));
+    }
+    
+    grid_to_world(x, with_scale=true) {
+        let value_scale = with_scale ? this.scale : 1;
+        return Math.floor(x * (GRID_SIZE * value_scale));
+    }    
 
     async render(do_animation=true) {
         const entities_elt = document.querySelector("#entities");
@@ -82,8 +100,8 @@ export class Game {
             let anim = elem.animate([
                 {left: elem.style.left,
                 top:  elem.style.top},
-                {left: CSS.px(grid_to_world(entity.x)),
-                 top:  CSS.px(grid_to_world(entity.y))}
+                {left: CSS.px(this.grid_to_world(entity.x)),
+                 top:  CSS.px(this.grid_to_world(entity.y))}
                 ],
                 {
                     duration: animation_speed
@@ -97,8 +115,8 @@ export class Game {
                 })
             }
 
-            elem.style.left = CSS.px(grid_to_world(entity.x));
-            elem.style.top = CSS.px(grid_to_world(entity.y));
+            elem.style.left = CSS.px(this.grid_to_world(entity.x));
+            elem.style.top = CSS.px(this.grid_to_world(entity.y));
             const facing = entity.facing;
             elem.style.setProperty('--flip', entity.facing)
         }

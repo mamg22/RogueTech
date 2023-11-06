@@ -1,4 +1,3 @@
-import { world_to_grid, grid_to_world } from './utility';
 import { audios } from './resources';
 
 const game_view = document.querySelector("#game-view");
@@ -20,8 +19,8 @@ map_elem.addEventListener('pointerdown', function(e) {
 map_elem.addEventListener('pointerup', function(e) {
     if (is_click(pointer_down, e)) {
         globalThis.game.handle_input(
-            world_to_grid(e.offsetX, false),
-            world_to_grid(e.offsetY, false)
+            globalThis.game.world_to_grid(e.offsetX, false),
+            globalThis.game.world_to_grid(e.offsetY, false)
         );
     }
     pointer_down = null

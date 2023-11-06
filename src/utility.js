@@ -1,7 +1,5 @@
 import { astar, Graph } from './libs/astar';
 
-export const GRID_SIZE = 64;
-
 export function delay(ms) {
     return new Promise(function (resolve, reject) {
         setTimeout(resolve, ms);
@@ -52,16 +50,6 @@ export function transpose_array(arr) {
 
 export function get_move_dir(old_x, new_x) {
     return Math.sign(new_x - old_x);
-}
-
-export function world_to_grid(x, with_scale=true) {
-    let value_scale = with_scale ? globalThis.game.scale : 1;
-    return Math.floor(x / (GRID_SIZE * value_scale));
-}
-
-export function grid_to_world(x, with_scale=true) {
-    let value_scale = with_scale ? globalThis.game.scale : 1;
-    return Math.floor(x * (GRID_SIZE * value_scale));
 }
 
 class TypedLocalStorage {

@@ -56,10 +56,6 @@ let state = {
 function init_game() {
     let game = new Game();
     globalThis.game = game;
-    game.load_settings();
-    game.render_map();
-    game.render();
-    game.render_ui();
 }
 
 const server_info = JSON.parse(
