@@ -514,9 +514,7 @@ export class Level {
         });
         this.entities.splice(idx, 1)
     }
-    add_entity(entity, x, y) {
-        entity.x ??= x;
-        entity.y ??= y;
+    add_entity(entity) {
         this.entities.push(entity);
     }
 }
