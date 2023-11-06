@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import { wait_for, clamp, world_to_grid, grid_to_world, find_path, format_ms } from './utility';
+import { wait_for, delay, clamp, world_to_grid, grid_to_world, find_path, format_ms } from './utility';
 import { Point, Message, MessageLog } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
@@ -45,28 +45,22 @@ export class Game {
         this.start_time = null;
         this.turn = 1;
         this.message_log = new MessageLog();
+        this.render_metadata = {
+            attacking: [],
+            dead: []
+        };
     }
 
     async render(do_animation=true) {
         const entities_elt = document.querySelector("#entities");
-        const entity_elements = entities_elt.children;
-        const entity_ids = this.level.entities.map(function(entity){
-            return entity.id;
-        });
-    
-        for (const entity_element of Array.from(entity_elements)) {
-            const entity_id = +entity_element.getAttribute("entity-id")
-            if (! entity_ids.includes(entity_id)) {
-                entity_element.remove()
-            }
-        }
-    
-        const animation_speed = do_animation ? 125 : 0;
+        const animation_speed = do_animation ? 200 : 0;
         
         let animations = [];
         for (const entity of this.level.entities) {
             const elem_id = "entity-" + entity.id;
             let elem = document.getElementById(elem_id);
+
+            // If not exists create it
             if (!elem) {
                 elem = document.createElement("div");
                 elem.id = elem_id
@@ -77,6 +71,12 @@ export class Game {
                 elem.style.zIndex = 25 - entity.type;
                 entities_elt.append(elem);
             }
+            const img = elem.querySelector('img');
+
+            if (this.render_metadata.attacking.includes(entity)) {
+                img.src = img.src.replace('standing', 'attack');
+            }
+
             let anim = elem.animate([
                 {left: elem.style.left,
                 top:  elem.style.top},
@@ -87,7 +87,14 @@ export class Game {
                     duration: animation_speed
                 }
             );
+
             animations.push(wait_for(anim, 'finish'));
+            if (this.render_metadata.attacking.includes(entity)) {
+                anim.addEventListener('finish', function(e){
+                    img.src = img.src.replace('attack', 'standing');
+                })
+            }
+
             elem.style.left = CSS.px(grid_to_world(entity.x));
             elem.style.top = CSS.px(grid_to_world(entity.y));
             const facing = entity.facing;
@@ -96,11 +103,35 @@ export class Game {
         await Promise.all(animations);
         const player_elem_id = "entity-" + this.player.id;
         const player_elem = document.getElementById(player_elem_id);
-        player_elem.scrollIntoView({
+        player_elem?.scrollIntoView({
             behavior: "smooth",
             block: "center",
             inline: "center"
         });
+
+        const entity_elements = entities_elt.children;
+        const entity_ids = this.level.entities.map(function(entity){
+            return entity.id;
+        });
+    
+
+        for (const entity_element of Array.from(entity_elements)) {
+            const entity_id = +entity_element.getAttribute("entity-id")
+            if (! entity_ids.includes(entity_id)) {
+                const dead_entity = this.render_metadata.dead.find(function(elem) {
+                    return elem.id == entity_id
+                });
+                if (dead_entity) {
+                    const dead_img = entity_element.querySelector("img");
+                    dead_img.src = sprites.etc.boom;
+                    await delay(1400);
+                }
+                entity_element.remove()
+            }
+        }
+
+        this.render_metadata.attacking = [];
+        this.render_metadata.dead = [];
     }
     
 
@@ -282,6 +313,7 @@ export class Game {
                         const target = action.attack;
                         let result = entity.fighter.attack(target);
                         results.push(...result);
+                        this.render_metadata.attacking.push(entity);
                     }
                     else if (action.switch_level) {
                         const target_floor = action.switch_level;
@@ -291,7 +323,6 @@ export class Game {
                     }
                 }
                 else if (entity?.fighter?.hp <= 0) {
-                    this.level.remove_entity(entity);
                 }
                 for (const result of results) {
                     if ('message' in result) {
@@ -304,6 +335,8 @@ export class Game {
                         if (dead === this.player) {
                             this.set_state(Game.State.player_dead);
                         }
+                        this.render_metadata.dead.push(dead);
+                        this.level.remove_entity_by_id(dead.id);
                         dead.handler = null;
                         this.push_msg(`${dead.name} ha sido derrotado`);
                     }
