@@ -477,6 +477,12 @@ export class Level {
         let idx = this.entities.indexOf(entity)
         this.entities.splice(idx, 1)
     }
+    remove_entity_by_id(id) {
+        let idx = this.entities.findIndex(function(elem) {
+            return elem.id === id;
+        });
+        this.entities.splice(idx, 1)
+    }
 }
 
 export function generate_level(rng, level) {
