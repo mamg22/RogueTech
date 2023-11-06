@@ -36,4 +36,8 @@ export class Fighter {
         }
         return results;
     }
+
+    heal(amount) {
+        this.hp = Math.min(this.hp + amount, this.max_hp);
+    }
 }
