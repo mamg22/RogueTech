@@ -359,6 +359,7 @@ export class Game {
                     }
                     if ('item_added' in result && result.item_added) {
                         this.level.remove_entity_by_id(result.item_added.id);
+                        this.update_inventory();
                     }
                     if (entity.type == Entity.Type.player && result?.consumed === 0) {
                         no_turn = true;
@@ -561,6 +562,29 @@ export class Game {
         const last = elem_body.children[elem_body.children.length - 1];
         elem.showModal();
         last?.scrollIntoView(true);
+    }
+
+    update_inventory() {
+        const inventory_contents_elt = document.getElementById('inventory-contents');
+
+        inventory_contents_elt.replaceChildren();
+        if (this.player.inventory.items.length > 0) {
+            for (const item of this.player.inventory.items) {
+                const elem = document.createElement('div');
+                elem.classList.add('inventory-card');
+                elem.innerText = item.name;
+                elem.addEventListener(function(e) {
+                    this.handle_ui_input({inventory: item});
+                });
+                inventory_contents_elt.append(elem);
+            }
+        }
+        else {
+            const elem = document.createElement('div');
+            elem.classList.add('centered');
+            elem.innerText = "Tu inventario está vacío";
+            inventory_contents_elt.append(elem);
+        }
     }
 }
 globalThis.Game = Game;
