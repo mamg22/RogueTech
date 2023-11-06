@@ -166,9 +166,13 @@ export class Game {
     }
 
     render_ui() {
-        const health_indicator = document.getElementById('health-indicator-value');
+        const health_indicator = document.querySelector('.health-indicator');
+        const health_indicator_value = document.getElementById('health-indicator-value');
         const player_fighter = this.player.fighter;
-        health_indicator.innerText = `${player_fighter.hp}/${player_fighter.max_hp}`
+        const health_proportion = Math.max(player_fighter.hp / player_fighter.max_hp, 0);
+
+        health_indicator_value.innerText = `${player_fighter.hp}/${player_fighter.max_hp}`
+        health_indicator.style.setProperty('--hp', health_proportion);
 
         let level_info = document.getElementsByClassName('floor-indicator-value');
         for (const indicator of level_info) {

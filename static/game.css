@@ -164,7 +164,7 @@ img {
 }
 
 .health-indicator {
-    color: limegreen;
+    color: hsl(calc(120 * var(--hp)) 100% 60%);
     min-width: 7ch;
 }
 #health-indicator-value {
