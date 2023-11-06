@@ -2,11 +2,11 @@ import { get_move_dir, find_path } from './utility';
 
 export class Entity {
     static Type = Object.freeze({
-        player: 1,
-        npc: 2,
-        item: 3,
-        stair: 4,
-        decoration: 5,
+        player: 0,
+        npc: 5,
+        item: 10,
+        stair: 15,
+        decoration: 20s,
     })
 
     constructor(x, y, name, description, solid, sprite, type, facing=1, components={}) {
