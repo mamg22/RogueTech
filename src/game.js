@@ -591,8 +591,9 @@ export class Game {
                 const elem = document.createElement('div');
                 elem.classList.add('inventory-card');
                 elem.innerText = item.name;
-                elem.addEventListener(function(e) {
-                    this.handle_ui_input({inventory: item});
+                const this_game = this;
+                elem.addEventListener('click', function(e) {
+                    this_game.handle_ui_input({inventory: item});
                 });
                 inventory_contents_elt.append(elem);
             }
