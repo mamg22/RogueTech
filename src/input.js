@@ -100,7 +100,8 @@ function pinch_remove_event(ev) {
 }
 
 game_view.addEventListener('wheel', function(e) {
+    e.preventDefault()
     if (Math.abs(e.deltaY) > 3){
-        game.zoom(Math.sign(e.deltaY))
+        game.zoom(Math.sign(-e.deltaY))
     }
 })
