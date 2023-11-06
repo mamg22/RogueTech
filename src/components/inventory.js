@@ -27,4 +27,10 @@ export class Inventory {
 
         return results;
     }
+
+    get_item_by_id(id) {
+        return this.items.find(function(elem) {
+            elem.id === id;
+        });
+    }
 }
