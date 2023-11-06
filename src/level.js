@@ -514,6 +514,11 @@ export class Level {
         });
         this.entities.splice(idx, 1)
     }
+    add_entity(entity, x, y) {
+        entity.x ??= x;
+        entity.y ??= y;
+        this.entities.push(entity);
+    }
 }
 
 export function generate_level(rng, level) {
