@@ -256,6 +256,8 @@ export class Game {
                 this.show_inventory();
             }
             if ('inventory_item' in data) {
+                this.show_entityinfo(data.inventory_item);
+                return;
             }
             break;
         }
