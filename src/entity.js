@@ -29,8 +29,11 @@ export class Entity {
     }
 
     set_facing(dir) {
-        this.facing = Math.sign(dir);
-        if (this.facing == 0 ) {
+        const real_dir = Math.sign(dir);
+        if (real_dir !== 0) {
+            this.facing = real_dir;
+        }
+        if (this.facing == 0) {
             this.facing = 1;
         }
     }
