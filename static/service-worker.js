@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v5"
+const CACHE_VERSION = "v7"
 
 self.addEventListener("install", event => {
     console.log("Service worker installed");
@@ -18,11 +18,26 @@ self.addEventListener("install", (event) => {
             "/",
             "/static/style.css",
             "/offline",
-            '/static/res/bgm/main_game.mp3',
-            '/static/res/sfx/booster.mp3',
-            '/static/res/sfx/pickup.mp3',
-            '/static/res/sfx/boom.mp3',
-            '/static/res/demo_map.png'
+            'static/res/bgm/main_game.mp3',
+            'static/res/decoration/stair-down.png',
+            'static/res/decoration/stair-up.png',
+            'static/res/decoration/vending_machine.png',
+            'static/res/demo_map.png',
+            'static/res/etc/boom.gif',
+            'static/res/item/dvd.png',
+            'static/res/item/pendrive.png',
+            'static/res/item/water_bottle.png',
+            'static/res/npc/bot-1/attack.png',
+            'static/res/npc/bot-1/dead.png',
+            'static/res/npc/bot-1/dying.gif',
+            'static/res/npc/bot-1/exploding.png',
+            'static/res/npc/bot-1/standing.png',
+            'static/res/player/attack.png',
+            'static/res/player/moving.png',
+            'static/res/player/standing.png',
+            'static/res/sfx/boom.mp3',
+            'static/res/sfx/booster.mp3',
+            'static/res/sfx/pickup.mp3'
         ])
     );
 });
@@ -38,7 +53,9 @@ async function handle_request(event) {
         response = await fetch(event.request);
         // If the response is not ok, redirect to the offline page
         if (!response || response.status !== 200) {
-            return caches.match('/offline');
+            if (event.request == 'navigate') {
+                return caches.match('/offline');
+            }
         }
         // Otherwise, return the response
         return response;
