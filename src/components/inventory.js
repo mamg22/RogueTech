@@ -30,7 +30,7 @@ export class Inventory {
 
     get_item_by_id(id) {
         return this.items.find(function(elem) {
-            elem.id === id;
+            return elem.id === id;
         });
     }
 }
