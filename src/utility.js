@@ -96,4 +96,10 @@ export function find_path(map, from_x, from_y, to_x, to_y, closest=false) {
     return result;
 }
 
+export function distance_between(x0, y0, x1, y1) {
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    return Math.sqrt(dx ** 2 + dy ** 2);
+}
+
 export const global_rng = new Chance();
