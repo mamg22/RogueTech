@@ -267,7 +267,7 @@ function do_map_splits(rng, node, n, config) {
 }
 
 function generate_map(rng, level) {
-    let grid = new Grid(26, 30);
+    let grid = new Grid(27, 27);
     const root = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
 
     const SPLITS = 6;
