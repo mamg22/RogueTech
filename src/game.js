@@ -371,6 +371,11 @@ export class Game {
                         let result = entity.inventory.use(target);
                         results.push(...result);
                     }
+                    else if (action.drop_item) {
+                        const target = action.drop_item;
+                        let result = entity.inventory.drop_item(target);
+                        results.push(...result);
+                    }
                     else if (action.switch_level) {
                         const target_floor = action.switch_level;
                         let result = this.switch_level(target_floor);
@@ -403,6 +408,9 @@ export class Game {
                     if ('item_added' in result && result.item_added) {
                         this.level.remove_entity_by_id(result.item_added.id);
                         this.update_inventory();
+                    }
+                    if ('item_dropped' in result && result.item_dropped) {
+                        this.level.add_entity(result.item_dropped);
                     }
                     if (entity.type == Entity.Type.player && result?.consumed === 0) {
                         no_turn = true;

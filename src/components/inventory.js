@@ -72,4 +72,20 @@ export class Inventory {
             return elem.id === id;
         });
     }
+
+    drop_item(item) {
+        let results = [];
+
+        item.x = this.owner.x;
+        item.y = this.owner.y;
+
+        this.remove_item(item);
+        results.push({
+            item_dropped: item,
+            message: new Message(`Has tirado: ${item.name}`, 'yellow'),
+            consumed: 1,
+        });
+
+        return results;
+    }
 }
