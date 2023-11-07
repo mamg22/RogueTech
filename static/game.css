@@ -150,7 +150,7 @@ img {
     align-items: center;
     background-color: #222222;
     color: white;
-    padding: 0.25em 0.3em;
+    padding: 0.3rem 0.3rem;
 }
 
 .hud > div {
@@ -158,6 +158,10 @@ img {
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+}
+
+.glow {
+    text-shadow: whitesmoke 0px 0px 3px;
 }
 
 .indicator {

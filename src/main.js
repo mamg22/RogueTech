@@ -35,5 +35,7 @@ const server_info = JSON.parse(
 );
 globalThis.server_info = server_info
 
-document.addEventListener('DOMContentLoaded', init_game);
+document.addEventListener('DOMContentLoaded', function(e) {
+    init_game();
+});
 window.dispatchEvent(new Event('gameload'))
