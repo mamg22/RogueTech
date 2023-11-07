@@ -156,7 +156,7 @@ export class EnemyAIHandler {
             AIRoomGuarding,
             AIWallBump,
         ];
-        const selectedAI = global_rng.pickone(availableAI)
+        const selectedAI = global_rng.weighted(availableAI, [1, 2, 1, 2])
         this.default_ai = new selectedAI();
     }
     next_action(player, level) {
