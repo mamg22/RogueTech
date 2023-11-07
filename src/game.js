@@ -510,7 +510,7 @@ export class Game {
             })
         }, 7000);
         
-        while (messages_elt.children.length > 8) {
+        while (messages_elt.children.length > 5) {
             messages_elt.children[0].remove()
         }
     }

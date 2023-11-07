@@ -10,7 +10,7 @@ export class Fighter {
 
     take_damage(amount) {
         let results = [];
-        this.hp -= amount;
+        this.hp = Math.max(this.hp - amount, 0);
         if (this.hp <= 0) {
             results.push({dead: this.owner})
         }
