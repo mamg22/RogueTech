@@ -440,7 +440,9 @@ export class Game {
                         this.level.remove_entity_by_id(dead.id);
                         dead.handler = null;
                         this.push_msg(`${dead.name} ha sido derrotado`);
-                        this.message_log.add_message(this.turn, `${dead.name} ha sido derrotado`);
+                        this.message_log.add_message(this.turn,
+                            new Message(`${dead.name} ha sido derrotado`)
+                        );
                     }
                     if ('render_map' in result && result.render_map) {
                         this.render_map();
