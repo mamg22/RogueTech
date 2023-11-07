@@ -46,7 +46,7 @@ export class RandomWalkHandler {
         const owner = this.owner
         const map = level.get_collision_map().content
         let action = {};
-        if (this.owner.can_reach(player.x, player.y)) {
+        if (this.owner.can_reach(player.x, player.y) && this.last_known_pos) {
             action = {attack: player};
         }
         else if (this.owner.can_see(player, level, 5) ||
