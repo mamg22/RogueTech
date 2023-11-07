@@ -44,7 +44,7 @@ export function drive_effect(entity, {heal_amount, damage_amount}) {
         results.push(...damage_results);
         results.push({
             item_consumed: true,
-            message: new Message("¡El pendrive contenía software malicioso y te ha causado daño!", 'red'),
+            message: new Message("¡El pendrive contenía virus y te ha causado daño!", 'red'),
             consumed: 1,
         });
     }

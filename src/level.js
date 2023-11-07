@@ -325,8 +325,8 @@ function generate_map(rng, level) {
             if (ok_sides == 2) {
                 grid.set(hole_pos.x, hole_pos.y, 1);
                 branch.hole_offset = hole_offset;
-                // 20% chance to make another hole
-                if (rng.bool({likelihood: 80})) {
+                // 25% chance to make another hole
+                if (rng.bool({likelihood: 75})) {
                     break;
                 }
             }
@@ -374,7 +374,7 @@ function place_entities(rng, map, level) {
 
     for (let i = 0; i < N_ENEMIES; i++) {
         const enemy_templates = [
-            ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
+            ["Robot", "Un robot enemigo", true, sprites.enemy.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
                 fighter: new Fighter(5, 4, 2)
             }],
@@ -396,16 +396,24 @@ function place_entities(rng, map, level) {
 
     for (let i = 0; i < N_ITEMS; i++) {
         const item_templates = [
-            ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1, {
+            ["Botella de agua",
+                "Una botella con 1L de agua. No es muy util para tí, pero podrías probar lanzandola",
+                false, sprites.items.water_bottle, Entity.Type.item, 1, {
                 item: new Item(throw_water_bottle, true, "Elige donde lanzar la botella...", {damage: 8, radius: 1}),
             }],
-            ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1, {
+            ["DVD",
+                "Al frente dice que contiene un programa para saturar la red, causando interferencia. Causará que el enemigo más cercano a tí sufra daños",
+                false, sprites.items.dvd, Entity.Type.item, 1, {
                 item: new Item(cast_interference, false, null, {damage: 10, maximum_range: 8}),
             }],
-            ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1, {
+            ["Pendrive",
+                "Un pendrive desconocido. Quizá puedas ver lo que tiene dentro, aunque no se si sea muy seguro.",
+                false, sprites.items.pendrive, Entity.Type.item, 1, {
                 item: new Item(drive_effect, false, null, {heal_amount: 10, damage_amount: 10}),
             }],
-            ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1, {
+            ["Maquina expendedora",
+                "Una maquina expendedora común y corriente. Está llena de productos comestibles, lástima que seas un robot.",
+                true, sprites.decoration.vending_machine, Entity.Type.decoration, 1, {
                 item: new Item(),
             }],
         ];
