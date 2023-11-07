@@ -1,7 +1,7 @@
 import { Point, Rectangle } from './common';
 import { sprites } from './resources';
 import { Entity } from './entity';
-import { RandomWalkHandler } from './components/handler';
+import { EnemyAIHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
@@ -352,10 +352,7 @@ function place_entities(rng, map, level) {
     if (level < 5) {
         const room_idx = rng.integer({ min: rooms.length - 4, max: rooms.length - 1 });
         const room = rooms[room_idx];
-        const center_pos = new Point(
-            room.rect.x + Math.round(room.rect.width / 2),
-            room.rect.y + Math.round(room.rect.height / 2),
-        );
+        const center_pos = room.rect.get_center();
         entities.push(new Entity(center_pos.x, center_pos.y,
             "Escalera", "Escalera hacia arriba",
             false, sprites.decoration.stair_up, Entity.Type.stair,
@@ -366,10 +363,7 @@ function place_entities(rng, map, level) {
     if (level > 1) {
         const room_idx = rng.integer({min: 0, max: 4});
         const room = rooms[room_idx];
-        const center_pos = new Point(
-            room.rect.x + Math.round(room.rect.width / 2),
-            room.rect.y + Math.round(room.rect.height / 2),
-        );
+        const center_pos = room.rect.get_center();
         entities.push(new Entity(center_pos.x, center_pos.y,
             "Escalera", "Escalera hacia abajo",
             false, sprites.decoration.stair_down, Entity.Type.stair,
@@ -381,7 +375,7 @@ function place_entities(rng, map, level) {
     for (let i = 0; i < N_ENEMIES; i++) {
         const enemy_templates = [
             ["Robot", "X", true, sprites.enemy.standing, Entity.Type.npc, -1, {
-                handler: new RandomWalkHandler(),
+                handler: new EnemyAIHandler(),
                 fighter: new Fighter(5, 4, 2)
             }],
         ];

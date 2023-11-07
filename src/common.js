@@ -25,6 +25,12 @@ export class Rectangle {
         return new Point(x, y);    
     }
 
+    get_center() {
+        const cx = Math.floor(this.x + this.width / 2);
+        const cy = Math.floor(this.y + this.height / 2);
+        return new Point(cx, cy);
+    }
+
     toString() {
         return `Rectangle((${this.x}, ${this.y}), w: ${this.width}, h: ${this.height})`;
     }
