@@ -1,6 +1,7 @@
 import { Message } from './common';
+import { global_rng } from './utility';
 
-function heal({entity, amount}) {
+export function heal(entity, {amount}) {
     let results = [];
 
     if (entity.fighter.hp === entity.fighter.max_hp) {
@@ -15,6 +16,35 @@ function heal({entity, amount}) {
         results.push({
             item_consumed: true,
             message: new Message("Has reparado parte de tus daños", 'green'),
+            consumed: 1,
+        });
+    }
+
+    return results;
+}
+
+export function drive_effect(entity, {heal_amount, damage_amount}) {
+    let results = [];
+
+    const is_good = global_rng.bool();
+    let amount;
+    if (is_good) {
+        amount = heal_amount;
+        let heal_results = entity.fighter.heal(amount);
+        results.push(...heal_results);
+        results.push({
+            item_consumed: true,
+            message: new Message("¡El pendrive contenía software útil!", 'green'),
+            consumed: 1,
+        });
+    }
+    else {
+        amount = damage_amount;
+        let damage_results = entity.fighter.take_damage(amount);
+        results.push(...damage_results);
+        results.push({
+            item_consumed: true,
+            message: new Message("¡El pendrive contenía software malicioso!", 'red'),
             consumed: 1,
         });
     }

@@ -1,4 +1,5 @@
 import { astar, Graph } from './libs/astar';
+import { Chance } from 'chance';
 
 export function delay(ms) {
     return new Promise(function (resolve, reject) {
@@ -94,3 +95,5 @@ export function find_path(map, from_x, from_y, to_x, to_y, closest=false) {
 
     return result;
 }
+
+export const global_rng = new Chance();

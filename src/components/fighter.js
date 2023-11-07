@@ -14,7 +14,7 @@ export class Fighter {
         if (this.hp <= 0) {
             results.push({dead: this.owner})
         }
-        return results
+        return results;
     }
 
     attack(target) {
@@ -38,6 +38,8 @@ export class Fighter {
     }
 
     heal(amount) {
+        let results = [];
         this.hp = Math.min(this.hp + amount, this.max_hp);
+        return results;
     }
 }

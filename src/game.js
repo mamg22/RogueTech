@@ -198,6 +198,8 @@ export class Game {
         for (const indicator of level_info) {
             indicator.innerText = this.level.number; 
         }
+
+        this.update_inventory();
     }
 
     switch_level(target_level) {
@@ -258,6 +260,16 @@ export class Game {
             if ('inventory_item' in data) {
                 this.show_entityinfo(data.inventory_item);
                 return;
+            }
+            if ('use_item' in data) {
+                const id = +data.use_item;
+                const target_entity = this.player.inventory.get_item_by_id(id);
+                this.player.handler.push_action({use_item: target_entity})
+            }
+            if ('drop_item' in data) {
+                const id = +data.drop_item;
+                const target_entity = this.player.inventory.get_item_by_id(id);
+                this.player.handler.push_action({drop_item: target_entity})
             }
             break;
         }
@@ -354,6 +366,11 @@ export class Game {
                         let result = entity.inventory.add_item(target);
                         results.push(...result);
                     }
+                    else if (action.use_item) {
+                        const target = action.use_item;
+                        let result = entity.inventory.use(target);
+                        results.push(...result);
+                    }
                     else if (action.switch_level) {
                         const target_floor = action.switch_level;
                         let result = this.switch_level(target_floor);
@@ -372,6 +389,7 @@ export class Game {
                     if ('dead' in result) {
                         const dead = result.dead;
                         if (dead === this.player) {
+                            this.finish_run();
                             this.set_state(Game.State.player_dead);
                         }
                         this.render_metadata.dead.push(dead);
@@ -624,6 +642,7 @@ export class Game {
         const entityinfo_name = document.getElementById('entityinfo-dialog-name');
         const entityinfo_description = document.getElementById('entityinfo-dialog-description');
         const entityinfo_hp_bar = document.getElementById('entityinfo-dialog-hp-bar');
+        const entityinfo_buttons = document.getElementById('entityinfo-dialog-buttons');
 
         entityinfo_image.src = entity.sprite;
         entityinfo_name.innerText = entity.name;
@@ -638,6 +657,16 @@ export class Game {
         else {
             entityinfo_dialog.style.removeProperty('--hp');
             entityinfo_hp_bar.style.setProperty('display', 'none');
+        }
+
+        if (this.player.inventory.get_item_by_id(entity.id)) {
+            entityinfo_buttons.style.setProperty('display', 'block');
+            for (const button of entityinfo_buttons.children) {
+                button.setAttribute('target-entity', entity.id)
+            }
+        }
+        else {
+            entityinfo_buttons.style.setProperty('display', 'none')
         }
 
         entityinfo_dialog.showModal();

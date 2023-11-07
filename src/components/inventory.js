@@ -33,4 +33,43 @@ export class Inventory {
             return elem.id === id;
         });
     }
+
+    use(item_entity, args={}) {
+        let results = [];
+
+        const item_component = item_entity.item;
+
+        if (item_component.use_function) {
+            let full_args = {...item_component.function_args, ...args};
+            const item_use_results = item_component.use_function(this.owner, full_args);
+
+            for (const use_result of item_use_results) {
+                if (use_result.item_consumed) {
+                    this.remove_item(item_entity);
+                }
+            }
+            results.push(...item_use_results)
+        }
+        else {
+            results.push({
+                message: new Message(`El ${item_entity.name} no puede usarse`, 'yellow'),
+                consumed: 0,
+            })
+        }
+
+        return results;
+    }
+
+    remove_item(item) {
+        const index = this.items.indexOf(item);
+        if (index > -1) {
+          this.items.splice(index, 1);
+        }
+    }
+
+    remove_item_by_id(id) {
+        return this.items.find(function(elem) {
+            return elem.id === id;
+        });
+    }
 }

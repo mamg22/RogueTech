@@ -272,6 +272,17 @@ Tiempo: <span id="gameover-time"></span>
     </div>
 </div>
 
+<div id="entityinfo-dialog-buttons" class="center">
+    <button target-entity="" id="entityinfo-dialog-button-drop"
+    _="on click call game.handle_ui_input({drop_item: @target-entity as Int})">
+        Tirar
+    </button>
+    <button target-entity="" id="entityinfo-dialog-button-use"
+    _="on click call game.handle_ui_input({use_item: @target-entity as Int})">
+        Usar
+    </button>
+</div>
+
 <div id="entityinfo-dialog-description">
 </div>
 
