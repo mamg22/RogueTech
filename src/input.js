@@ -104,3 +104,7 @@ game_view.addEventListener('wheel', function(e) {
         game.zoom(Math.sign(-e.deltaY))
     }
 })
+
+window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+})
