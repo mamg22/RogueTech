@@ -1,5 +1,5 @@
 import { Point } from '../common';
-import { find_path } from '../utility';
+import { find_path, global_rng } from '../utility';
 
 export class PlayerHandler {
     constructor() {
@@ -37,10 +37,127 @@ export class PlayerHandler {
     }
 }
 
-export class RandomWalkHandler {
+export class AIWallBump {
+    constructor() {
+        this.next_direction();
+    }
+    next_direction() {
+        let direction_x = 0;
+        let direction_y = 0;
+        while (direction_x === 0 && direction_y === 0) {
+            direction_x = global_rng.weighted([-1, 0, 1], [1, 3, 1]);
+            direction_y = global_rng.weighted([-1, 0, 1], [1, 3, 1]);
+        }
+        this.direction_x = direction_x;
+        this.direction_y = direction_y;
+
+    }
+    next_action(owner, player, level) {
+        if (level.get_collision_at(owner.x + this.direction_x, owner.y + this.direction_y)) {
+            this.next_direction();
+            return {wait: true}
+        }
+        return {move_rel: new Point(this.direction_x, this.direction_y)}
+    }
+}
+
+export class AIStatic {
+    constructor(){
+    }
+    next_action(owner, player, level) {
+        return {wait: true}
+    }
+}
+
+export class AIGuarding {
+    constructor() {
+        this.target = null;
+        this.retarget_cooldown = 8;
+    }
+    next_action(owner, player, level) {
+        if (this.target) {
+            if ( (owner.x === this.target.x && owner.x === this.target.y) ||
+                level.get_collision_at(this.target.x, this.target.y)) {
+                this.target = null;
+                this.retarget_cooldown = 8;
+            }
+            return {move_astar: this.target};
+        }
+        else {
+            if (this.retarget_cooldown <= 0) {
+                const rooms = level.map.tree.get_leaves();
+                const room_idx = global_rng.integer({min: 0, max: rooms.length - 1});
+                const room = rooms[room_idx];
+                const center_pos = room.rect.get_center();
+                this.target = center_pos;
+            }
+            else {
+                this.retarget_cooldown--;
+            }
+            return {wait: true};
+        }
+    }
+}
+
+export class AIRoomGuarding {
+    constructor() {
+        this.target = null;
+        this.home_room = null;
+        this.room_corners = null;
+        this.retarget_cooldown = 3;
+    }
+    next_action(owner, player, level) {
+        console.log(owner.x, owner.y)
+        if (!this.home_room) {
+            const rooms = level.map.tree.get_leaves();
+            for (const room of rooms) {
+                if (room.rect.contains_point(owner.x, owner.y)) {
+                    this.home_room = room;
+                    break;
+                }
+            }
+
+            const rect = this.home_room.rect;
+
+            this.room_corners = [
+                new Point(rect.x + 1, rect.y + 1),
+                new Point(rect.x + rect.width - 2, rect.y + 1),
+                new Point(rect.x + 1, rect.y + rect.height - 2),
+                new Point(rect.x + rect.width - 2, rect.y + rect.height - 2),
+            ];
+        }
+        if (this.target) {
+            if ( (owner.x === this.target.x && owner.x === this.target.y) ||
+                level.get_collision_at(this.target.x, this.target.y)) {
+                this.target = null;
+                this.retarget_cooldown = 3;
+            }
+            return {move_astar: this.target};
+        }
+        else {
+            if (this.retarget_cooldown <= 0) {
+                this.target = global_rng.pickone(this.room_corners);
+            }
+            else {
+                this.retarget_cooldown--;
+            }
+            return {wait: true};
+        }
+    }
+}
+
+export class EnemyAIHandler {
     constructor() {
         this.last_known_pos = null;
         this.sight_count = 0;
+        const availableAI = [
+            AIStatic,
+            AIGuarding,
+            AIRoomGuarding,
+            AIWallBump,
+        ];
+        const selectedAI = global_rng.pickone(availableAI)
+        this.default_ai = new selectedAI();
     }
     next_action(player, level) {
         const owner = this.owner
@@ -59,6 +176,9 @@ export class RandomWalkHandler {
                 }    
             }
             this.last_known_pos = new Point(player.x, player.y);
+        }
+        else {
+            action = this.default_ai.next_action(this.owner, player, level);
         }
         return action;
     }
