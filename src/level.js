@@ -5,7 +5,7 @@ import { RandomWalkHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
-import { heal, drive_effect } from './item-functions';
+import { heal, drive_effect, cast_interference } from './item-functions';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -406,7 +406,7 @@ function place_entities(rng, map, level) {
                 item: new Item(heal, false, {amount: 4}),
             }],
             ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1, {
-                item: new Item(),
+                item: new Item(cast_interference, false, {damage: 10, maximum_range: 8}),
             }],
             ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1, {
                 item: new Item(drive_effect, false, {heal_amount: 10, damage_amount: 10}),

@@ -371,7 +371,7 @@ export class Game {
                     }
                     else if (action.use_item) {
                         const target = action.use_item;
-                        let result = entity.inventory.use(target);
+                        let result = entity.inventory.use(target, {level: this.level, player: this.player});
                         results.push(...result);
                     }
                     else if (action.drop_item) {

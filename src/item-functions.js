@@ -1,5 +1,5 @@
 import { Message } from './common';
-import { global_rng } from './utility';
+import { global_rng, distance_between } from './utility';
 
 export function heal(entity, {amount}) {
     let results = [];
@@ -46,6 +46,50 @@ export function drive_effect(entity, {heal_amount, damage_amount}) {
             item_consumed: true,
             message: new Message("¡El pendrive contenía software malicioso y te ha causado daño!", 'red'),
             consumed: 1,
+        });
+    }
+
+    return results;
+}
+
+export function cast_interference(entity, {damage, maximum_range, level}) {
+    let results = [];
+
+    let target = null
+    let closest_distance = maximum_range + 1;
+
+    for (const possible_target of level.get_entities()) {
+        if ('fighter' in possible_target &&
+            possible_target.id !== entity.id &&
+            entity.can_see(possible_target, level, maximum_range)) {
+            const distance = distance_between(
+                entity.x, entity.y,
+                possible_target.x, possible_target.y
+            );
+            
+            if (distance < closest_distance) {
+                target = possible_target;
+                closest_distance = distance;
+            }
+        }
+    }
+
+    if (target) {
+        results.push({
+            item_consumed: true,
+            target: target,
+            message: new Message(`La interferencia afecta al ${target.name}, causando ${damage} de daños`, 'default'),
+            consumed: 1,
+        });
+        let cast_results = target.fighter.take_damage(damage);
+        results.push(...cast_results);
+    }
+    else {
+        results.push({
+            item_consumed: false,
+            target: null,
+            message: new Message(`No hay enemigos cercanos y visibles a los que atacar...`, 'yellow'),
+            consumed: 0,
         });
     }
 
