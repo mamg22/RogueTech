@@ -131,6 +131,10 @@ img {
     color: #ff6666;
 }
 
+.message.orange {
+    color: #ffaa33;
+}
+
 .message.success,
 .message.green {
     color: #66ff66;
@@ -139,6 +143,10 @@ img {
 .message.blue,
 .message.other {
     color: #33ffff;
+}
+
+.message.magenta {
+    color: #ff33ff;
 }
 
 /* #endregion Message Box */
