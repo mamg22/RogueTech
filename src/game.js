@@ -200,6 +200,14 @@ export class Game {
             indicator.innerText = this.level.number; 
         }
 
+        const cancel_button = document.getElementById('cancel-button');
+        if (this.state == Game.State.targeting) {
+            cancel_button.style.removeProperty("display")
+        }
+        else {
+            cancel_button.style.setProperty("display", "none");
+        }
+
         this.update_inventory();
     }
 
@@ -273,6 +281,10 @@ export class Game {
                 this.player.handler.push_action({drop_item: target_entity})
             }
             break;
+        case Game.State.targeting:
+            this.set_state(Game.State.player_turn)
+            this.push_msg("Cancelado")
+            break;
         }
         this.tick_turns();
     }
@@ -335,6 +347,10 @@ export class Game {
 
     async tick_turns(actions) {
         this.set_state(Game.State.processing);
+        if (!this.player?.handler?.has_action()) {
+            this.render_ui();
+            this.render();
+        }
         outer: 
         while (this.player?.handler?.has_action()) {
             if (this.state === Game.State.cancel) {
