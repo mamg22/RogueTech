@@ -430,8 +430,8 @@ export class Game {
                     break;
                 }
             }
-            await this.render();
             this.render_ui();
+            await this.render();
             this.turn++;
             if (! ('handler' in this.player)) {
                 this.show_gameover();
