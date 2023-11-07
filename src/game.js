@@ -433,6 +433,7 @@ export class Game {
                         this.level.remove_entity_by_id(dead.id);
                         dead.handler = null;
                         this.push_msg(`${dead.name} ha sido derrotado`);
+                        this.message_log.add_message(this.turn, `${dead.name} ha sido derrotado`);
                     }
                     if ('render_map' in result && result.render_map) {
                         this.render_map();
@@ -448,7 +449,6 @@ export class Game {
                         this.show_inventory(false);
                     }
                     if ('player_attacked' in result && result.player_attacked) {
-                        this.push_msg
                         this.set_state(Game.State.cancel);
                     }
                     if ('item_dropped' in result && result.item_dropped) {
