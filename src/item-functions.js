@@ -118,7 +118,7 @@ export function throw_water_bottle(entity, {level, damage, radius, x, y}) {
         const dx = Math.abs(target.x - x);
         const dy = Math.abs(target.y - y);
 
-        if (dx <= 1 && dy <= 1 && entity.fighter) {
+        if (dx <= 1 && dy <= 1 && target.fighter) {
             results.push({
                 message: new Message(
                     `El agua causa cortocircuitos en el ${target.name} y causa ${damage} de daño`,
