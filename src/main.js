@@ -53,10 +53,11 @@ let state = {
     }
 }
 
-function init_game() {
-    let game = new Game();
+function init_game(seed) {
+    let game = new Game(seed);
     globalThis.game = game;
 }
+globalThis.init_game = init_game;
 
 const server_info = JSON.parse(
     document.getElementById('server-info').text
