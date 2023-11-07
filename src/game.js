@@ -77,7 +77,7 @@ export class Game {
         const animation_speed = do_animation ? 200 : 0;
         
         let animations = [];
-        for (const entity of this.level.entities) {
+        for (const entity of this.level.entities.concat(this.render_metadata.dead)) {
             const elem_id = "entity-" + entity.id;
             let elem = document.getElementById(elem_id);
 
@@ -136,20 +136,27 @@ export class Game {
         });
     
 
+        let removal_animations = []
         for (const entity_element of Array.from(entity_elements)) {
             const entity_id = +entity_element.getAttribute("entity-id")
             if (! entity_ids.includes(entity_id)) {
+                entity_element.removeAttribute('entity-id');
                 const dead_entity = this.render_metadata.dead.find(function(elem) {
                     return elem.id == entity_id
-                });
+                });                    
                 if (dead_entity) {
                     const dead_img = entity_element.querySelector("img");
                     dead_img.src = sprites.etc.boom;
-                    await delay(1400);
+                    setTimeout(function() {
+                        entity_element.remove()
+                    }, 1400);
                 }
-                entity_element.remove()
+                else {
+                    entity_element.remove()
+                }
             }
         }
+        
 
         this.render_metadata.attacking = [];
         this.render_metadata.dead = [];
