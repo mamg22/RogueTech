@@ -274,6 +274,10 @@ dialog::backdrop {
     flex: 1 1;
 }
 
+#entityinfo-dialog-description {
+    width: 20em;
+}
+
 /* #endregion Dialog */
 
 /* #region Map */
@@ -456,6 +460,7 @@ big, .big {
     padding: 0.2rem;
     border: 1px solid #888888;
     border-radius: 0.5rem;
+    cursor: pointer;
 }
 
 .inventory-header {

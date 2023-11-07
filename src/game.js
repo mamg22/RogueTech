@@ -674,9 +674,14 @@ export class Game {
 
     update_inventory() {
         const inventory_contents_elt = document.getElementById('inventory-contents');
+        const inventory_counter_elt = document.getElementById('inventory-contents-indicator');
+
+        const inv_capacity = this.player.inventory.capacity;
+        const inv_size = this.player.inventory.items.length;
+        inventory_counter_elt.innerText = `${inv_size} / ${inv_capacity}`;
 
         inventory_contents_elt.replaceChildren();
-        if (this.player.inventory.items.length > 0) {
+        if (inv_size > 0) {
             for (const item of this.player.inventory.items) {
                 const elem = document.createElement('div');
                 elem.classList.add('inventory-card');
@@ -722,7 +727,7 @@ export class Game {
             const fig = entity.fighter
             const health_proportion = fig.hp / fig.max_hp;
             entityinfo_dialog.style.setProperty('--hp', health_proportion);
-            entityinfo_hp_bar.style.setProperty('display', 'block');
+            entityinfo_hp_bar.style.removeProperty('display', 'block');
         }
         else {
             entityinfo_dialog.style.removeProperty('--hp');
@@ -730,7 +735,7 @@ export class Game {
         }
 
         if (this.player.inventory.get_item_by_id(entity.id)) {
-            entityinfo_buttons.style.setProperty('display', 'block');
+            entityinfo_buttons.style.removeProperty('display');
             for (const button of entityinfo_buttons.children) {
                 button.setAttribute('target-entity', entity.id)
             }
