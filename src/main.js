@@ -24,35 +24,6 @@ if (!CSS.px) {
     }
 }
 
-let state = {
-    levels: [],
-    level: null,
-    player: null,
-    scale: 1.0,
-
-    seed: 1,
-    start_time: new Date(),
-    end_time: null,
-    total_time: null,
-    score: 0,
-    success: false,
-    kills: 0,
-
-    get_entity(x, y) {
-        // TODO: Generalizar a get_entities, devolviendo una lista de entidades.
-        // Organizado por el peso
-        // [ Solidos ] > [ No solidos ]
-        // [ Jugador, Enemigo ] > [ Otros ]
-        // Devolviendo siempre una lista
-        for (const entity of this.level.entities) {
-            if (entity.x == x && entity.y == y) {
-                return entity;
-            }
-        }
-        return null;
-    }
-}
-
 function init_game(seed) {
     let game = new Game(seed);
     globalThis.game = game;
