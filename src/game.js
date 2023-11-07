@@ -418,6 +418,10 @@ export class Game {
                     }
                     if ('item_dropped' in result && result.item_dropped) {
                         this.level.add_entity(result.item_dropped);
+                        this.show_inventory(false);
+                    }
+                    if ('item_consumed' in result) {
+                        this.show_inventory(false);
                     }
                     if (entity.type == Entity.Type.player && result?.consumed === 0) {
                         no_turn = true;
@@ -646,9 +650,14 @@ export class Game {
         }
     }
 
-    show_inventory() {
+    show_inventory(show=true) {
         const inventory_dialog = document.getElementById('inventory-dialog');
-        inventory_dialog.showModal();
+        if (show) {
+            inventory_dialog.showModal();
+        }
+        else {
+            inventory_dialog.close();
+        }
     }
 
     show_entityinfo(entity) {
