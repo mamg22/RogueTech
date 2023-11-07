@@ -267,13 +267,13 @@ function do_map_splits(rng, node, n, config) {
 }
 
 function generate_map(rng, level) {
-    let grid = new Grid(40, 30);
+    let grid = new Grid(26, 30);
     const root = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
 
     const SPLITS = 6;
     const split_config = {
-        MIN_SIZE: 5,
-        MAX_SIZE: 10,
+        MIN_SIZE: 4,
+        MAX_SIZE: 8,
         SPLIT_END_CHANCE: 25,
         WIDTH_THRESHOLD: 1.25,
         HEIGHT_THRESHOLD: 1.25,
