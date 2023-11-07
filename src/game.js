@@ -360,6 +360,9 @@ export class Game {
                         let result = entity.fighter.attack(target);
                         results.push(...result);
                         this.render_metadata.attacking.push(entity);
+                        if (target === this.player) {
+                            results.push({player_attacked: true});
+                        }
                     }
                     else if (action.pick_up) {
                         const target = action.pick_up;
@@ -408,6 +411,10 @@ export class Game {
                     if ('item_added' in result && result.item_added) {
                         this.level.remove_entity_by_id(result.item_added.id);
                         this.update_inventory();
+                    }
+                    if ('player_attacked' in result && result.player_attacked) {
+                        this.push_msg
+                        this.set_state(Game.State.cancel);
                     }
                     if ('item_dropped' in result && result.item_dropped) {
                         this.level.add_entity(result.item_dropped);
