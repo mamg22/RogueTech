@@ -5,7 +5,7 @@ import { RandomWalkHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
-import { heal, drive_effect, cast_interference } from './item-functions';
+import { heal, drive_effect, cast_interference, throw_water_bottle } from './item-functions';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -403,13 +403,13 @@ function place_entities(rng, map, level) {
     for (let i = 0; i < N_ITEMS; i++) {
         const item_templates = [
             ["Botella de agua", "X", false, sprites.items.water_bottle, Entity.Type.item, 1, {
-                item: new Item(heal, false, {amount: 4}),
+                item: new Item(throw_water_bottle, true, "Elige donde lanzar la botella...", {damage: 8, radius: 1}),
             }],
             ["DVD", "X", false, sprites.items.dvd, Entity.Type.item, 1, {
-                item: new Item(cast_interference, false, {damage: 10, maximum_range: 8}),
+                item: new Item(cast_interference, false, null, {damage: 10, maximum_range: 8}),
             }],
             ["Pendrive", "X", false, sprites.items.pendrive, Entity.Type.item, 1, {
-                item: new Item(drive_effect, false, {heal_amount: 10, damage_amount: 10}),
+                item: new Item(drive_effect, false, null, {heal_amount: 10, damage_amount: 10}),
             }],
             ["Maquina", "X", true, sprites.decoration.vending_machine, Entity.Type.decoration, 1, {
                 item: new Item(),

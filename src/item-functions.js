@@ -1,4 +1,4 @@
-import { Message } from './common';
+import { Message, Point } from './common';
 import { global_rng, distance_between } from './utility';
 
 export function heal(entity, {amount}) {
@@ -91,6 +91,42 @@ export function cast_interference(entity, {damage, maximum_range, level}) {
             message: new Message(`No hay enemigos cercanos y visibles a los que atacar...`, 'yellow'),
             consumed: 0,
         });
+    }
+
+    return results;
+}
+
+export function throw_water_bottle(entity, {level, damage, radius, x, y}) {
+    let results = [];
+
+    if (entity.can_see(new Point(x, y), level, 99)) {
+        results.push({
+            item_consumed: false,
+            message: new Message("No puedes lanzarlo allí, ¡está bloqueado por una pared!", 'yellow'),
+            consumed: 0,
+        });
+    }
+
+    results.push({
+        item_consumed: true,
+        message: new Message("La botella salpica agua, mojando todo su alrededor", 'orange'),
+        consumed: 1,
+    });
+
+    for (const target of level.get_entities()) {
+        const dx = Math.abs(target.x - x);
+        const dy = Math.abs(target.y - y);
+
+        if (dx <= 1 && dy <= 1) {
+            results.push({
+                message: new Message(
+                    `El agua causa cortocircuitos en el ${target.name} y causa ${damage} de daño`,
+                    'orange'
+                )
+            });
+            let damage_results = target.fighter.take_damage(damage);
+            results.push(...damage_results);
+        }
     }
 
     return results;

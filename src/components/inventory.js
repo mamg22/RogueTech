@@ -4,6 +4,7 @@ export class Inventory {
     constructor(capacity) {
         this.capacity = capacity;
         this.items = [];
+        this.targeting_item = null;
     }
 
     add_item(item) {
@@ -39,22 +40,31 @@ export class Inventory {
 
         const item_component = item_entity.item;
 
-        if (item_component.use_function) {
-            let full_args = {...item_component.function_args, ...args};
-            const item_use_results = item_component.use_function(this.owner, full_args);
-
-            for (const use_result of item_use_results) {
-                if (use_result.item_consumed) {
-                    this.remove_item(item_entity);
-                }
-            }
-            results.push(...item_use_results)
+        if (item_component.targeting && !('x' in args || 'y' in args)) {
+            results.push({
+                targeting: item_entity,
+                consumed: 0,
+            });
+            this.targeting_item = item_entity;
         }
         else {
-            results.push({
-                message: new Message(`El ${item_entity.name} no puede usarse`, 'yellow'),
-                consumed: 0,
-            })
+            if (item_component.use_function) {
+                let full_args = {...item_component.function_args, ...args};
+                const item_use_results = item_component.use_function(this.owner, full_args);
+    
+                for (const use_result of item_use_results) {
+                    if (use_result.item_consumed) {
+                        this.remove_item(item_entity);
+                    }
+                }
+                results.push(...item_use_results)
+            }
+            else {
+                results.push({
+                    message: new Message(`El ${item_entity.name} no puede usarse`, 'yellow'),
+                    consumed: 0,
+                })
+            }
         }
 
         return results;

@@ -19,6 +19,7 @@ export class Game {
         player_turn: 1,
         inspect: 2,
         player_dead: 3,
+        targeting: 4,
     });
 
     constructor(seed) {
@@ -323,6 +324,9 @@ export class Game {
         case Game.State.inspect:
             this.process_inspect(x, y);
             return;
+        case Game.State.targeting:
+            this.player.handler.push_action({use_target: new Point(x, y)});
+            break
         default:
             break;
         }
@@ -379,6 +383,15 @@ export class Game {
                         let result = entity.inventory.drop_item(target);
                         results.push(...result);
                     }
+                    else if (action.use_target) {
+                        const target = entity.inventory.targeting_item;
+                        const target_pos = action.use_target;
+                        let result = entity.inventory.use(target, {
+                            level: this.level, player: this.player,
+                            x: target_pos.x, y: target_pos.y
+                        });
+                        results.push(...result);
+                    }
                     else if (action.switch_level) {
                         const target_floor = action.switch_level;
                         let result = this.switch_level(target_floor);
@@ -412,6 +425,12 @@ export class Game {
                         this.level.remove_entity_by_id(result.item_added.id);
                         this.update_inventory();
                     }
+                    if (result.targeting) {
+                        this.set_state(Game.State.targeting);
+                        const message = result.targeting.item.targeting_message;
+                        this.push_msg(message || "Elige donde usar el objeto");
+                        this.show_inventory(false);
+                    }
                     if ('player_attacked' in result && result.player_attacked) {
                         this.push_msg
                         this.set_state(Game.State.cancel);
@@ -441,7 +460,9 @@ export class Game {
                 this.show_gameover();
             }
         }
-        this.set_state(Game.State.player_turn);
+        if (this.state === Game.State.processing || this.state === Game.State.cancel) {
+            this.set_state(Game.State.player_turn);
+        }
     }
 
     async process_inspect(x, y) {
