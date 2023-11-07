@@ -99,12 +99,13 @@ export function cast_interference(entity, {damage, maximum_range, level}) {
 export function throw_water_bottle(entity, {level, damage, radius, x, y}) {
     let results = [];
 
-    if (entity.can_see(new Point(x, y), level, 99)) {
+    if (!entity.can_see(new Point(x, y), level, 99)) {
         results.push({
             item_consumed: false,
             message: new Message("No puedes lanzarlo allí, ¡está bloqueado por una pared!", 'yellow'),
             consumed: 0,
         });
+        return results;
     }
 
     results.push({
@@ -117,7 +118,7 @@ export function throw_water_bottle(entity, {level, damage, radius, x, y}) {
         const dx = Math.abs(target.x - x);
         const dy = Math.abs(target.y - y);
 
-        if (dx <= 1 && dy <= 1) {
+        if (dx <= 1 && dy <= 1 && entity.fighter) {
             results.push({
                 message: new Message(
                     `El agua causa cortocircuitos en el ${target.name} y causa ${damage} de daño`,
