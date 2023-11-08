@@ -55,6 +55,8 @@ export class Game {
             dead: []
         };
 
+        this.stats = {};
+
         this.load_settings();
         this.render_map();
         this.render_ui();
@@ -156,6 +158,9 @@ export class Game {
                 }
             }
         }
+        if (this.render_metadata.dead.length > 0) {
+            audios.sfx.boom.play();
+        }
         
 
         this.render_metadata.attacking = [];
@@ -173,13 +178,19 @@ export class Game {
             for (let x = 0; x < this.level.map.grid.width; x++) {
                 let current_cell = document.createElement("td");
                 let cell_contents = document.createElement("div");
-    
+                let cell_image = document.createElement('img');
+
+                cell_contents.append(cell_image);
                 cell_contents.setAttribute("x", x);
                 cell_contents.setAttribute("y", y);
                 cell_contents.classList.add("map-cell");
     
                 if (this.level.map.grid.get(x, y) == 0) {
+                    cell_image.src = "/static/t2.jpg"
                     cell_contents.classList.add("solid");
+                }
+                else {
+                    // cell_image.src = "/static/f3.png"
                 }
     
                 current_cell.appendChild(cell_contents);
@@ -600,6 +611,7 @@ export class Game {
         scoredata.details = {};
     
         scoredata.details.kills = this.kills;
+        scoredata.details.turns = this.turns;
     
         return scoredata;
     }

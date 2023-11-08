@@ -312,6 +312,11 @@ dialog::backdrop {
     pointer-events: none;
 }
 
+#map-table img {
+    width: 100%;
+    height: 100%;
+}
+
 #map-table tr:nth-child(odd) td:nth-child(odd) div,
 #map-table tr:nth-child(even) td:nth-child(even) div {
     background: rgba(0, 0, 0, 0.2);
