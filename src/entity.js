@@ -90,8 +90,14 @@ export class Entity {
         return dx <= 1 && dy <= 1;
     }
 
-    can_move(x, y) {
-        
+    can_move(x, y, level) {
+        const reachable = this.can_reach(x, y);
+        const collision = level.get_collision_at(x, y);
+        return reachable && !collision;
+    }
+
+    can_move_relative(x, y, level) {
+        return this.can_move(this.x + x, this.y + y, level);
     }
     
     move(x, y) {

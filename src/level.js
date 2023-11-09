@@ -5,7 +5,7 @@ import { EnemyAIHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
-import { heal, drive_effect, cast_interference, throw_water_bottle } from './item-functions';
+import { heal, drive_effect, cast_interference, cast_confusion, throw_water_bottle } from './item-functions';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -401,10 +401,15 @@ function place_entities(rng, map, level) {
                 false, sprites.items.water_bottle, Entity.Type.item, 1, {
                 item: new Item(throw_water_bottle, true, "Elige donde lanzar la botella...", {damage: 8, radius: 1}),
             }],
-            ["DVD",
+            ["DVD: interferidor.exe",
                 "Al frente dice que contiene un programa para saturar la red, causando interferencia. Causará que el enemigo más cercano a tí sufra daños",
                 false, sprites.items.dvd, Entity.Type.item, 1, {
                 item: new Item(cast_interference, false, null, {damage: 10, maximum_range: 8}),
+            }],
+            ["DVD: aturdidor.exe",
+                "Al frente dice que contiene un programa para aturdir un enemigo. Causará que el enemigo que elijas sea aturdido por 10 turnos, haciendolo incapaz de seguirte o siquiera moverse correctamente",
+                false, sprites.items.dvd, Entity.Type.item, 1, {
+                item: new Item(cast_confusion, true, "Elige un enemigo para aturdir", {duration: 10}),
             }],
             ["Pendrive",
                 "Un pendrive desconocido. Quizá puedas ver lo que tiene dentro, aunque no se si sea muy seguro.",

@@ -189,3 +189,29 @@ export class EnemyAIHandler {
         return undefined;
     }
 }
+
+export class ConfusedHandler {
+    constructor(previous_ai, number_of_turns=10) {
+        this.previous_ai = previous_ai;
+        this.number_of_turns = number_of_turns;
+    }
+
+    next_action(player, level) {
+        if (this.number_of_turns > 0) {
+            const direction_x = global_rng.integer({min: -1, max: 1});
+            const direction_y = global_rng.integer({min: -1, max: 1});
+
+            this.number_of_turns--;
+            if (this.owner.can_move_relative(direction_x, direction_y, level)) {
+                return {move_rel: new Point(direction_x, direction_y)}
+            }
+            else {
+                return {wait: true};
+            }
+        }
+        else {
+            this.owner.handler = this.previous_ai;
+            return {wait: true};
+        }
+    }
+}

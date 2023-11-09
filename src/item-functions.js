@@ -1,5 +1,6 @@
 import { Message, Point } from './common';
 import { global_rng, distance_between } from './utility';
+import { ConfusedHandler } from './components/handler';
 
 export function heal(entity, {amount}) {
     let results = [];
@@ -129,6 +130,56 @@ export function throw_water_bottle(entity, {level, damage, radius, x, y}) {
             results.push(...damage_results);
         }
     }
+
+    return results;
+}
+
+export function cast_confusion(entity, {player, level, x, y, duration}) {
+    let results = [];
+
+    if (!entity.can_see(new Point(x, y), level, 8)) {
+        results.push({
+            item_consumed: false,
+            message: new Message("No puedes usarlo contra un enemigo si no es visible o está lejos", 'yellow'),
+            consumed: 0,
+        });
+        return results;
+    }
+
+    const entities = level.get_entities();
+    let found_target = false;
+
+    for (const target of entities) {
+        if (target.x == x && target.y == y && target.handler) {
+            if (target === player) {
+                results.push({
+                    item_consumed: false,
+                    message: new Message("¡No puedes usarlo en tí mismo!", 'yellow'),
+                    consumed: 0,
+                });
+            }
+            const confused_handler = new ConfusedHandler(target.handler, duration)
+            confused_handler.owner = target;
+            target.handler = confused_handler;
+
+            results.push({
+                item_consumed: true,
+                message: new Message(`El ${target.name} es aturdido!`, 'green'),
+                consumed: 1,
+            });
+
+            found_target = true;
+            break;
+        }
+    }
+    if (!found_target) {
+        results.push({
+            item_consumed: false,
+            message: new Message("No hay un enemigo ahí", 'yellow'),
+            consumed: 0,
+        });
+    }
+
 
     return results;
 }
