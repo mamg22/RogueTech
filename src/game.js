@@ -124,13 +124,16 @@ export class Game {
             elem.style.setProperty('--flip', entity.facing)
         }
         await Promise.all(animations);
-        const player_elem_id = "entity-" + this.player.id;
-        const player_elem = document.getElementById(player_elem_id);
-        player_elem?.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "center"
-        });
+
+        if (this.render_metadata.follow_player) {
+            const player_elem_id = "entity-" + this.player.id;
+            const player_elem = document.getElementById(player_elem_id);
+            player_elem?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "center"
+            });
+        }
 
         const entity_elements = entities_elt.children;
         const entity_ids = this.level.entities.map(function(entity){
@@ -383,15 +386,24 @@ export class Game {
                     if (action.move) {
                         const point = action.move;
                         entity.move(point.x, point.y);
+                        if (entity === this.player) {
+                            this.render_metadata.follow_player = true;
+                        }
                     }
                     else if (action.move_rel) {
                         const point = action.move_rel;
                         entity.move_relative(point.x, point.y);
+                        if (entity === this.player) {
+                            this.render_metadata.follow_player = true;
+                        }
                     }
                     else if (action.move_astar) {
                         const target = action.move_astar;
                         let result = entity.move_astar(target.x, target.y, this.level, entity.type != Entity.Type.player)
                         results.push(...result);
+                        if (entity === this.player) {
+                            this.render_metadata.follow_player = true;
+                        }
                     }
                     else if (action.attack) {
                         const target = action.attack;
