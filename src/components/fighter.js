@@ -1,18 +1,19 @@
 import { Message } from '../common';
 
 export class Fighter {
-    constructor(hp, power, defense) {
+    constructor(hp, power, defense, xp=0) {
         this.max_hp = hp;
         this.hp = hp;
         this.power = power;
         this.defense = defense;
+        this.xp = xp;
     }
 
     take_damage(amount) {
         let results = [];
         this.hp = Math.max(this.hp - amount, 0);
         if (this.hp <= 0) {
-            results.push({dead: this.owner})
+            results.push({dead: this.owner, xp: this.xp})
         }
         return results;
     }

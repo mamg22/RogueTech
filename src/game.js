@@ -9,6 +9,7 @@ import { astar, Graph } from './libs/astar';
 import { PlayerHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Inventory } from './components/inventory';
+import { Experience } from './components/experience';
 
 export const GRID_SIZE = 64;
 
@@ -33,8 +34,9 @@ export class Game {
             true, sprites.player.standing, Entity.Type.player, 1,
             {
                 handler: new PlayerHandler(),
-                fighter: new Fighter(999, 4, 2),
+                fighter: new Fighter(100, 4, 2),
                 inventory: new Inventory(5),
+                experience: new Experience(),
             });
 
         this.levels = [];
@@ -466,6 +468,18 @@ export class Game {
                         this.message_log.add_message(this.turn,
                             new Message(`${dead.name} ha sido derrotado`)
                         );
+                    }
+                    if ('xp' in result) {
+                        const level_up = this.player.experience.add_xp(result.xp);
+
+                        if (level_up) {
+                            const player_level = this.player.experience.current_level;
+                            this.push_msg(`¡Subes de nivel! Ahora eres nivel ${player_level}`, 'green');
+                            this.message_log.add_message(this.turn,
+                                new Message(`¡Subes de nivel! Ahora eres nivel ${player_level}`, 'green')
+                            );
+    
+                        }
                     }
                     if ('render_map' in result && result.render_map) {
                         this.render_map();
