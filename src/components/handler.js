@@ -107,7 +107,6 @@ export class AIRoomGuarding {
         this.retarget_cooldown = 3;
     }
     next_action(owner, player, level) {
-        console.log(owner.x, owner.y)
         if (!this.home_room) {
             const rooms = level.map.tree.get_leaves();
             for (const room of rooms) {
