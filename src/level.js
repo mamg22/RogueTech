@@ -490,7 +490,8 @@ export class Level {
         return map_data;
     }
     get_entities() {
-        return this.entities.toSorted(function (a, b) {
+        // Sort by type, ascending
+        return Array.from(this.entities).sort(function (a, b) {
             return a.type - b.type;
         });
     }
