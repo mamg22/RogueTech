@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"build": "esbuild src/main.js --outfile=static/main-compiled.js --bundle --sourcemap",
+		"build": "esbuild src/main.js --outfile=static/main-compiled.js --bundle --sourcemap --minify",
 		"watch": "esbuild src/main.js --outfile=static/main-compiled.js --bundle --watch --sourcemap"
 	},
 	"dependencies": {
