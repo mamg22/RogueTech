@@ -269,7 +269,8 @@ export class Game {
     handle_ui_input(data) {
         switch (this.state) {
         case Game.State.player_dead:
-            return;
+            game.show_gameover();
+            break;
         case Game.State.processing:
             this.set_state(Game.State.cancel);
             this.player.handler.clear_actions();
@@ -518,7 +519,7 @@ export class Game {
             this.render_ui();
             await this.render();
             this.turn++;
-            if (! ('handler' in this.player)) {
+            if (! (this.player.handler)) {
                 this.show_gameover();
             }
         }

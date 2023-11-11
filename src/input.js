@@ -9,6 +9,12 @@ game_view.addEventListener('pointermove', function(e) {
     }
 });
 
+game_view.addEventListener('click', function(e) {
+    if (e.target == this) {
+        game.handle_ui_input({offscreen_click: true})
+    }
+})
+
 const map_elem = document.querySelector("#map");
 let pointer_down = null;
 
