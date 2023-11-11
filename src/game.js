@@ -405,7 +405,7 @@ export class Game {
                         const target = action.move_astar;
                         let result = entity.move_astar(target.x, target.y, this.level, entity.type != Entity.Type.player)
                         results.push(...result);
-                        if (entity === this.player) {
+                        if (entity === this.player && result[0].astar_moved) {
                             this.render_metadata.follow_player = true;
                         }
                     }
@@ -508,7 +508,6 @@ export class Game {
                     }
                     if (entity.type == Entity.Type.player && result?.consumed === 0) {
                         no_turn = true;
-                        this.render_metadata.follow_player = false;
                     }
                     if (result?.astar_moved === false) {
                         entity.handler.clear_actions();
