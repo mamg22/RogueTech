@@ -36,13 +36,14 @@ window.addEventListener('click', function(e) {
     play_if_unmuted();
 });
 
-document.addEventListener("visibilitychange", () => {
+document.addEventListener("visibilitychange", function(e) {
     if (document.hidden) {
       audios.bgm.main.pause();
-    } else {
+    }
+    else {
       play_if_unmuted();
     }
-  });
+});
   
 
 function is_click(start, end) {
