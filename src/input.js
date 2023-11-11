@@ -17,7 +17,7 @@ map_elem.addEventListener('pointerdown', function(e) {
 })
 
 map_elem.addEventListener('pointerup', function(e) {
-    if (is_click(pointer_down, e)) {
+    if (pointer_down && is_click(pointer_down, e)) {
         globalThis.game.handle_input(
             globalThis.game.world_to_grid(e.offsetX, false),
             globalThis.game.world_to_grid(e.offsetY, false)
