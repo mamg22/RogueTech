@@ -26,11 +26,24 @@ map_elem.addEventListener('pointerup', function(e) {
     pointer_down = null
 })
 
-window.addEventListener('click', function(e) {
+function play_if_unmuted() {
     if (! typedLocalStorage.getItem('mute-bgm')) {
         audios.bgm.main.play()
     }
+}
+
+window.addEventListener('click', function(e) {
+    play_if_unmuted();
 });
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      audios.bgm.main.pause();
+    } else {
+      play_if_unmuted();
+    }
+  });
+  
 
 function is_click(start, end) {
     const max_dist = 5;
