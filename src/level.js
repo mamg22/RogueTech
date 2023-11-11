@@ -293,9 +293,7 @@ function generate_map(rng, level) {
         
         // Generate with contents [0 .. wall_dim)
         let offsets = Array.from(Array(wall_dimension).keys());
-        console.log(offsets);
         while (offsets.length > 0) {
-            console.log(offsets)
             let hole_offset;
             let hole_pos = {x: null, y: null};
             let neighbor_deltas = [];
