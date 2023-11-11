@@ -170,6 +170,7 @@ export class Game {
 
         this.render_metadata.attacking = [];
         this.render_metadata.dead = [];
+        this.render_metadata.follow_player = false;
     }
     
 
@@ -507,6 +508,7 @@ export class Game {
                     }
                     if (entity.type == Entity.Type.player && result?.consumed === 0) {
                         no_turn = true;
+                        this.render_metadata.follow_player = false;
                     }
                     if (result?.astar_moved === false) {
                         entity.handler.clear_actions();

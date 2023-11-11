@@ -9,25 +9,24 @@ game_view.addEventListener('pointermove', function(e) {
     }
 });
 
-game_view.addEventListener('click', function(e) {
-    if (e.target == this) {
-        game.handle_ui_input({offscreen_click: true})
-    }
-})
-
 const map_elem = document.querySelector("#map");
 let pointer_down = null;
 
-map_elem.addEventListener('pointerdown', function(e) {
+game_view.addEventListener('pointerdown', function(e) {
     pointer_down = e;
 })
 
-map_elem.addEventListener('pointerup', function(e) {
+game_view.addEventListener('pointerup', function(e) {
     if (pointer_down && is_click(pointer_down, e)) {
-        globalThis.game.handle_input(
-            globalThis.game.world_to_grid(e.offsetX, false),
-            globalThis.game.world_to_grid(e.offsetY, false)
-        );
+        if (e.target !== this) {
+            globalThis.game.handle_input(
+                globalThis.game.world_to_grid(e.offsetX, false),
+                globalThis.game.world_to_grid(e.offsetY, false)
+            );
+        }
+        else {
+            game.handle_ui_input({offscreen_click: true})
+        }
     }
     pointer_down = null
 })
