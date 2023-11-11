@@ -289,22 +289,25 @@ function generate_map(rng, level) {
 
     for (const branch of root.get_branches()) {
         let wall = branch.get_wall();
-
-
-        let tried = [];
-        while (true) {
+        const wall_dimension = Math.max(wall.width, wall.height);
+        
+        // Generate with contents [0 .. wall_dim)
+        let offsets = Array.from(Array(wall_dimension).keys());
+        console.log(offsets);
+        while (offsets.length > 0) {
+            console.log(offsets)
             let hole_offset;
             let hole_pos = {x: null, y: null};
             let neighbor_deltas = [];
 
+            hole_offset = rng.pickone(offsets);
+
             if (branch.split_direction == BSPNode.Direction.horizontal) {
-                hole_offset = rng.natural({min: 0, max: wall.width, exclude: tried});
                 hole_pos.x = wall.x + hole_offset;
                 hole_pos.y = wall.y;
                 neighbor_deltas = [{x: 0, y: -1}, {x: 0, y: 1}];
             }
             else {
-                hole_offset = rng.natural({min: 0, max: wall.height, exclude: tried});
                 hole_pos.x = wall.x;
                 hole_pos.y = wall.y  + hole_offset;
                 neighbor_deltas = [{x: -1, y: 0}, {x: 1, y: 0}];
@@ -321,6 +324,8 @@ function generate_map(rng, level) {
                     }
                 }
             }
+
+            offsets.splice(offsets.indexOf(hole_offset), 1);
             
             if (ok_sides == 2) {
                 grid.set(hole_pos.x, hole_pos.y, 1);
@@ -329,9 +334,6 @@ function generate_map(rng, level) {
                 if (rng.bool({likelihood: 75})) {
                     break;
                 }
-            }
-            else {
-                tried.push(hole_offset);
             }
         }
     }
