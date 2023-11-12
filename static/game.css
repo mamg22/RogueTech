@@ -275,7 +275,12 @@ dialog::backdrop {
 }
 
 #entityinfo-dialog-description {
+    margin: 1rem 0.5rem 0rem;
     width: 20em;
+}
+
+#entityinfo-dialog-hp-bar {
+    margin: 0.5rem 0.2rem 0rem;
 }
 
 #upload-error {
