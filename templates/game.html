@@ -200,7 +200,7 @@
             "
             >Cómo jugar</button>
             <button type="button" class="" _="
-            on gameload from window
+            init
                 if server_info.has_session
                     hide
                 end
@@ -219,8 +219,7 @@
         <div class="center">
             <button type="Submit" class="block" _="
             on click
-                call game.finish_run()
-                call game.show_gameover()
+                call game.handle_ui_input({finish_run: true})
             end
             "
             >Terminar Partida</button>
@@ -236,8 +235,8 @@
 Puntución final: <span id="gameover-score"></span> <br>
 Tiempo: <span id="gameover-time"></span>
 
-<div>
-    <button _="
+<div class="column center">
+    <button id="gameover-upload-button" type="button" _="
     def setup()
         if server_info exists
             set logged_in to server_info.has_session
@@ -245,22 +244,47 @@ Tiempo: <span id="gameover-time"></span>
             add .hidden to next <div/> when logged_in
         end
     end
+    def reset()
+        remove @disabled from <#gameover-dialog */>
+        add .hidden to #upload-error
+        add .hidden to #upload-success
+    end
     init
         call setup()
     end
     on click
-        game.upload_score()
+        add @disabled='true' to <#gameover-dialog */>
+        call game.upload_score()
+        set upload_result to it
+        remove @disabled='true' from <#gameover-dialog */>
+        add .hidden to #upload-error when upload_result exists
+        if upload_result exists then
+            remove .hidden from #upload-success
+            add @disabled to me
+        end
     end
-    on mutation of @open from closest <dialog/>
-        call setup()
-    end
-    on load or gameload from window
-        setup()
+    on close from closest <dialog/> or cancel from closest <dialog/>
+        reset()
     end
     "
     >Subir puntuación</button>
     <div class="small">
         No has iniciado sesión. Ingresa o crea una cuenta para compartir tus puntuaciones.
+    </div>
+    <div class="small hidden" id="upload-error">
+        Ha ocurrido un error al subir la puntuación, por favor, intentalo de nuevo.
+    </div>
+    <div class="small hidden" id="upload-success">
+        La puntuación ha sido subida exitosamente
+    </div>
+    <hr>
+    <div>
+        <button type="Submit" class="block" _="
+        on click
+            call init_game()
+        end
+        "
+        >Nueva Partida</button>
     </div>
 </div>
 {%- endcall -%}

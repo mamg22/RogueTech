@@ -278,6 +278,14 @@ dialog::backdrop {
     width: 20em;
 }
 
+#upload-error {
+    color: #ff7777;
+}
+
+#upload-success {
+    color: #77ff77;
+}
+
 /* #endregion Dialog */
 
 /* #region Map */

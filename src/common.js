@@ -52,3 +52,5 @@ export class MessageLog {
         this.messages[turn].push(message);
     }
 }
+
+export const VERSION = 1

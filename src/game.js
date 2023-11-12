@@ -1,7 +1,7 @@
 import Chance from 'chance';
 
 import { wait_for, delay, clamp, find_path, format_ms } from './utility';
-import { Point, Message, MessageLog } from './common';
+import { Point, Message, MessageLog, VERSION } from './common';
 import { Entity } from './entity';
 import { generate_level } from './level';
 import { sprites, audios } from './resources';
@@ -49,7 +49,7 @@ export class Game {
 
         this.state = Game.State.player_turn;
         this.scale = 1.0;
-        this.start_time = null;
+        this.start_time = new Date();
         this.turn = 1;
         this.message_log = new MessageLog();
         this.render_metadata = {
@@ -57,7 +57,11 @@ export class Game {
             dead: []
         };
 
-        this.stats = {};
+        this.stats = {
+            score: 0,
+            success: false,
+            kills: 0,
+        };
 
         this.load_settings();
         this.render_map();
@@ -270,6 +274,9 @@ export class Game {
     handle_ui_input(data) {
         switch (this.state) {
         case Game.State.player_dead:
+            if ('upload_score' in data) {
+                game.upload_score()
+            }
             game.show_gameover();
             break;
         case Game.State.processing:
@@ -304,6 +311,13 @@ export class Game {
                 const id = +data.drop_item;
                 const target_entity = this.player.inventory.get_item_by_id(id);
                 this.player.handler.push_action({drop_item: target_entity})
+            }
+            if ('finish_run' in data) {
+                game.finish_run()
+                game.show_gameover()
+            }
+            if ('upload_score' in data) {
+                game.upload_score()
             }
             break;
         case Game.State.targeting:
@@ -633,19 +647,19 @@ export class Game {
         scoredata.seed = this.seed;
         scoredata.version = VERSION;
         scoredata.time_ms = this.total_time;
-        scoredata.score = this.score;
+        scoredata.score = this.stats.score;
         scoredata.date = this.end_time.toISOString();
-        scoredata.success = this.success;
+        scoredata.success = this.stats.success;
         scoredata.details = {};
     
-        scoredata.details.kills = this.kills;
-        scoredata.details.turns = this.turns;
+        scoredata.details.kills = this.stats.kills;
+        scoredata.details.turns = this.turn;
     
         return scoredata;
     }
 
     async upload_score() {
-        const scoredata = build_scoredata()
+        const scoredata = this.build_scoredata()
         const data_json = JSON.stringify(scoredata)
     
         const upload_result = await fetch(
@@ -676,36 +690,47 @@ export class Game {
         const score_field = document.getElementById("gameover-score");
         const time_field = document.getElementById("gameover-time");
     
-        score_field.innerText = this.score;
+        score_field.innerText = this.stats.score;
         time_field.innerText = format_ms(this.total_time);
     
         gameover_dialog.showModal();
     }
 
     finish_run() {
+        this.set_state(Game.State.player_dead);
         const end_time = new Date();
         const total_playtime = end_time - this.start_time;
     
         this.end_time = end_time;
         this.total_time = total_playtime;
+
+        this.scoredata = this.build_scoredata();
     }
 
     show_log() {
         const elem = document.querySelector('#log-dialog');
         const elem_body = elem.querySelector('.dialog-body')
         elem_body.replaceChildren();
-        for (const turn in this.message_log.messages) {
-            const turn_data = this.message_log.messages[turn];
+        if (this.message_log.messages.length > 0) {
+            for (const turn in this.message_log.messages) {
+                const turn_data = this.message_log.messages[turn];
+                const header = document.createElement("h4");
+                header.classList.add('centered')
+                header.innerText = `--- Turno ${turn} ---`;
+                elem_body.append(header);
+                for (const message of turn_data) {
+                    const message_line = document.createElement('div');
+                    message_line.classList.add('message', message.category);
+                    message_line.innerText = message.text;
+                    elem_body.append(message_line);
+                }
+            }
+        }
+        else {
             const header = document.createElement("h4");
             header.classList.add('centered')
-            header.innerText = `--- Turno ${turn} ---`;
+            header.innerText = `--- No hay eventos para mostrar aquí ---`;
             elem_body.append(header);
-            for (const message of turn_data) {
-                const message_line = document.createElement('div');
-                message_line.classList.add('message', message.category);
-                message_line.innerText = message.text;
-                elem_body.append(message_line);
-            }
         }
         const last = elem_body.children[elem_body.children.length - 1];
         elem.showModal();

@@ -11,11 +11,10 @@ import { delay, wait_for, format_ms, clamp,
 import { generate_level } from './level';
 import './game';
 
-_hyperscript.browserInit();
-globalThis._hyperscript = _hyperscript;
-_hyperscript.use(_template);
-
-const VERSION = 1
+const server_info = JSON.parse(
+    document.getElementById('server-info').text
+);
+globalThis.server_info = server_info
 
 // Firefox-specific polyfill
 if (!CSS.px) {
@@ -23,6 +22,10 @@ if (!CSS.px) {
         return `${i}px`;
     }
 }
+
+_hyperscript.browserInit();
+globalThis._hyperscript = _hyperscript;
+_hyperscript.use(_template);
 
 function check_browser_version() {
     // Required versions due to structuredClone
@@ -60,10 +63,6 @@ function init_game(seed) {
 }
 globalThis.init_game = init_game;
 
-const server_info = JSON.parse(
-    document.getElementById('server-info').text
-);
-globalThis.server_info = server_info
 
 document.addEventListener('DOMContentLoaded', function(e) {
     check_browser_version();
