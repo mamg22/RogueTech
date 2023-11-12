@@ -92,18 +92,43 @@ export class Game {
             // If not exists create it
             if (!elem) {
                 elem = document.createElement("div");
-                elem.id = elem_id
-                elem.setAttribute('entity-id', entity.id)
+                elem.id = elem_id;
+                elem.setAttribute('entity-id', entity.id);
+
                 let elem_img = document.createElement("img");
                 elem_img.src = entity.sprite;
                 elem.append(elem_img);
+                
+                if ('fighter' in entity && entity !== this.player) {
+                    let elem_hp_bar = document.createElement("div");
+                    elem_hp_bar.classList.add("bar", "hp-bar")
+                    let elem_hp_bar_fill = document.createElement("div");
+                    elem_hp_bar_fill.classList.add("bar-fill")
+
+                    elem_hp_bar.append(elem_hp_bar_fill);
+
+                    elem.append(elem_hp_bar);
+                }
+
                 elem.style.zIndex = 50 - entity.type;
                 entities_elt.append(elem);
-            }
+            }    
             const img = elem.querySelector('img');
 
             if (this.render_metadata.attacking.includes(entity)) {
                 img.src = img.src.replace('standing', 'attack');
+            }
+
+            if ('fighter' in entity && entity !== this.player) {
+                const hp_bar = elem.querySelector('.hp-bar');
+                const health = entity.fighter.hp / entity.fighter.max_hp;
+                if (health > 0 && health < 1) {
+                    hp_bar.style.removeProperty("display");
+                    elem.style.setProperty("--hp", health)
+                }
+                else {
+                    hp_bar.style.setProperty("display", "none");
+                }
             }
 
             let anim = elem.animate([

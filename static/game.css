@@ -78,6 +78,14 @@ img {
     transform: scaleX(var(--flip, 1));
 }
 
+#entities > * > .bar {
+    position: absolute;
+    top: 0px;
+    left: 5%;
+    width: 90%;
+    height: calc(4px * var(--scale));
+}
+
 /* #region Messages Box */
 
 #messages {
