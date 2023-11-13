@@ -486,6 +486,7 @@ export class Game {
                         let result = this.switch_level(target_floor);
                         results.push(...result);
                         console.log(result);
+                        this.render_metadata.follow_player = true;
                     }
                 }
                 else if (entity?.fighter?.hp <= 0) {
