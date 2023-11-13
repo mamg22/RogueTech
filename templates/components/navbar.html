@@ -36,7 +36,7 @@
     </div>
     <div>
     {% if session.user_session %}
-        <a class="clickable" href="/cerrar-sesion" hx-confirm="¿Desea cerrar la sesión?">
+        <a class="clickable" href="{{ url_for('web.my_profile') }}">
             <span class="material-icons">person</span>
             <span>{{ session.user_session.name }}</span>
         </a>

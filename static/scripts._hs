@@ -94,6 +94,18 @@ behavior CheckConfirmation(field, confirmation, name)
 end
 
 behavior InstallButton
+    init
+        repeat forever
+            log 'loop'
+            if window.deferredPrompt exists then
+                show
+            else
+                hide
+            end
+
+            wait 5s
+        end
+    end
     on click
         if window.deferredPrompt then
             call window.deferredPrompt.prompt()

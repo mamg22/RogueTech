@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v8"
+const CACHE_VERSION = "v10"
 
 self.addEventListener("install", event => {
     console.log("Service worker installed");
@@ -15,8 +15,6 @@ const addResourcesToCache = async (resources) => {
 self.addEventListener("install", (event) => {
     event.waitUntil(
         addResourcesToCache([
-            "/static/style.css",
-            "/offline",
             'static/res/bgm/main_game.mp3',
             'static/res/decoration/stair-down.png',
             'static/res/decoration/stair-up.png',
@@ -51,11 +49,11 @@ async function handle_request(event) {
         // Otherwise, fetch the request from the network
         response = await fetch(event.request);
         // If the response is not ok, redirect to the offline page
-        if (!response || response.status !== 200) {
-            if (event.request == 'navigate') {
-                return caches.match('/offline');
-            }
-        }
+        // if (!response || response.status !== 200) {
+        //     if (event.request == 'navigate') {
+        //         return caches.match('/offline');
+        //     }
+        // }
         // Otherwise, return the response
         return response;
     } catch (error) {
