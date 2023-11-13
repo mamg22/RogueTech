@@ -113,8 +113,18 @@
                 >
                     <span class="material-icons md-36">backpack</span>
                 </div>
-                <div class="clickable"
-                _="on click call game.handle_ui_input({database: true})"
+                <div class="clickable" id="db-button"
+                _="
+                on click
+                    call game.handle_ui_input({database: true})
+                end
+                on shine
+                    repeat until event click
+                        transition my color to '#777777' over 1s
+                        transition my color to '#ffffff' over 1s
+                    end
+                end
+                "
                 >
                     <span class="material-icons md-36">storage</span>
                 </div>

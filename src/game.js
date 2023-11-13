@@ -404,7 +404,12 @@ export class Game {
                     this.player.handler.push_action({switch_level: target.stair.target_floor});
                 }
                 else if (target.type == Entity.Type.item) {
-                    this.player.handler.push_action({pick_up: target});
+                    if (target.item) {
+                        this.player.handler.push_action({pick_up: target});
+                    }
+                    else {
+                        this.player.handler.push_action({pick_up_db: target})
+                    }
                 }
                 else if (target.type == Entity.Type.exit) {
                     this.player.handler.push_action({exit: true})
@@ -474,7 +479,15 @@ export class Game {
                     else if (action.pick_up) {
                         const target = action.pick_up;
                         let result = entity.inventory.add_item(target);
+                        if (target.database_item) {
+                            result.push(...entity.database.add_item(target));
+                        }
                         results.push(...result);
+                    }
+                    else if (action.pick_up_db) {
+                        const target = action.pick_up_db;
+                        let result = entity.database.add_item(target);
+                        results.push(...result)
                     }
                     else if (action.use_item) {
                         const target = action.use_item;
@@ -506,8 +519,7 @@ export class Game {
                         results.push(...result);
                     }
                 }
-                else if (entity?.fighter?.hp <= 0) {
-                }
+
                 for (const result of results) {
                     if ('message' in result) {
                         const msg = result.message;
@@ -545,7 +557,14 @@ export class Game {
                     }
                     if ('item_added' in result && result.item_added) {
                         this.level.remove_entity_by_id(result.item_added.id);
-                        this.update_inventory();
+                    }
+                    if ('db_item_added' in result && result.db_item_added) {
+                        const db_button = document.getElementById("db-button");
+                        db_button.dispatchEvent(new Event("shine"));
+                        this.level.remove_entity_by_id(result.db_item_added.id)
+                    }
+                    if ('db_item_exists' in result && result.db_item_exists) {
+                        this.level.remove_entity_by_id(result.db_item_exists.id)
                     }
                     if (result.targeting) {
                         this.set_state(Game.State.targeting);

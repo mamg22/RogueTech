@@ -6,6 +6,7 @@ import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
 import { heal, drive_effect, cast_interference, cast_confusion, throw_water_bottle } from './item-functions';
+import { DatabaseItem } from './components/database-item';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -441,7 +442,14 @@ function place_entities(rng, map, level) {
                 "Un pendrive desconocido. Quizá puedas ver lo que tiene dentro, aunque no se si sea muy seguro.",
                 false, sprites.items.pendrive, Entity.Type.item, 1, {
                 item: new Item(drive_effect, false, null, {heal_amount: 10, damage_amount: 10}),
+                database_item: new DatabaseItem("pendrive")
             }],
+            ["CD",
+                "CD",
+                false, sprites.items.dvd, Entity.Type.item, 1, {
+                database_item: new DatabaseItem('cd'),
+            }],
+
         ];
     
         while (true) {
@@ -544,14 +552,18 @@ export class Level {
         });
     }
     remove_entity(entity) {
-        let idx = this.entities.indexOf(entity)
-        this.entities.splice(idx, 1)
+        let idx = this.entities.indexOf(entity);
+        if (idx !== -1) {
+            this.entities.splice(idx, 1)
+        }
     }
     remove_entity_by_id(id) {
         let idx = this.entities.findIndex(function(elem) {
             return elem.id === id;
         });
-        this.entities.splice(idx, 1)
+        if (idx !== -1) {
+            this.entities.splice(idx, 1)
+        }
     }
     add_entity(entity) {
         this.entities.push(entity);
