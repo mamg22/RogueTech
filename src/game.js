@@ -225,7 +225,7 @@ export class Game {
                     cell_contents.classList.add("solid");
                 }
                 else {
-                    // cell_image.src = "/static/f3.png"
+                    cell_image.src = "/static/floor1.png"
                 }
     
                 current_cell.appendChild(cell_contents);
