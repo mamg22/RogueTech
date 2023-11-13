@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v7"
+const CACHE_VERSION = "v8"
 
 self.addEventListener("install", event => {
     console.log("Service worker installed");
@@ -15,7 +15,6 @@ const addResourcesToCache = async (resources) => {
 self.addEventListener("install", (event) => {
     event.waitUntil(
         addResourcesToCache([
-            "/",
             "/static/style.css",
             "/offline",
             'static/res/bgm/main_game.mp3',
