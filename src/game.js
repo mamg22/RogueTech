@@ -967,11 +967,16 @@ export class Game {
     update_stats() {
         const hp = document.getElementById('stats-dialog-hp');
         const maxhp = document.getElementById('stats-dialog-max-hp');
+        const hp_bar = document.getElementById('stats-dialog-hp-bar');
         const attack = document.getElementById('stats-dialog-attack');
         const defense = document.getElementById('stats-dialog-defense');
 
-        hp.innerText = this.player.fighter.hp;
-        maxhp.innerText = this.player.fighter.max_hp;
+        const p_hp = this.player.fighter.hp;
+        const p_maxhp = this.player.fighter.max_hp;
+
+        hp.innerText = p_hp;
+        maxhp.innerText = p_maxhp;
+        hp_bar.style.setProperty('--hp', p_hp / p_maxhp);
         attack.innerText = this.player.fighter.power;
         defense.innerText = this.player.fighter.defense;
 
