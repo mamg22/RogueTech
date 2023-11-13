@@ -1,4 +1,5 @@
 import { Message } from '../common';
+import { global_rng } from '../utility';
 
 export class Fighter {
     constructor(hp, power, defense, xp=0) {
@@ -19,10 +20,17 @@ export class Fighter {
     }
 
     attack(target) {
-        const damage = this.power - target.fighter.defense;
-
         let results = []
 
+        const fail_attack = global_rng.bool({likelihood: 10});
+
+        const damage = this.power - target.fighter.defense;
+
+        if (fail_attack) {
+            results.push({
+                message: new Message(`${this.owner.name} ataca ${target.name}, pero falla`)
+            })
+        }
         if (damage > 0) {
             results.push({
                 message: new Message(`${this.owner.name} ataca ${target.name} por ${damage} de daño`)
