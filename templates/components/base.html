@@ -12,6 +12,7 @@
     <script src="{{ url_for('static', filename='scripts._hs') }}" type="text/hyperscript"></script>
     
     {# Load htmx, _hyperscript and material-icons according to dev/prod environment #}
+    {#
     {% if config.ENVIRONMENT == 'development' %}
         <!-- <script defer src="{{ url_for('web.node_modules', filename='hyperscript.org/dist/_hyperscript.min.js.gz') }}"></script>
         <script defer src="{{ url_for('web.node_modules', filename='hyperscript.org/dist/template.js') }}"></script> -->
@@ -23,8 +24,11 @@
         <script defer src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {% endif %}
+    #}
 
+    <link href="/static/material-icons/material-icons.css" rel="stylesheet">
     <script defer src="{{ url_for('static', filename='libs/_hyperscript+template.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='libs/htmx.min.js.gz') }}"></script>
 
     <script src="{{ url_for('static', filename='main.js')}}"></script>
     <meta name="htmx-config" content='{"useTemplateFragments": true}'>
