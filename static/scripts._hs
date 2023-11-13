@@ -102,7 +102,7 @@ behavior InstallButton
                 hide
             end
 
-            wait 5s
+            wait 3s
         end
     end
     on beforeinstallprompt
