@@ -34,12 +34,14 @@ export class Database {
             });
         }
         else {
-            results.push({
-                consumed: 0,
-                db_item_added: null,
-                db_item_exists: item,
-                // message: new Message(`${db_name} ya existe en tu base de datos`, 'magenta')
-            });
+            if (!item.item) {
+                results.push({
+                    consumed: 0,
+                    db_item_added: null,
+                    db_item_exists: item,
+                    message: new Message(`${db_name} ya existe en tu base de datos`, 'magenta')
+                });
+            }
         }
 
         if (read) {
