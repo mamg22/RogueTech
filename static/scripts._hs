@@ -94,22 +94,11 @@ behavior CheckConfirmation(field, confirmation, name)
 end
 
 behavior InstallButton
-    init
-        hide
-    end
-    on beforeinstallprompt from window
-        show
-        remove .hidden
-    end
-    on intersection(intersecting) having threshold 0 from #play-button
-        if intersecting then
-            if window.deferredPrompt exists then
-                show
-                remove .hidden
-            end
-        end
-    end
     on click
-        call window.deferredPrompt.prompt()
+        if window.deferredPrompt then
+            call window.deferredPrompt.prompt()
+        else
+            alert("Estamos cargando los recursos para instalar la aplicación, prueba de nuevo en un momento")
+        end
     end
 end

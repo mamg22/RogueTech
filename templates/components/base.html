@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='main-icon.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json')}}">
-    <script src="{{ url_for('static', filename='scripts._hs') }}" type="text/hyperscript"></script>
+    <script defer src="{{ url_for('static', filename='scripts._hs') }}" type="text/hyperscript"></script>
     
     {# Load htmx, _hyperscript and material-icons according to dev/prod environment #}
     {#
@@ -31,11 +31,11 @@
     <script defer src="{{ url_for('static', filename='libs/htmx.min.js') }}"></script>
 
     <script src="{{ url_for('static', filename='main.js')}}"></script>
-    <meta name="htmx-config" content='{"useTemplateFragments": true, "historyEnabled": false}'>
+    <meta name="htmx-config" content='{"useTemplateFragments": true, "historyEnabled": true}'>
     
     {% block head_add %}{% endblock head_add%}
 </head>
-<body hx-boost="false" hx-history="false">
+<body hx-boost="false">
     {% include 'components/navbar.html' %}
     <main id="main">
         {% block content %}
