@@ -514,6 +514,15 @@ big, .big {
     background-color: transparent;
 }
 
+@font-face {
+    font-family: Square;
+    src: url('/static/Square.ttf');
+}
+
+#database-info-dialog-description {
+    font-family: Square;
+}
+
 @media (orientation: landscape) {
     #database-info-dialog-container {
         display: flex;
