@@ -266,6 +266,7 @@ export class Game {
 
         this.update_inventory();
         this.update_database();
+        this.update_stats();
     }
 
     switch_level(target_level) {
@@ -329,6 +330,9 @@ export class Game {
             }
             if ('database' in data) {
                 this.show_database();
+            }
+            if ('stats' in data) {
+                this.show_stats();
             }
             if ('inventory_item' in data) {
                 this.show_entityinfo(data.inventory_item);
@@ -545,6 +549,10 @@ export class Game {
 
                         if (level_up) {
                             const player_level = this.player.experience.current_level;
+                            this.player.fighter.max_hp += 10;
+                            this.player.fighter.hp += 10;
+                            this.player.fighter.power += 1;
+                            this.player.fighter.defense += 1;
                             this.push_msg(`¡Subes de nivel! Ahora eres nivel ${player_level}`, 'green');
                             this.message_log.add_message(this.turn,
                                 new Message(`¡Subes de nivel! Ahora eres nivel ${player_level}`, 'green')
@@ -956,5 +964,44 @@ export class Game {
         dbinfo_dialog.showModal();
     }
 
+    update_stats() {
+        const hp = document.getElementById('stats-dialog-hp');
+        const maxhp = document.getElementById('stats-dialog-max-hp');
+        const attack = document.getElementById('stats-dialog-attack');
+        const defense = document.getElementById('stats-dialog-defense');
+
+        hp.innerText = this.player.fighter.hp;
+        maxhp.innerText = this.player.fighter.max_hp;
+        attack.innerText = this.player.fighter.power;
+        defense.innerText = this.player.fighter.defense;
+
+        const level = document.getElementById('stats-dialog-level');
+        const xp = document.getElementById('stats-dialog-xp');
+        const xp_next = document.getElementById('stats-dialog-xp-next');
+        const xp_bar = document.getElementById('stats-dialog-xp-bar');
+
+        const p_xp = this.player.experience.current_xp;
+        const p_xp_next = this.player.experience.experience_to_next_level;
+        
+        level.innerText = this.player.experience.current_level;
+        xp.innerText = p_xp;
+        xp_next.innerText = p_xp_next;
+
+        xp_bar.style.setProperty('--xp', p_xp / p_xp_next);
+
+        const score = document.getElementById('stats-dialog-score');
+        score.innerText = this.stats.score;
+
+    }
+
+    show_stats(show=true) {
+        const stats_dialog = document.getElementById('stats-dialog');
+        if (show) {
+            stats_dialog.showModal();
+        }
+        else {
+            stats_dialog.close();
+        }
+    }
 }
 globalThis.Game = Game;

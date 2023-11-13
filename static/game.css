@@ -479,6 +479,20 @@ big, .big {
     --bar-value: var(--hp);
 }
 
+.xp-bar {
+    --bar-background: blue;
+    --bar-color: cyan;
+    --bar-value: var(--xp);
+}
+
+.bar-margin {
+    margin: 0.3rem 0;
+}
+
+.vertical-spacer {
+    height: 1rem;
+}
+
 /* #endregion Bars */
 
 .inventory-card {

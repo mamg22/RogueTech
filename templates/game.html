@@ -31,7 +31,9 @@
     <div id="game-area">
         <div id="main-hud" class="hud">
             <div class="hud-left">
-                <div class="indicator health-indicator">
+                <div class="indicator health-indicator clickable"
+                _="on click call game.handle_ui_input({stats: true})"
+                >
                     <div><span class="material-icons">health_and_safety</span> <br> 
                         <span id="health-indicator-value">-/-</span></div>
                 </div>
@@ -301,6 +303,22 @@ Tiempo: <span id="gameover-time"></span>
 {%- endcall -%}
 
 {%- call funcs.game_dialog("stats-dialog", "Información de la partida") -%}
+<div>
+    HP: <span id="stats-dialog-hp"></span> / <span id="stats-dialog-max-hp"></span>
+    <div id="stats-dialog-hp-bar" class="bar hp-bar bar-margin"><div class="bar-fill"></div></div>
+    Ataque: <span id="stats-dialog-attack"></span> <br>
+    Defensa: <span id="stats-dialog-defense"></span><br>
+</div>
+<div class="vertical-spacer"></div>
+<div>
+    Nivel: <span id="stats-dialog-level"></span> <br>
+    Experiencia: <span id="stats-dialog-xp"></span> / <span id="stats-dialog-xp-next"></span>
+    <div id="stats-dialog-xp-bar" class="bar xp-bar bar-margin"><div class="bar-fill"></div></div>
+</div>
+<div class="vertical-spacer"></div>
+<div>
+    Puntuación: <span id="stats-dialog-score"></span>
+</div>
 {%- endcall -%}
 
 {%- call funcs.game_dialog("entityinfo-dialog", "Información") -%}
