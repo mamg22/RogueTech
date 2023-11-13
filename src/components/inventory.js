@@ -13,7 +13,7 @@ export class Inventory {
         if (this.items.length >= this.capacity) {
             results.push({
                 item_added: null,
-                message: new Message("¡Tu inventario está lleno, no puedes llevar esto!", 'yellow'),
+                message: new Message("¡Tu inventario está lleno, no puedes recoger esto!", 'yellow'),
                 consumed: 0,
             });
         }
