@@ -27,6 +27,7 @@ Fue inventado en 1981 por Sony y Phillips, y estos todos los hemos usado
     },
     {
         id: 'gpu',
+        name: "Tarjeta gráfica",
         image: 'crap',
         description:
 `<b> Tarjeta Gráfica</b><br>
@@ -41,6 +42,7 @@ Sabías que todos los dispositivos con pantalla deben poseer una sin excepción?
     },
     {
         id: 'psu',
+        name: "Fuente de poder",
         image: 'gfy',
         description:
 `<b> Fuente de poder </b><br>
@@ -55,6 +57,7 @@ Está es muy importante, ya que si está no es adecuada a nuestro dispositivo,
     },
     {
         id: 'hdd',
+        name: "Disco duro",
         image: 'hdd deez nuts',
         description:
 `<b> Disco Duro </b><br>
@@ -69,6 +72,7 @@ La tecnología ha evolucionado tanto que estos fueron la inspiración de la nuev
     },
     {
         id: 'floppy',
+        name: "Disquete",
         image: 'floppy deez nuts',
         description:
 `<b> Disquete </b><br>
@@ -88,6 +92,7 @@ Estos fueron los primero dispositivos de almacenamiento creados, y fueron demand
     },
     {
         id: 'cpu',
+        name: "CPU",
         image: 'cpu deez',
         description:
 `<b> CPU </b>
@@ -101,6 +106,7 @@ Todos los equipos del mundo, celulares, teléfonos, consolas de juego y hasta te
     },
     {
         id: 'fancooler',
+        name: "Fan cooler",
         image: 'fan deez',
         description:
 `<b> Fan Cooler</b><br>
@@ -116,6 +122,7 @@ luces LED y hacerlos súper llamativos!!
     },
     {
         id: 'thermalpaste',
+        name: "Pasta Termica",
         image: 'thermal deez',
         description:
 `<b> Pasta Termica </b><br>
