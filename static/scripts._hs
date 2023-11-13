@@ -96,7 +96,6 @@ end
 behavior InstallButton
     init
         repeat forever
-            log 'loop'
             if window.deferredPrompt exists then
                 show
             else
@@ -105,6 +104,9 @@ behavior InstallButton
 
             wait 5s
         end
+    end
+    on beforeinstallprompt
+        show
     end
     on click
         if window.deferredPrompt then
