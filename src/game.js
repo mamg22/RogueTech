@@ -10,6 +10,8 @@ import { PlayerHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Inventory } from './components/inventory';
 import { Experience } from './components/experience';
+import { Database } from './components/database';
+import { database_items } from './database-info';
 
 export const GRID_SIZE = 64;
 
@@ -37,6 +39,7 @@ export class Game {
                 fighter: new Fighter(100, 4, 2),
                 inventory: new Inventory(5),
                 experience: new Experience(),
+                database: new Database(),
             });
 
         this.levels = [];
@@ -262,6 +265,7 @@ export class Game {
         }
 
         this.update_inventory();
+        this.update_database();
     }
 
     switch_level(target_level) {
@@ -323,8 +327,15 @@ export class Game {
             if ('inventory' in data) {
                 this.show_inventory();
             }
+            if ('database' in data) {
+                this.show_database();
+            }
             if ('inventory_item' in data) {
                 this.show_entityinfo(data.inventory_item);
+                return;
+            }
+            if ('database_item' in data) {
+                this.show_db_info(data.database_item);
                 return;
             }
             if ('use_item' in data) {
@@ -857,5 +868,74 @@ export class Game {
 
         return results;
     }
+
+    update_database() {
+        const database_contents_elt = document.getElementById('database-contents');
+        const database_counter_elt = document.getElementById('database-contents-indicator');
+
+        const db_capacity = this.player.database.capacity;
+        const db_size = this.player.database.items.length;
+        database_counter_elt.innerText = `${db_size} / ${db_capacity}`;
+
+        database_contents_elt.replaceChildren();
+        if (db_size > 0) {
+            for (const item of this.player.database.items) {
+                const elem = document.createElement('div');
+
+                const db_item = database_items.find(function(elem) {
+                    return elem.id === item;
+                })
+
+                elem.classList.add('inventory-card');
+                elem.innerText = db_item.name;
+                const this_game = this;
+                elem.addEventListener('click', function(e) {
+                    this_game.handle_ui_input({database_item: item});
+                    console.log("DB:", item)
+                });
+                database_contents_elt.append(elem);
+            }
+            
+        }
+        else {
+            const elem = document.createElement('div');
+            elem.classList.add('centered');
+            elem.innerText = "Tu base de datos está vacía";
+            database_contents_elt.append(elem);
+        }
+
+        if (db_size < db_capacity) {
+            const elem = document.createElement('div');
+            elem.classList.add('centered');
+            elem.innerHTML = "<br>¡Sigue explorando para completar tu base de datos de conocimientos!";
+            database_contents_elt.append(elem);
+        }
+    }
+
+    show_database(show=true) {
+        const database_dialog = document.getElementById('database-dialog');
+        if (show) {
+            database_dialog.showModal();
+        }
+        else {
+            database_dialog.close();
+        }
+    }
+
+    show_db_info(item) {
+        const dbinfo_dialog = document.getElementById('database-info-dialog');
+        const dbinfo_image = document.getElementById('database-info-dialog-image');
+        const dbinfo_description = document.getElementById('database-info-dialog-description');
+
+        const db_item = database_items.find(function(elem) {
+            return elem.id === item;
+        })
+
+        dbinfo_image.src = db_item.image;
+        dbinfo_description.innerHTML = db_item.description;
+
+        dbinfo_dialog.showModal();
+    }
+
 }
 globalThis.Game = Game;

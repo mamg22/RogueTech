@@ -113,6 +113,11 @@
                 >
                     <span class="material-icons md-36">backpack</span>
                 </div>
+                <div class="clickable"
+                _="on click call game.handle_ui_input({database: true})"
+                >
+                    <span class="material-icons md-36">storage</span>
+                </div>
             </div>
     
         </div>
@@ -291,9 +296,9 @@ Tiempo: <span id="gameover-time"></span>
 
 {%- call funcs.game_dialog("entityinfo-dialog", "Información") -%}
 <div class="center column">
-    <img id="entityinfo-dialog-image" src="/static/res/player/standing.png" class="info-icon">
+    <img id="entityinfo-dialog-image" src="" class="info-icon">
     <div>
-        <div class="centered" id="entityinfo-dialog-name">Enemigo</div>
+        <div class="centered" id="entityinfo-dialog-name"></div>
         <div id="entityinfo-dialog-hp-bar" style="width: 200px" class="bar hp-bar">
             <div class="bar-fill"></div>
         </div>
@@ -319,17 +324,34 @@ Tiempo: <span id="gameover-time"></span>
 
 {%- call funcs.game_dialog("inventory-dialog", "Inventario") -%}
 <h4 class="big inventory-header">Inventario
-    <span id="inventory-contents-indicator">0 / 20</span>
+    <span id="inventory-contents-indicator">- / -</span>
 </h4>
 <div id="inventory-contents">
-</div>
-<div>
-
 </div>
 {%- endcall -%}
 
 {%- call funcs.game_dialog("log-dialog", "Registro de eventos") -%}
 {%- endcall -%}
+
+{%- call funcs.game_dialog("database-dialog", "Base de datos") -%}
+<h4 class="big inventory-header">Datos encontrados
+    <span id="database-contents-indicator">- / -</span>
+</h4>    
+<div id="database-contents">
+</div>    
+{%- endcall -%}
+
+
+{# This one has special styling #}
+<dialog id="database-info-dialog">
+<div class="center">
+    <div>
+        <img id="database-info-dialog-image" class="info-icon">
+    </div>
+    <div id="database-info-dialog-description">
+    </div>
+</div>
+</dialog>
 
 
 <!-- #endregion Dialogs -->
