@@ -8,7 +8,7 @@
         <img src="{{ url_for('static', filename='main-icon.png')}}"
         alt="Icono del juego: Un dibujo minimalista de un procesador blanco con trazos de colores amarillo, cyan y azul saliendo de 'este"
         class="appicon"/>
-        <a class="button block active" hx-boost="false"
+        <a class="button block active" hx-boost="false" id="play-button"
             href="{{ url_for('web.game') }}">
             <span class="big">Jugar</span>
             <span class="material-icons">play_arrow</span>

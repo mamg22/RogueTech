@@ -101,6 +101,14 @@ behavior InstallButton
         show
         remove .hidden
     end
+    on intersection(intersecting) having threshold 0 from #play-button
+        if intersecting then
+            if window.deferredPrompt exists then
+                show
+                remove .hidden
+            end
+        end
+    end
     on click
         call window.deferredPrompt.prompt()
     end
