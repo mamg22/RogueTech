@@ -5,6 +5,7 @@ export class Entity {
         player: 0,
         npc: 5,
         item: 10,
+        exit: 14,
         stair: 15,
         decoration: 20,
     })

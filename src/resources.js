@@ -21,6 +21,7 @@ export const sprites = {
         boom: "/static/res/etc/boom.gif",
         stair_up: "/static/res/decoration/stair-up.png",
         stair_down: "/static/res/decoration/stair-down.png",
+        door: "/static/res/decoration/stair-down.png",
     },
     etc: {
         boom: "/static/res/etc/boom.gif"

@@ -395,6 +395,9 @@ export class Game {
                 else if (target.type == Entity.Type.item) {
                     this.player.handler.push_action({pick_up: target});
                 }
+                else if (target.type == Entity.Type.exit) {
+                    this.player.handler.push_action({exit: true})
+                }
             }
             break;
         case Game.State.inspect:
@@ -485,8 +488,11 @@ export class Game {
                         const target_floor = action.switch_level;
                         let result = this.switch_level(target_floor);
                         results.push(...result);
-                        console.log(result);
                         this.render_metadata.follow_player = true;
+                    }
+                    else if (action.exit) {
+                        let result = this.do_exit();
+                        results.push(...result);
                     }
                 }
                 else if (entity?.fighter?.hp <= 0) {
@@ -836,6 +842,20 @@ export class Game {
         }
 
         entityinfo_dialog.showModal();
+    }
+
+    do_exit() {
+        let results = [{consumed: 0}]
+        if (this.stats.success) {
+            this.push_msg("¡Sales del edificio!");
+            this.finish_run();
+            this.show_gameover();
+        }
+        else {
+            this.push_msg("¡La salida esta bloqueada!")
+        }
+
+        return results;
     }
 }
 globalThis.Game = Game;

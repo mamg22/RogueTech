@@ -342,15 +342,25 @@ function generate_map(rng, level) {
 function place_entities(rng, map, level) {
     const N_ENTITIES = 10;
     const N_ENEMIES = 10;
-    const N_ITEMS = 10;
+    const N_ITEMS = 15;
 
     const rooms = map.tree.get_leaves();
 
     let entities = [];
+    let down_room = null;
+    let up_room = null;
 
     // Required entities
+    if (level === 1) {
+        const room = rooms[0];
+        down_room = 0;
+        entities.push(new Entity(1, 1,
+            "Salida", "Salida del edificio",
+            false, sprites.decoration.door, Entity.Type.exit, 1, {}))
+    }
     if (level < 5) {
         const room_idx = rng.integer({ min: rooms.length - 4, max: rooms.length - 1 });
+        up_room = room_idx;
         const room = rooms[room_idx];
         const center_pos = room.rect.get_center();
         entities.push(new Entity(center_pos.x, center_pos.y,
@@ -363,6 +373,7 @@ function place_entities(rng, map, level) {
     if (level > 1) {
         const room_idx = rng.integer({min: 0, max: 4});
         const room = rooms[room_idx];
+        down_room = room_idx;
         const center_pos = room.rect.get_center();
         entities.push(new Entity(center_pos.x, center_pos.y,
             "Escalera", "Escalera hacia abajo",
@@ -378,20 +389,35 @@ function place_entities(rng, map, level) {
                 handler: new EnemyAIHandler(),
                 fighter: new Fighter(5, 4, 2, 50)
             }],
+            ["Robot", "Un robot enemigo más fuerte", true, sprites.enemy.standing, Entity.Type.npc, -1, {
+                handler: new EnemyAIHandler(),
+                fighter: new Fighter(10, 5, 3, 100)
+            }],
         ];
+
+        while (true) {
+            const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
+            if (room_idx == up_room || room_idx == down_room) {
+                continue;
+            }
+            const room = rooms[room_idx];
     
-        const room_idx = rng.integer({ min: 1, max: rooms.length - 1 });
-        const room = rooms[room_idx];
-
-        const room_pos = room.rect.get_random_point(rng);
-        const entity_idx = rng.integer({min: 0, max: enemy_templates.length - 1});
-        let template = enemy_templates[entity_idx]
-        let entity = new Entity(
-            room_pos.x, room_pos.y,
-            ...template
-        );
-
-        entities.push(entity);
+            const room_pos = room.rect.get_random_point(rng);
+            if (entities.some(function(elem) {
+                return elem.x == room_pos.x && elem.y == room_pos.y
+            })) {
+                continue;
+            }
+            const entity_idx = rng.integer({min: 0, max: enemy_templates.length - 1});
+            let template = enemy_templates[entity_idx]
+            let entity = new Entity(
+                room_pos.x, room_pos.y,
+                ...template
+            );
+    
+            entities.push(entity);
+            break;
+        }
     }
 
     for (let i = 0; i < N_ITEMS; i++) {
@@ -401,8 +427,8 @@ function place_entities(rng, map, level) {
                 false, sprites.items.water_bottle, Entity.Type.item, 1, {
                 item: new Item(throw_water_bottle, true, "Elige donde lanzar la botella...", {damage: 8, radius: 1}),
             }],
-            ["DVD: interferidor.exe",
-                "Al frente dice que contiene un programa para saturar la red, causando interferencia. Causará que el enemigo más cercano a tí sufra daños",
+            ["DVD: DDOS.exe",
+                "Al frente dice que contiene un programa para causar un ataque DDOS, enviando inmensas cantidades de información a un lugar específico. Causará que el enemigo más cercano a tí sufra daños",
                 false, sprites.items.dvd, Entity.Type.item, 1, {
                 item: new Item(cast_interference, false, null, {damage: 10, maximum_range: 8}),
             }],
@@ -416,25 +442,29 @@ function place_entities(rng, map, level) {
                 false, sprites.items.pendrive, Entity.Type.item, 1, {
                 item: new Item(drive_effect, false, null, {heal_amount: 10, damage_amount: 10}),
             }],
-            ["Maquina expendedora",
-                "Una maquina expendedora común y corriente. Está llena de productos comestibles, lástima que seas un robot.",
-                true, sprites.decoration.vending_machine, Entity.Type.decoration, 1, {
-                item: new Item(),
-            }],
         ];
     
-        const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
-        const room = rooms[room_idx];
+        while (true) {
+            const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
+            const room = rooms[room_idx];
+    
+            const room_pos = room.rect.get_random_point(rng);
+            if (entities.some(function(elem) {
+                return elem.x == room_pos.x && elem.y == room_pos.y
+            })) {
+                continue;
+            }
 
-        const room_pos = room.rect.get_random_point(rng);
-        const entity_idx = rng.integer({min: 0, max: item_templates.length - 1});
-        let template = item_templates[entity_idx]
-        let entity = new Entity(
-            room_pos.x, room_pos.y,
-            ...template
-        );
-
-        entities.push(entity);
+            const entity_idx = rng.integer({min: 0, max: item_templates.length - 1});
+            let template = item_templates[entity_idx]
+            let entity = new Entity(
+                room_pos.x, room_pos.y,
+                ...template
+            );
+    
+            entities.push(entity);
+            break;
+        }
     }
 
 
@@ -443,7 +473,7 @@ function place_entities(rng, map, level) {
 }
 
 export class Level {
-    constructor(number, map, entities) {
+    constructor(number, map, entities=[]) {
         this.number = number;
         this.map = map;
         this.entities = entities;
