@@ -13,7 +13,7 @@ export class Experience {
     add_xp(xp) {
         this.current_xp += xp;
 
-        if (this.current_xp > this.experience_to_next_level) {
+        if (this.current_xp >= this.experience_to_next_level) {
             this.current_xp -= this.experience_to_next_level;
             this.current_level++;
 
