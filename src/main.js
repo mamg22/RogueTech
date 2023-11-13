@@ -39,16 +39,13 @@ function check_browser_version() {
     if (chrome_ver) {
         const version_number = +chrome_ver[2];
         ok_version = version_number >= MIN_CHROME_VERSION;
-        console.log("Got chrome version: " + version_number)
     }
     else if (firefox_ver) {
         const version_number = +firefox_ver[1];
         ok_version = version_number >= MIN_CHROME_VERSION;
-        console.log("Got firefox version: " + version_number)
 
     }
     else {
-        console.warn("Unknown browser, cannot know version")
         ok_version = true;
     }
 
