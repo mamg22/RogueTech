@@ -506,3 +506,75 @@ big, .big {
         flex-direction: column;
     }
 }  
+
+/* #region Database dialog */
+
+#database-info-dialog {
+    border: none;
+    background-color: transparent;
+}
+
+@media (orientation: landscape) {
+    #database-info-dialog-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: absolute;
+        left: 7%;
+        width: 85%;
+        top: 6%;
+        height: 85%;
+    }
+
+    #database-info-dialog-description {
+        overflow: auto;
+        max-height: 80%;
+        color: black;
+    }
+
+    #database-info-dialog-bg-h {
+        width: 100%;
+        height: 100%;
+        max-width: 90svw;
+        max-height: 90svh;
+    }
+
+    #database-info-dialog-bg-v {
+        display: none;
+    }
+
+}  
+
+@media (orientation: portrait) {
+    #database-info-dialog-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        left: 15%;
+        width: 70%;
+        top: 6%;
+        height: 85%;
+    }
+
+    #database-info-dialog-description {
+        overflow: auto;
+        max-height: 80%;
+        color: black;
+    }
+
+    #database-info-dialog-bg-h {
+        display: none;
+    }
+
+    #database-info-dialog-bg-v {
+        width: 100%;
+        height: 100%;
+        max-width: 90svw;
+        max-height: 90svh;
+
+    }
+
+}
+
+/* #endregion Database dialog */

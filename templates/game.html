@@ -354,13 +354,18 @@ Tiempo: <span id="gameover-time"></span>
 
 {# This one has special styling #}
 <dialog id="database-info-dialog">
-<div class="center">
-    <div>
-        <img id="database-info-dialog-image" class="info-icon">
-    </div>
-    <div id="database-info-dialog-description">
-    </div>
-</div>
+    <form method="dialog" tabindex="-1">
+        <div id="database-info-dialog-container">
+            <div class="center column">
+                <img id="database-info-dialog-image" class="info-icon">
+                <button>Cerrar</button>
+            </div>
+            <div id="database-info-dialog-description">
+            </div>
+        </div>
+        <img src="/static/tablet.png" id="database-info-dialog-bg-h"/>
+        <img src="/static/tablet-v.png" id="database-info-dialog-bg-v"/>
+    </form>
 </dialog>
 
 
