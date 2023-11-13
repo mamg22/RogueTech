@@ -388,11 +388,11 @@ function place_entities(rng, map, level) {
         const enemy_templates = [
             ["Robot", "Un robot enemigo", true, sprites.enemy.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50)
+                fighter: new Fighter(5, 4, 2, 50, 100)
             }],
             ["Robot", "Un robot enemigo más fuerte", true, sprites.enemy.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(10, 5, 3, 100)
+                fighter: new Fighter(10, 5, 2, 100, 300)
             }],
         ];
 

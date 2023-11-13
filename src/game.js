@@ -536,6 +536,9 @@ export class Game {
                             this.finish_run();
                             this.set_state(Game.State.player_dead);
                         }
+                        else {
+                            this.stats.kills += 1;
+                        }
                         this.render_metadata.dead.push(dead);
                         this.level.remove_entity_by_id(dead.id);
                         dead.handler = null;
@@ -559,6 +562,9 @@ export class Game {
                             );
     
                         }
+                    }
+                    if ('score' in result) {
+                        this.stats.score += result.score;
                     }
                     if ('render_map' in result && result.render_map) {
                         this.render_map();
@@ -722,8 +728,8 @@ export class Game {
         scoredata.success = this.stats.success;
         scoredata.details = {};
     
-        scoredata.details.kills = this.stats.kills;
-        scoredata.details.turns = this.turn;
+        scoredata.details["Enemigos derrotados"] = this.stats.kills;
+        scoredata.details["Turnos"] = this.turn;
     
         return scoredata;
     }

@@ -2,19 +2,20 @@ import { Message } from '../common';
 import { global_rng } from '../utility';
 
 export class Fighter {
-    constructor(hp, power, defense, xp=0) {
+    constructor(hp, power, defense, xp=0, score=0) {
         this.max_hp = hp;
         this.hp = hp;
         this.power = power;
         this.defense = defense;
         this.xp = xp;
+        this.score = score;
     }
 
     take_damage(amount) {
         let results = [];
         this.hp = Math.max(this.hp - amount, 0);
         if (this.hp <= 0) {
-            results.push({dead: this.owner, xp: this.xp})
+            results.push({dead: this.owner, xp: this.xp, score: this.score})
         }
         return results;
     }
