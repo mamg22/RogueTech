@@ -280,6 +280,7 @@ dialog::backdrop {
     overflow: auto;
     /* max-height: 80dvh; */
     flex: 1 1;
+    text-align: justify;
 }
 
 #entityinfo-dialog-description {
@@ -536,6 +537,7 @@ big, .big {
 #database-info-dialog-description {
     /* font-family: Square; */
     font-family: monospace;
+    text-align: justify;
 }
 
 @media (orientation: landscape) {

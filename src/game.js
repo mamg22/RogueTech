@@ -92,7 +92,7 @@ export class Game {
 
     async render(do_animation=true) {
         const entities_elt = document.querySelector("#entities");
-        const animation_speed = do_animation ? 200 : 0;
+        const animation_speed = do_animation ? 300 : 0;
         
         let animations = [];
         for (const entity of this.level.entities.concat(this.render_metadata.dead)) {

@@ -9,7 +9,7 @@ export const database_items = [
 `<b> Pendrive </b><br>
 Un pendrive es un dispositivo que se conecta al puerto USB de una
  PC u otro aparato eléctrico y nos permite guardar y transferir 
-datos de forma rápida y sencilla <br>
+datos de forma rápida y sencilla. <br>
 
 Este dispositivo es importante ya que es muy práctico, económico y 
 versátil para transportar información.`
