@@ -247,7 +247,7 @@
 
 {%- call funcs.game_dialog("dev-menu", "Opcioes de desarrollador") -%}
 <div class="center column">
-    <button _="
+    <button type="button" _="
     on click
         call game.switch_level(1)
         call game.render_map()
@@ -256,7 +256,7 @@
     ">
         Ir al piso 1.
     </button>
-    <button _="
+    <button type="button" _="
     on click
         call game.switch_level(6)
         call game.render_map()
@@ -265,7 +265,7 @@
     ">
         Ir al piso final.
     </button>
-    <button _="
+    <button type="button" _="
     on click
         call game.do_instant_levelup()
         call game.tick_turns()
