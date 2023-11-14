@@ -387,37 +387,49 @@ function place_entities(rng, map, level) {
 
     for (let i = 0; i < N_ENEMIES; i++) {
         const enemy_templates = [
-            ["Robot", "Un robot enemigo", true, sprites.bot1.standing, Entity.Type.npc, -1, {
+            ["Robot básico", "Un robot enemigo. Es el modelo más básico, uno de los prototipos iniciales, no son muy resistentes",
+                true, sprites.bot1.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50, 100),
+                fighter: new Fighter(8, 5, 2, 60, 100),
                 sprite_set: new SpriteSet(sprites.bot1),
             }],
-            ["Robot", "Un robot enemigo", true, sprites.bot2.standing, Entity.Type.npc, -1, {
+            ["Robot acorazado", "Un robot enemigo. Este modelo fue construido con materiales resistentes como fibra de carbono y acero. Puede resistir bien los daños, pero es lento al moverse, reduciendo su capacidad de ataque", true, sprites.bot2.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50, 100),
+                fighter: new Fighter(60, 8, 12, 120, 500),
                 sprite_set: new SpriteSet(sprites.bot2),
             }],
-            ["Robot", "Un robot enemigo", true, sprites.bot3.standing, Entity.Type.npc, -1, {
+            ["Robot ligero", "Un robot enemigo. Posee un diseño ligero, que le permite moverse con agilidad. Esta velocidad adicional le permite asestar golpes más potentes, pero es altamente vulnerable a los golpes.", true, sprites.bot3.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50, 100),
+                fighter: new Fighter(20, 10, 1, 100, 350),
                 sprite_set: new SpriteSet(sprites.bot3),
             }],
-            ["Robot", "Un robot enemigo", true, sprites.bot4.standing, Entity.Type.npc, -1, {
+            ["Robot láser", "Un robot enemigo. Diseñado para asistir en la manufactura de piezas metálicas, este robot ha sido modificado maliciosamente para usar su láser contra sus oponentes",
+                true, sprites.bot4.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50, 100),
+                fighter: new Fighter(30, 16, 3, 120, 500),
                 sprite_set: new SpriteSet(sprites.bot4),
             }],
-            ["Robot", "Un robot enemigo", true, sprites.bot5.standing, Entity.Type.npc, -1, {
+            ["Robot flotante", "Un robot enemigo. Flota mediante un conjunto de materiales superconductores y magnéticos que, bajo las condiciones de temperatura correctas, le permitirán levitar.",
+                true, sprites.bot5.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50, 100),
+                fighter: new Fighter(16, 8, 5, 90, 300),
                 sprite_set: new SpriteSet(sprites.bot5),
             }],
-            ["Robot", "Un robot enemigo", true, sprites.bot6.standing, Entity.Type.npc, -1, {
+            ["Robot robusto", "Un robot enemigo. Creado cuidadosamente con plásticos impresos en 3D; las complejas estructuras descubiertas por diversos investigadores pueden resistir mejor el peso y los impactos, a la vez que hace uso más eficiente de los recursos.",
+            true, sprites.bot6.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50, 100),
+                fighter: new Fighter(12, 4, 4, 80, 150),
                 sprite_set: new SpriteSet(sprites.bot6),
             }],
         ];
+
+        const floor_weights = [
+            [90, 0, 0, 0, 0, 10],
+            [50, 0, 0, 0, 20, 30],
+            [0, 15, 15, 0, 50, 20],
+            [0, 40, 40, 0, 20, 0],
+            [0, 33, 33, 33, 1, 0],
+        ]
 
         while (true) {
             const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
@@ -433,7 +445,8 @@ function place_entities(rng, map, level) {
                 continue;
             }
             const entity_idx = rng.integer({min: 0, max: enemy_templates.length - 1});
-            let template = enemy_templates[entity_idx]
+            let template = rng.weighted(enemy_templates, floor_weights[level - 1]);
+            // let template = enemy_templates[entity_idx]
             let entity = new Entity(
                 room_pos.x, room_pos.y,
                 ...template
@@ -451,15 +464,17 @@ function place_entities(rng, map, level) {
                 false, sprites.items.water_bottle, Entity.Type.item, 1, {
                 item: new Item(throw_water_bottle, true, "Elige donde lanzar la botella...", {damage: 8, radius: 1}),
             }],
-            ["DVD: DDOS.exe",
+            ["CD: DDOS.exe",
                 "Al frente dice que contiene un programa para causar un ataque DDOS, enviando inmensas cantidades de información a un lugar específico. Causará que el enemigo más cercano a tí sufra daños",
-                false, sprites.items.dvd, Entity.Type.item, 1, {
+                false, sprites.items.cd, Entity.Type.item, 1, {
                 item: new Item(cast_interference, false, null, {damage: 10, maximum_range: 8}),
+                database_item: new DatabaseItem('cd'),
             }],
-            ["DVD: aturdidor.exe",
+            ["CD: aturdidor.exe",
                 "Al frente dice que contiene un programa para aturdir un enemigo. Causará que el enemigo que elijas sea aturdido por 10 turnos, haciendolo incapaz de seguirte o siquiera moverse correctamente",
-                false, sprites.items.dvd, Entity.Type.item, 1, {
+                false, sprites.items.cd, Entity.Type.item, 1, {
                 item: new Item(cast_confusion, true, "Elige un enemigo para aturdir", {duration: 10}),
+                database_item: new DatabaseItem('cd'),
             }],
             ["Pendrive",
                 "Un pendrive desconocido. Quizá puedas ver lo que tiene dentro, aunque no se si sea muy seguro.",
@@ -467,12 +482,6 @@ function place_entities(rng, map, level) {
                 item: new Item(drive_effect, false, null, {heal_amount: 10, damage_amount: 10}),
                 database_item: new DatabaseItem("pendrive")
             }],
-            ["CD",
-                "CD",
-                false, sprites.items.dvd, Entity.Type.item, 1, {
-                database_item: new DatabaseItem('cd'),
-            }],
-
         ];
     
         while (true) {

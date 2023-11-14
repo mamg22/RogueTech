@@ -59,7 +59,8 @@ export class Game {
         this.message_log = new MessageLog();
         this.render_metadata = {
             attacking: [],
-            dead: []
+            dead: [],
+            follow_player: true,
         };
 
         this.stats = {
