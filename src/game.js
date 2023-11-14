@@ -11,6 +11,7 @@ import { Fighter } from './components/fighter';
 import { Inventory } from './components/inventory';
 import { Experience } from './components/experience';
 import { Database } from './components/database';
+import { SpriteSet } from './components/sprite-set';
 import { database_items } from './database-info';
 
 export const GRID_SIZE = 64;
@@ -40,6 +41,7 @@ export class Game {
                 inventory: new Inventory(5),
                 experience: new Experience(),
                 database: new Database(),
+                sprite_set: new SpriteSet(sprites.player),
             });
 
         this.levels = [];
@@ -119,7 +121,7 @@ export class Game {
             const img = elem.querySelector('img');
 
             if (this.render_metadata.attacking.includes(entity)) {
-                img.src = img.src.replace('standing', 'attack');
+                img.src = entity.sprite_set.attack;
             }
 
             if ('fighter' in entity && entity !== this.player) {
@@ -148,7 +150,7 @@ export class Game {
             animations.push(wait_for(anim, 'finish'));
             if (this.render_metadata.attacking.includes(entity)) {
                 anim.addEventListener('finish', function(e){
-                    img.src = img.src.replace('attack', 'standing');
+                    img.src = entity.sprite_set.standing;
                 })
             }
 
@@ -182,13 +184,13 @@ export class Game {
                 entity_element.removeAttribute('entity-id');
                 const dead_entity = this.render_metadata.dead.find(function(elem) {
                     return elem.id == entity_id
-                });                    
+                });
                 if (dead_entity) {
                     const dead_img = entity_element.querySelector("img");
-                    dead_img.src = sprites.etc.boom;
+                    dead_img.src = dead_entity.sprite_set.dying;
                     setTimeout(function() {
                         entity_element.remove()
-                    }, 1400);
+                    }, 1920);
                 }
                 else {
                     entity_element.remove()

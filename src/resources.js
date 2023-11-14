@@ -3,13 +3,39 @@ export const sprites = {
         standing: "/static/res/player/standing.png",
         moving: "/static/res/player/moving.png",
         attack: "/static/res/player/attack.png",
+        dying: ""
     },
-    enemy: {
+    bot1: {
         standing: "/static/res/npc/bot-1/standing.png",
         attack: "/static/res/npc/bot-1/attack.png",
         exploding: "/static/res/npc/bot-1/exploding.png",
         dead: "/static/res/npc/bot-1/dead.png",
         dying: "/static/res/npc/bot-1/dying.gif"
+    },
+    bot2: {
+        standing: "/static/res/npc/bot-2/standing.png",
+        attack: "/static/res/npc/bot-2/attack.png",
+        dying: "/static/res/npc/bot-2/dying.gif",
+    },
+    bot3: {
+        standing: "/static/res/npc/bot-3/standing.png",
+        attack: "/static/res/npc/bot-3/attack.png",
+        dying: "/static/res/npc/bot-3/dying.gif",
+    },
+    bot4: {
+        standing: "/static/res/npc/bot-4/standing.png",
+        attack: "/static/res/npc/bot-4/attack.png",
+        dying: "/static/res/npc/bot-4/dying.apng",
+    },
+    bot5: {
+        standing: "/static/res/npc/bot-5/standing.png",
+        attack: "/static/res/npc/bot-5/attack.png",
+        dying: "/static/res/npc/bot-5/dying.apng",
+    },
+    bot6: {
+        standing: "/static/res/npc/bot-6/standing.png",
+        attack: "/static/res/npc/bot-6/attack.png",
+        dying: "/static/res/npc/bot-6/dying.apng",
     },
     items: {
         water_bottle: "/static/res/item/water_bottle.png",

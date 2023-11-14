@@ -7,6 +7,7 @@ import { Stair } from './components/stair';
 import { Item } from './components/item';
 import { heal, drive_effect, cast_interference, cast_confusion, throw_water_bottle } from './item-functions';
 import { DatabaseItem } from './components/database-item';
+import { SpriteSet } from './components/sprite-set';
 
 class Grid {
     constructor(width, height, default_value=0) {
@@ -386,13 +387,35 @@ function place_entities(rng, map, level) {
 
     for (let i = 0; i < N_ENEMIES; i++) {
         const enemy_templates = [
-            ["Robot", "Un robot enemigo", true, sprites.enemy.standing, Entity.Type.npc, -1, {
+            ["Robot", "Un robot enemigo", true, sprites.bot1.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(5, 4, 2, 50, 100)
+                fighter: new Fighter(5, 4, 2, 50, 100),
+                sprite_set: new SpriteSet(sprites.bot1),
             }],
-            ["Robot", "Un robot enemigo más fuerte", true, sprites.enemy.standing, Entity.Type.npc, -1, {
+            ["Robot", "Un robot enemigo", true, sprites.bot2.standing, Entity.Type.npc, -1, {
                 handler: new EnemyAIHandler(),
-                fighter: new Fighter(10, 5, 2, 100, 300)
+                fighter: new Fighter(5, 4, 2, 50, 100),
+                sprite_set: new SpriteSet(sprites.bot2),
+            }],
+            ["Robot", "Un robot enemigo", true, sprites.bot3.standing, Entity.Type.npc, -1, {
+                handler: new EnemyAIHandler(),
+                fighter: new Fighter(5, 4, 2, 50, 100),
+                sprite_set: new SpriteSet(sprites.bot3),
+            }],
+            ["Robot", "Un robot enemigo", true, sprites.bot4.standing, Entity.Type.npc, -1, {
+                handler: new EnemyAIHandler(),
+                fighter: new Fighter(5, 4, 2, 50, 100),
+                sprite_set: new SpriteSet(sprites.bot4),
+            }],
+            ["Robot", "Un robot enemigo", true, sprites.bot5.standing, Entity.Type.npc, -1, {
+                handler: new EnemyAIHandler(),
+                fighter: new Fighter(5, 4, 2, 50, 100),
+                sprite_set: new SpriteSet(sprites.bot5),
+            }],
+            ["Robot", "Un robot enemigo", true, sprites.bot6.standing, Entity.Type.npc, -1, {
+                handler: new EnemyAIHandler(),
+                fighter: new Fighter(5, 4, 2, 50, 100),
+                sprite_set: new SpriteSet(sprites.bot6),
             }],
         ];
 
