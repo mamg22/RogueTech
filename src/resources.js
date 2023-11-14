@@ -37,6 +37,16 @@ export const sprites = {
         attack: "/static/res/npc/bot-6/attack.png",
         dying: "/static/res/npc/bot-6/dying.apng",
     },
+    spectre: {
+        standing: "/static/res/npc/boss-spectre/standing.png",
+        attack: "/static/res/npc/boss-spectre/attack.png",
+        dying: "/static/res/npc/boss-spectre/dying.apng",
+    },
+    ghost: {
+        standing: "/static/res/npc/boss-ghost/standing.png",
+        attack: "/static/res/npc/boss-ghost/attack.apng",
+        dying: "/static/res/npc/boss-ghost/dying.apng",
+    },
     items: {
         antivirus: "/static/res/item/antivirus.png",
         cpu: "/static/res/item/cpu.png",

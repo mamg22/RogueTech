@@ -214,3 +214,61 @@ export class ConfusedHandler {
         }
     }
 }
+
+export class BossHandler {
+    constructor() {
+        this.last_known_pos = null;
+        this.sight_count = 0;
+        this.turn_skip_counter = 0;
+        this.target = null;
+        this.retarget_cooldown = 1;
+    }
+    next_action(player, level) {
+        this.turn_skip_counter++;
+
+        const owner = this.owner
+        const map = level.get_collision_map().content
+        let action = {};
+        if (this.owner.can_reach(player.x, player.y)) {
+            action = {attack: player};
+        }
+        else if (this.turn_skip_counter == 4) {
+            this.turn_skip_counter = 0;
+            action = {wait: true}
+        }
+        else if (this.owner.can_see(player, level, 99)) {
+            action = {move_astar: new Point(player.x, player.y)};
+        }
+        else {
+            if (this.target) {
+                if ( (owner.x === this.target.x && owner.x === this.target.y) ||
+                    level.get_collision_at(this.target.x, this.target.y)) {
+                    this.target = null;
+                    this.retarget_cooldown = 1;
+                }
+                return {move_astar: this.target};
+            }
+            else {
+                if (this.retarget_cooldown <= 0) {
+                    this.target = global_rng.pickone([
+                        new Point(2, 2),
+                        new Point(2, 17),
+                        new Point(17, 2),
+                        new Point(17, 17),
+                    ]);
+                }
+                else {
+                    this.retarget_cooldown--;
+                }
+                return {wait: true};
+            }
+            }
+        return action;
+    }
+    has_action() {
+        return true;
+    }
+    clear_actions() {
+        return undefined;
+    }
+}

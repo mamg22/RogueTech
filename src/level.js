@@ -1,10 +1,11 @@
 import { Point, Rectangle } from './common';
 import { sprites } from './resources';
 import { Entity } from './entity';
-import { EnemyAIHandler } from './components/handler';
+import { EnemyAIHandler, BossHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
+import { Boss } from './components/boss';
 import { heal, drive_effect, cast_interference, cast_confusion, throw_water_bottle,
          instant_levelup, up_fighter_stat, up_inventory_size, set_spare_cpu } from './item-functions';
 import { DatabaseItem } from './components/database-item';
@@ -361,7 +362,7 @@ function place_entities(rng, map, level) {
             "Salida", "Salida del edificio",
             false, sprites.decoration.door, Entity.Type.exit, 1, {}))
     }
-    if (level < 5) {
+    if (level < 6) {
         const room_idx = rng.integer({ min: rooms.length - 4, max: rooms.length - 1 });
         up_room = room_idx;
         const room = rooms[room_idx];
@@ -696,6 +697,43 @@ export class Level {
         this.entities.push(entity);
     }
 }
+
+export function generate_final_level(rng, level=6) {
+    let grid = new Grid(20, 20);
+    let tree = new BSPNode("0", new Rectangle(1, 1, grid.width - 2, grid.height - 2));
+
+    grid.set_filled_from_rectangle(new Rectangle(1, 1, 20 - 2, 20 - 2), 1);
+    grid.set_filled_from_rectangle(new Rectangle(4, 4, 3, 3), 0);
+    grid.set_filled_from_rectangle(new Rectangle(13, 4, 3, 3), 0);
+    grid.set_filled_from_rectangle(new Rectangle(4, 13, 3, 3), 0);
+    grid.set_filled_from_rectangle(new Rectangle(13, 13, 3, 3), 0);
+    grid.set_filled_from_rectangle(new Rectangle(4, 9, 12, 2), 0);
+
+    const map = { grid: grid, tree: tree }
+
+    let entities = []
+
+    entities.push(new Entity(1, 1,
+        "Escalera", "Escalera hacia abajo",
+        false, sprites.decoration.stair_down, Entity.Type.stair,
+        1, {
+            stair: new Stair(level, -1)
+        }))
+
+    entities.push(new Entity(18, 18,
+        "Spectre",
+        "Robot controlado por Spectre, la IA fuera de control.",
+        true, sprites.spectre.standing, Entity.Type.npc, -1, {
+        handler: new BossHandler(),
+        fighter: new Fighter(200, 10, 10, 500, 5000),
+        sprite_set: new SpriteSet(sprites.spectre),
+        boss: new Boss(1),
+    }))
+
+    return new Level(level, map, entities)
+
+}
+globalThis.generate_final_level = generate_final_level;
 
 export function generate_level(rng, level) {
     const game_map = generate_map(rng, level);

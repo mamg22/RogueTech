@@ -227,6 +227,11 @@
                 go to url '/'
             end
             ">Menú Principal</button>
+            <button type="button" class="" _="
+            on click
+                call #dev-menu.showModal()
+            end
+            ">Opciones de desarrollador</button>
         </div>
         <hr>
         <div class="center">
@@ -238,6 +243,36 @@
             >Terminar Partida</button>
         </div>
     </div>
+{%- endcall -%}
+
+{%- call funcs.game_dialog("dev-menu", "Opcioes de desarrollador") -%}
+<div class="center column">
+    <button _="
+    on click
+        call game.switch_level(1)
+        call game.render_map()
+        call game.tick_turns()
+    end
+    ">
+        Ir al piso 1.
+    </button>
+    <button _="
+    on click
+        call game.switch_level(6)
+        call game.render_map()
+        call game.tick_turns()
+    end
+    ">
+        Ir al piso final.
+    </button>
+    <button _="
+    on click
+        call game.do_instant_levelup()
+        call game.tick_turns()
+    end">
+        Subir a nivel 50
+    </button>
+</div>
 {%- endcall -%}
 
 {%- call funcs.game_dialog("how-to-play", "Cómo jugar") -%}
@@ -266,6 +301,8 @@ Al tocar el icono de la lupa podrás entrar al modo inspeccionar y luego puedes 
 {%- endcall -%}
 
 {%- call funcs.game_dialog("gameover-dialog", "Fin de la partida", false) -%}
+
+<h4><span id="gameover-reason"></span></h4>
 
 Puntución final: <span id="gameover-score"></span> <br>
 Tiempo: <span id="gameover-time"></span>

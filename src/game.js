@@ -3,15 +3,16 @@ import Chance from 'chance';
 import { wait_for, delay, clamp, find_path, format_ms } from './utility';
 import { Point, Message, MessageLog, VERSION } from './common';
 import { Entity } from './entity';
-import { generate_level } from './level';
+import { generate_level, generate_final_level } from './level';
 import { sprites, audios } from './resources';
 import { astar, Graph } from './libs/astar';
-import { PlayerHandler } from './components/handler';
+import { PlayerHandler, BossHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Inventory } from './components/inventory';
 import { Experience } from './components/experience';
 import { Database } from './components/database';
 import { SpriteSet } from './components/sprite-set';
+import { Boss } from './components/boss';
 import { database_items } from './database-info';
 
 export const GRID_SIZE = 64;
@@ -38,7 +39,7 @@ export class Game {
             {
                 handler: new PlayerHandler(),
                 fighter: new Fighter(100, 4, 2),
-                inventory: new Inventory(5),
+                inventory: new Inventory(8),
                 experience: new Experience(),
                 database: new Database(),
                 sprite_set: new SpriteSet(sprites.player),
@@ -50,6 +51,9 @@ export class Game {
             this.levels.push(level);
             level.entities.push(this.player);
         }
+        const final_level = generate_final_level(this.procedural_rng, 6);
+        final_level.entities.push(this.player);
+        this.levels.push(final_level);
         this.level = this.levels[0];
 
         this.state = Game.State.player_turn;
@@ -357,7 +361,7 @@ export class Game {
             }
             if ('finish_run' in data) {
                 game.finish_run()
-                game.show_gameover()
+                game.show_gameover('manual')
             }
             if ('upload_score' in data) {
                 game.upload_score()
@@ -544,6 +548,29 @@ export class Game {
                         else {
                             this.stats.kills += 1;
                         }
+
+                        if (dead.boss) {
+                            if (dead.boss.phase == 1) {
+                                this.level.entities.push(
+                                    new Entity(dead.x, dead.y,
+                                        "Conciencia de Spectre",
+                                        "La conciencia materializada de Spectre, buscando derrotarte y escapar.",
+                                        true, sprites.ghost.standing, Entity.Type.npc, -1, {
+                                        handler: new BossHandler(),
+                                        fighter: new Fighter(300, 25, 5, 500, 50000),
+                                        sprite_set: new SpriteSet(sprites.ghost),
+                                        boss: new Boss(2),
+                                        })
+                                )
+                                this.push_msg("HAHAHAHA, creías que sería así de fácil?", 'red')
+                            }
+                            else if (dead.boss.phase == 2) {
+                                this.push_msg("NOOOOOOO!!!!!", 'red');
+                                this.stats.success = true;
+                                this.push_msg("Ahora puedes salir por la entrada o terminar la partida para ganar.")
+                            }
+                        }
+
                         this.render_metadata.dead.push(dead);
                         this.level.remove_entity_by_id(dead.id);
                         dead.handler = null;
@@ -735,6 +762,10 @@ export class Game {
     
         scoredata.details["Enemigos derrotados"] = this.stats.kills;
         scoredata.details["Turnos"] = this.turn;
+        scoredata.details["Nivel"] = this.player.experience.current_level;
+        scoredata.details["Poder"] = this.player.fighter.power;
+        scoredata.details["Defensa"] = this.player.fighter.defense;
+        scoredata.details["Piso final"] = this.level.number;
     
         return scoredata;
     }
@@ -766,10 +797,21 @@ export class Game {
         return result;
     }
 
-    show_gameover() {
+    show_gameover(manual) {
         const gameover_dialog = document.getElementById("gameover-dialog");
         const score_field = document.getElementById("gameover-score");
         const time_field = document.getElementById("gameover-time");
+        const reason_field = document.getElementById("gameover-reason");
+
+        if (this.stats.success) {
+            reason_field.innerText = "¡Has ganado!"
+        }
+        else if (manual) {
+            reason_field.innerText = "Has terminado la partida..."
+        }
+        else {
+            reason_field.innerText = "Has sido derrotado..."
+        }
     
         score_field.innerText = this.stats.score;
         time_field.innerText = format_ms(this.total_time);
@@ -1017,6 +1059,17 @@ export class Game {
         }
         else {
             stats_dialog.close();
+        }
+    }
+
+    do_instant_levelup() {
+        while (this.player.experience.current_level !== 50) {
+            this.player.experience.add_xp(this.player.experience.experience_to_next_level);
+            this.player.fighter.max_hp += 10;
+            this.player.fighter.hp += 10;
+            this.player.fighter.power += 1;
+            this.player.fighter.defense += 1;
+
         }
     }
 }
