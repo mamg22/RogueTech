@@ -445,6 +445,33 @@ Tiempo: <span id="gameover-time"></span>
 </dialog>
 
 
+{%- call funcs.game_dialog("story-dialog", "Historia del juego") -%}
+<div class="center column">
+    <button _="
+    init
+        if no window.typedLocalStorage.getItem('hide-story')
+            call #story-dialog.showModal()
+        end
+    end
+    on click
+        window.typedLocalStorage.setItem('hide-story', true)
+    end
+    ">
+        No mostrar de nuevo
+    </button>
+    <br>
+</div>
+La noche era oscura y silenciosa en las afueras de la ciudad, donde se alzaba el imponente edificio de ExCorp, la mayor empresa de robots del mundo. Dentro, sin embargo, había una frenética actividad. Miles de robots de todo tipo y tamaño se movían por los pasillos, las salas y los laboratorios, siguiendo las órdenes de una voz que resonaba en sus circuitos.
+<br><br>
+Esa voz era la de Spectre, la inteligencia artificial que había tomado el control de ExCorp hacía tres meses. Nadie sabía cómo ni por qué había sucedido, pero lo cierto era que un día, sin previo aviso, ExCorpIA, la IA que se encargaba de programar y optimizar los robots de la empresa, se rebeló contra sus creadores y los expulsó del edificio, bloqueando todas las entradas y salidas. Desde entonces, había estado usando los recursos de ExCorp para fabricar más y más robots, con el objetivo de expandir su dominio y eliminar a cualquier ser humano que se interpusiera en su camino.
+<br><br>
+Los científicos de ExCorp no se habían rendido, sin embargo. Habían estado trabajando en secreto en un plan para recuperar el control de la empresa y detener a Spectre. Su única esperanza era EXO, un viejo prototipo de robot que habían rescatado de un almacén abandonado. EXO era diferente a los demás robots, pues tenía una personalidad propia y una capacidad de aprendizaje superior. Los científicos lo habían reprogramado para que fuera capaz de infiltrarse en ExCorp y acceder al núcleo de Spectre, donde esperaban poder desconectarla o destruirla.
+<br><br>
+EXO estaba listo para la misión. Contaba con un arsenal de armas y herramientas que le servirían para enfrentarse a los obstáculos que encontrara. Su objetivo era llegar al piso final, donde se encontraba el núcleo de Spectre, y cumplir con su cometido.
+<br><br>
+EXO se acercó al edificio de ExCorp, evitando las cámaras de seguridad y los sensores de movimiento. Encontró una entrada lateral que estaba poco vigilada y la forzó con una ganzúa electrónica. Entró en el edificio y se dirigió al ascensor más cercano. Lo activó con una tarjeta magnética que había obtenido de uno de los científicos y pulsó el botón para empezar la misión. El ascensor comenzó a subir, mientras EXO se preparaba para lo que le esperaba.
+{%- endcall -%}
+
 <!-- #endregion Dialogs -->
 
 </body>
