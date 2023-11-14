@@ -5,7 +5,8 @@ import { EnemyAIHandler } from './components/handler';
 import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
-import { heal, drive_effect, cast_interference, cast_confusion, throw_water_bottle } from './item-functions';
+import { heal, drive_effect, cast_interference, cast_confusion, throw_water_bottle,
+         instant_levelup } from './item-functions';
 import { DatabaseItem } from './components/database-item';
 import { SpriteSet } from './components/sprite-set';
 
@@ -344,7 +345,7 @@ function generate_map(rng, level) {
 function place_entities(rng, map, level) {
     const N_ENTITIES = 10;
     const N_ENEMIES = 10;
-    const N_ITEMS = 15;
+    const N_ITEMS = 10;
 
     const rooms = map.tree.get_leaves();
 
@@ -460,29 +461,60 @@ function place_entities(rng, map, level) {
     for (let i = 0; i < N_ITEMS; i++) {
         const item_templates = [
             ["Botella de agua",
-                "Una botella con 1L de agua. No es muy util para tí, pero podrías probar lanzandola",
+                "Una botella con 1L de agua. No es muy util para tí, pero podrías probar lanzandola. Al lanzarla esparcirá agua, causando cortocircuitos y daños en los electronicos que se encuentren cerca.",
                 false, sprites.items.water_bottle, Entity.Type.item, 1, {
-                item: new Item(throw_water_bottle, true, "Elige donde lanzar la botella...", {damage: 8, radius: 1}),
+                item: new Item(throw_water_bottle, true, "Elige donde lanzar la botella...", {damage: 4 + 4*level, radius: 1}),
             }],
             ["CD: DDOS.exe",
                 "Al frente dice que contiene un programa para causar un ataque DDOS, enviando inmensas cantidades de información a un lugar específico. Causará que el enemigo más cercano a tí sufra daños",
                 false, sprites.items.cd, Entity.Type.item, 1, {
-                item: new Item(cast_interference, false, null, {damage: 10, maximum_range: 8}),
+                item: new Item(cast_interference, false, null, {damage: 5 + 5 * level, maximum_range: 8}),
                 database_item: new DatabaseItem('cd'),
             }],
             ["CD: aturdidor.exe",
                 "Al frente dice que contiene un programa para aturdir un enemigo. Causará que el enemigo que elijas sea aturdido por 10 turnos, haciendolo incapaz de seguirte o siquiera moverse correctamente",
                 false, sprites.items.cd, Entity.Type.item, 1, {
-                item: new Item(cast_confusion, true, "Elige un enemigo para aturdir", {duration: 10}),
+                item: new Item(cast_confusion, true, "Elige un enemigo para aturdir", {duration: 10 + 3 * level}),
                 database_item: new DatabaseItem('cd'),
             }],
             ["Pendrive",
                 "Un pendrive desconocido. Quizá puedas ver lo que tiene dentro, aunque no se si sea muy seguro.",
                 false, sprites.items.pendrive, Entity.Type.item, 1, {
-                item: new Item(drive_effect, false, null, {heal_amount: 10, damage_amount: 10}),
+                item: new Item(drive_effect, false, null, {heal_amount: 10 + 5 * level, damage_amount: 10 + 5 * level}),
                 database_item: new DatabaseItem("pendrive")
             }],
+            ["Kit de herramientas",
+                "Un pequeño conjunto de herramientas útil para reparaciones sencillas de electrónicos. Destornilladores de multiples tamaños, pinzas y un pincel para sacar el polvo. Usarlo reparará el 25% de tus daños.",
+                false, sprites.items.toolkit, Entity.Type.item, 1, {
+                    item: new Item(heal, false, null, {amount_percent: 0.25})
+                }
+            ],
+            ["Caja de herramientas",
+                "Un conjunto de herramientas bastante completo para reparaciones de electrónicos, además de docenas de destornilladores y herramientas, tiene estaño y un soldador, un multímetro para medir la corriente eléctrica, ¡e incluso una guía para solventar problemas comunes!. Usarlo reparará el 50% de tus daños.",
+                false, sprites.items.toolbox, Entity.Type.item, 1, {
+                    item: new Item(heal, false, null, {amount_percent: 0.50})
+                }
+            ],
+            ["Mejora de CPU",
+                "Cambiará tu CPU actual por uno más nuevo. Subirás inmediatamente al siguiente nivel",
+                false, sprites.items.level_up_chip, Entity.Type.item, 1, {
+                    item: new Item(instant_levelup, false, null, {})
+                }
+            ],
+            ["Disquete",
+                "Un medio de almacenamiento común en los años 80 y 90.",
+                false, sprites.items.floppy, Entity.Type.item, 1, {
+                    database_item: new DatabaseItem('floppy')
+                }
+            ],
+            ["Disquete etiquetado",
+                "Un medio de almacenamiento común en los años 80 y 90. Tiene algo escrito en la etiqueta que tiene al frente, quizá pueda contener información sobre que sucedió.",
+                false, sprites.items.floppy, Entity.Type.item, 1, {
+                    database_item: new DatabaseItem('story' + rng.integer({min: 1, max: 9})),
+                }
+            ]
         ];
+        item_weights = [100, 50, 50, 100, 100, 10, 5, 10, 10]
     
         while (true) {
             const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });
@@ -495,8 +527,7 @@ function place_entities(rng, map, level) {
                 continue;
             }
 
-            const entity_idx = rng.integer({min: 0, max: item_templates.length - 1});
-            let template = item_templates[entity_idx]
+            let template = rng.weighted(item_templates, item_weights);
             let entity = new Entity(
                 room_pos.x, room_pos.y,
                 ...template

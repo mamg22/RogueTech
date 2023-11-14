@@ -2,18 +2,26 @@ import { Message, Point } from './common';
 import { global_rng, distance_between } from './utility';
 import { ConfusedHandler } from './components/handler';
 
-export function heal(entity, {amount}) {
+export function heal(entity, {amount, amount_percent}) {
     let results = [];
+    let heal_amount;
+
+    if (amount_percent) {
+        heal_amount = Math.ceil(entity.fighter.max_hp * amount_percent);
+    }
+    else {
+        heal_amount = amount;
+    }
 
     if (entity.fighter.hp === entity.fighter.max_hp) {
         results.push({
             item_consumed: false,
-            message: new Message("Ya estás al máximo de salud", 'yellow'),
+            message: new Message("¡No tienes daños que reparar!", 'yellow'),
             consumed: 0,
         });
     }
     else {
-        entity.fighter.heal(amount);
+        entity.fighter.heal(heal_amount);
         results.push({
             item_consumed: true,
             message: new Message("Has reparado parte de tus daños", 'green'),
@@ -182,4 +190,19 @@ export function cast_confusion(entity, {player, level, x, y, duration}) {
 
 
     return results;
+}
+
+export function instant_levelup(entity) {
+    let results = [];
+
+    let current_xp = entity.experience.current_xp;
+    let next_level_xp = entity.experience.experience_to_next_level;
+
+    results.push({
+        xp: next_level_xp - current_xp,
+        item_consumed: true,
+        consumed: 1,
+    });
+
+    return results
 }
