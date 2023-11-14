@@ -6,7 +6,7 @@ import { Fighter } from './components/fighter';
 import { Stair } from './components/stair';
 import { Item } from './components/item';
 import { heal, drive_effect, cast_interference, cast_confusion, throw_water_bottle,
-         instant_levelup } from './item-functions';
+         instant_levelup, up_fighter_stat, up_inventory_size, set_spare_cpu } from './item-functions';
 import { DatabaseItem } from './components/database-item';
 import { SpriteSet } from './components/sprite-set';
 
@@ -512,9 +512,73 @@ function place_entities(rng, map, level) {
                 false, sprites.items.floppy, Entity.Type.item, 1, {
                     database_item: new DatabaseItem('story' + rng.integer({min: 1, max: 9})),
                 }
-            ]
+            ],
+            ["Tarjeta gráfica",
+                "Puede ser añadida a una computadora para acelerar o permitir el procesamiento de gráficos, permitiendo a la vez mostrar gráficos más complejos y de mayor resolución.",
+                false, sprites.items.gpu, Entity.Type.item, 1, {
+                    database_item: new DatabaseItem('gpu'),
+                }
+            ],
+            ["Fuente de poder",
+                "Provee energía para aparatos electrónicos. Usala para reemplazar y mejorar tu fuente de poder actual, mejorando tu capacidad de ataque",
+                false, sprites.items.psu, Entity.Type.item, 1, {
+                    item: new Item(up_fighter_stat, false, null, {power: 1}),
+                    database_item: new DatabaseItem('psu'),
+                }
+            ],
+            ["Disco Duro",
+                "Un dispoitivo que se conecta a una computadora y sirve como almacenamiento para todo tipo de archivos. Usalo para expandir la capacidad de tu inventario.",
+                false, sprites.items.hdd, Entity.Type.item, 1, {
+                    item: new Item(up_inventory_size, false, null, {increment: 5}),
+                    database_item: new DatabaseItem('hdd'),
+                }
+            ],
+            ["CPU",
+                "Uno de los componentes principales en una computadora. Se encarga de procesar toda la información. Usala para preparar un repuesto en caso de emergencia, permitiendote volver si eres derrotado por un enemigo",
+                false, sprites.items.cpu, Entity.Type.item, 1, {
+                    item: new Item(set_spare_cpu, false, null, {}),
+                    database_item: new DatabaseItem('cpu'),
+                }
+            ],
+            ["Fan cooler",
+                "Un compacto ventilador diseñado para extraer el calor de los componentes electrónicos.",
+                false, sprites.items.fancooler, Entity.Type.item, 1, {
+                    database_item: new DatabaseItem('fancooler'),
+                }
+            ],
+            ["Pasta térmica",
+                "Un compuesto químico en forma de pasta que sirve para mover el calor entre un microchip y el disipador que tenga",
+                false, sprites.items.pastatermica, Entity.Type.item, 1, {
+                    database_item: new DatabaseItem('thermalpaste'),
+                }
+            ],
+            ["RAM",
+                "Memoria no permanente donde el sistema y los programas guardan la información que están usando",
+                false, sprites.items.ram, Entity.Type.item, 1, {
+                    database_item: new DatabaseItem('ram'),
+                }
+            ],
+            ["Antivirus",
+                "Programa que encuentra y elimina virus y todo tipo de software malicioso",
+                false, sprites.items.antivirus, Entity.Type.item, 1, {
+                    database_item: new DatabaseItem('antivirus'),
+                }
+            ],
+            ["Firewall",
+                "Sistema que protege un equipo ante ataques sobre la red. Usarlo mejorará tu capacdad de defensa",
+                false, sprites.items.firewall, Entity.Type.item, 1, {
+                    item: new Item(up_fighter_stat, false, null, {defense: 1}),
+                    database_item: new DatabaseItem('firewall'),
+                }
+            ],
         ];
-        item_weights = [100, 50, 50, 100, 100, 10, 5, 10, 10]
+        item_weights = [
+            100, 100, 100, 100,
+            100, 33, 5, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100,
+        ];
     
         while (true) {
             const room_idx = rng.integer({ min: 0, max: rooms.length - 1 });

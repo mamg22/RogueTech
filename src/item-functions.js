@@ -206,3 +206,70 @@ export function instant_levelup(entity) {
 
     return results
 }
+
+export function up_fighter_stat(entity, {max_hp, power, defense}) {
+    let results = [];
+
+    results.push({
+        item_consumed: true,
+        consumed: 1,
+    });
+
+    if (max_hp) {
+        entity.fighter.max_hp += max_hp;
+        entity.fighter.hp += hp;
+
+        results.push({
+            message: new Message("Tu tolerancia a los daños ha mejorado", 'green')
+        })
+    }
+    if (power) {
+        entity.fighter.power += power;
+        results.push({
+            message: new Message("Tu poder ofensivo ha mejorado", 'green')
+        })
+
+    }
+    if (defense) {
+        entity.fighter.defense += defense;
+        results.push({
+            message: new Message("Tu defensa ha mejorado", 'green')
+        })
+    }
+
+    return results;
+}
+
+export function up_inventory_size(entity, {increment}) {
+    let results = [];
+
+    entity.inventory.capacity += increment;
+
+    results.push({
+        message: new Message(`¡Ahora puedes guardar ${increment} items más!`, 'green')
+    });
+
+    return results;
+}
+
+export function set_spare_cpu(entity) {
+    let results = [];
+
+    if (entity.fighter.spare) {
+        results.push({
+            message: new Message("¡Ya tienes una CPU de repuesto preparada!", 'yellow'),
+            item_consumed: false,
+            consumed: 0,
+        })
+    }
+    else {
+        entity.fighter.spare = true;
+        results.push({
+            message: new Message("La CPU está preparada para emergencia", 'yellow'),
+            item_consumed: true,
+            consumed: 1,
+        })
+    }
+
+    return results;
+}

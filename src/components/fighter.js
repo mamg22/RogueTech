@@ -9,13 +9,23 @@ export class Fighter {
         this.defense = defense;
         this.xp = xp;
         this.score = score;
+        this.spare = false;
     }
 
     take_damage(amount) {
         let results = [];
         this.hp = Math.max(this.hp - amount, 0);
         if (this.hp <= 0) {
-            results.push({dead: this.owner, xp: this.xp, score: this.score})
+            if (this.spare) {
+                this.spare = false;
+                this.hp = Math.floor(this.max_hp / 2);
+                results.push({
+                    message: new Message("La CPU de repuesto te ha salvado", 'green')
+                })
+            }
+            else {
+                results.push({dead: this.owner, xp: this.xp, score: this.score})
+            }
         }
         return results;
     }
@@ -23,9 +33,11 @@ export class Fighter {
     attack(target) {
         let results = []
 
-        const fail_attack = global_rng.bool({likelihood: 10});
+        const fail_attack = global_rng.bool({likelihood: 15});
 
-        const damage = this.power - target.fighter.defense;
+        const power_frac = Math.round(this.power / 4);
+        const variance = global_rng.integer({min: -power_frac, max: power_frac})
+        const damage = this.power - target.fighter.defense + variance;
 
         if (fail_attack) {
             results.push({
