@@ -237,10 +237,16 @@ export class Game {
     
                 if (this.level.map.grid.get(x, y) == 0) {
                     cell_image.src = "/static/t2.jpg"
+                    if (this.level.number === 6) {
+                        cell_image.src = "/static/boss-w.png"
+                    }
                     cell_contents.classList.add("solid");
                 }
                 else {
                     cell_image.src = "/static/floor1.png"
+                    if (this.level.number === 6) {
+                        cell_image.src = "/static/boss-f.png"
+                    }
                 }
     
                 current_cell.appendChild(cell_contents);
