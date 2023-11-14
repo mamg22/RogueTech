@@ -478,6 +478,8 @@ export class Game {
                         const target = action.attack;
                         let result = entity.fighter.attack(target);
                         results.push(...result);
+                        const attack_dir = target.x - entity.x;
+                        entity.set_facing(attack_dir);
                         this.render_metadata.attacking.push(entity);
                         if (target === this.player) {
                             results.push({player_attacked: true});
