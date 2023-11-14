@@ -24,7 +24,7 @@ Un CD es un disco óptico que se usa para almacenar información digital
  como música, software, películas, etc. Su nombre significa Compact Disc,
  o Disco Compacto en español.<br>
 
-Fue inventado en 1981 por Sony y Phillips, y estos todos los hemos usado
+Fue inventado en 1981 por Sony y Phillips. Estos todos los hemos usado
  desde jóvenes muchas veces en nuestra vida.`
     },
     {
@@ -37,9 +37,9 @@ Fue inventado en 1981 por Sony y Phillips, y estos todos los hemos usado
 Una tarjeta gráfica es un hardware que se encarga de procesar y mostrar los
  gráficos de una pantalla de un ordenador u otro dispositivo. <br>
 
-Sabías que todos los dispositivos con pantalla deben poseer una sin excepción?
- Y estás no siempre son un dispositivo aparte del computador, también pueden
- estar integradas a un chip de procesamiento.
+¿Sabías que todos los dispositivos con pantalla deben poseer una sin excepción?
+ Y éstas no siempre son un dispositivo aparte del computador, también pueden
+ estar integradas a un chip de procesamiento o CPU.
 `
     },
     {
@@ -53,8 +53,8 @@ Una fuente de poder es un dispositivo que se encarga de suministrar la energía
  eléctrica necesaria para el funcionamiento de un ordenador o de otro aparato
  electrónico. <br>
 
-Está es muy importante, ya que si está no es adecuada a nuestro dispositivo,
- este no podrá funcionar correctamente.
+Es fundamental, ya que si ésta no es adecuada a nuestro dispositivo,
+ este no podrá funcionar correctamente, o siquiera funcionar.
 `
     },
     {
@@ -64,12 +64,12 @@ Está es muy importante, ya que si está no es adecuada a nuestro dispositivo,
         description:
 `<b> Disco Duro </b><br>
 
-un disco duro es un dispositivo que permite almacenar información digital de
+Un disco duro es un dispositivo que permite almacenar información digital de
  forma permanente en una computadora. <br>
 
 La tecnología ha evolucionado tanto que estos fueron la inspiración de la nueva
- generación conocida como disco de estado sólido, muchos más pequeños y
- más rápidos!!
+ generación, conocida como disco de estado sólido, muchos más pequeños y
+ rápidos.
 `
     },
     {
@@ -80,16 +80,16 @@ La tecnología ha evolucionado tanto que estos fueron la inspiración de la nuev
 `<b> Disquete </b><br>
 
 El Disquete fue un dispositivo de almacenamiento de tipo magnético, una reliquia
- tecnológica, este era flexible y delgado protegido por una cubierta de plástico. <br>
+ tecnológica, este era flexible y delgado, protegido por una cubierta de plástico. <br>
 
 Estos fueron los primero dispositivos de almacenamiento creados, y fueron demandados
- hasta 25 años despues de su origen, siendo japon el ultimo pais donde se pararon toda
+ hasta 25 años despues de su origen, siendo Japon el ultimo pais donde se pararon toda
  su fabricación.<br>
 
  Quizá lo conozcas como el icono de guardado, pero los disquetes fueron dispositivos
  de almacenamiento muy populares hace un par de décadas. Tenían muy poca capacidad
  comparada con lo que tenemos hoy en día, comúnmente almacenando alrededor de 1.44 MB,
-¡Suficiente para almacenar un minuto de música en formato MP3!
+¡Suficiente para almacenar poco más de un minuto de música en formato MP3!
 `
     },
     {
@@ -99,11 +99,12 @@ Estos fueron los primero dispositivos de almacenamiento creados, y fueron demand
         description:
 `<b> CPU </b><br>
 
-Un CPU es el cebrero de todo equipo que procese datos e información, es un hardware que se encarga
- de ejecutar todas las instrucciones para que la información sea mostrada en pantalla. <br>
+Un CPU o Unidad de Procesamiento Central
+es el cerebro de todo equipo que procese datos e información, es un hardware que se encarga
+ de ejecutar todas las instrucciones para que la información sea mostrada en pantalla o transmitida. <br>
 
-Todos los equipos del mundo, celulares, teléfonos, consolas de juego y hasta televisores
- tienen uno propio, increíble no?
+Todos los equipos del mundo, como celulares, teléfonos, consolas de juego y hasta televisores
+ tienen uno propio, increíble ¿no?
 `
     },
     {
@@ -117,9 +118,9 @@ Un fan cooler es un ventilador que se usa para extraer el aire caliente del inte
  de una computadora o de otro dispositivo electrónico, manteniendo así el equipo fresco
  y con un rendimiento aceptable.<br>
 
-Es tan importante ya que la CPU como los microchips generan mucho calor, imagina que no
- se usarán los fan cooler, estos equipos se dañarían súper rápido, además de tener algunas 
-luces LED y hacerlos súper llamativos!!
+Es tan importante debido a que tanto la CPU como los microchips generan mucho calor, si no
+ se usarán los fan cooler, estos equipos se dañarían súper rápido. ¡Algunos pueden tener 
+luces LED y hacerlos súper llamativos!
 `
     },
     {
@@ -134,7 +135,7 @@ La pasta térmica es un compuesto que se usa como conductor de calor entre el CP
 
 A que nunca te has preguntado de que esta hecha la pasta térmica? Pues esta puede ser derivada
  de la silicona, metal, la cerámica o carbono. Incluso existe algo mejor que la pasta termica, 
-es el metal liquido, cumple la misma función y hasta mejor!!`
+es el metal liquido, cumple la misma función, ¡hasta mejor!`
     },
     {
         id: 'ram',
@@ -147,11 +148,11 @@ La memoria RAM es un tipo de memoria que almacena temporalmente los
 datos e instrucciones de los programas que se están ejecutando en
 un dispositivo.<br>
 
-La primera memoria ram fue inventada en el año 1947 por John Von Neumann,
+El concepto de la RAM fue inventada en el año 1947 por John Von Neumann,
 un cientifico matematico y de la computacion.<br>
 
-La memoria ram es algo curiosa porque almacena datos e instrucciones mientras
-el equipo mientras esta encendido, cuando se apaga todo lo que estaba dentro
+La memoria RAM es algo curiosa, porque almacena datos e instrucciones mientras
+el equipo mientras esta encendido y cuando se apaga, todo lo que estaba dentro
 se borrará permanentemente.
 `
     },
@@ -171,7 +172,7 @@ el sistema de correo electrónico, interesante ¿no?<br>
 
 Lo curioso de los antivirus es que la mayoria estan conectados a una base 
 de datos llena de informacion de millones de virus, para asi tener un registro
-de los mas antiguos y tener informacion valiosa de los nuevos.
+de los mas antiguos, y tener informacion valiosa de los nuevos.
 `
     },
     {
@@ -182,9 +183,9 @@ de los mas antiguos y tener informacion valiosa de los nuevos.
 `<b>Firewall</b><br>
 
 Un firewall es un sistema que protege tu red o tu dispositivo de accesos no 
-autorizados o maliciosos desde Internet.<br>
+autorizados o maliciosos desde la red o el Internet.<br>
 
-El primer firewall comercial fue diseñado por Marcus Ranum en 1990. Este bloqueaba
+El primer Firewall comercial fue diseñado por Marcus Ranum en 1990. Éste bloqueaba
 o permitia el acceso a los datos segun su protocolo establecido, era muy seguro
 de usar pero complejo de mantener.
 `
