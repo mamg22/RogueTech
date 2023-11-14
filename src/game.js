@@ -572,7 +572,14 @@ export class Game {
                             else if (dead.boss.phase == 2) {
                                 this.push_msg("NOOOOOOO!!!!!", 'red');
                                 this.stats.success = true;
-                                this.push_msg("Ahora puedes salir por la entrada o terminar la partida para ganar.")
+                                this.push_msg("Ahora puedes salir por la entrada o terminar la partida para ganar.", 'green')
+                                setTimeout(function() {
+                                    game.push_msg("Ahora puedes salir por la entrada o terminar la partida para ganar.", 'green')
+                                }, 10000);
+                                setTimeout(function() {
+                                    game.push_msg("Ahora puedes salir por la entrada o terminar la partida para ganar.", 'green')
+                                }, 20000);
+
                             }
                         }
 
