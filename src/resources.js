@@ -6,44 +6,44 @@ export const sprites = {
         dying: ""
     },
     bot1: {
-        standing: "/static/res/npc/bot-1/standing.png",
+        standing: "/static/res/npc/bot-1/standing.gif",
         attack: "/static/res/npc/bot-1/attack.png",
         exploding: "/static/res/npc/bot-1/exploding.png",
         dead: "/static/res/npc/bot-1/dead.png",
         dying: "/static/res/npc/bot-1/dying.gif"
     },
     bot2: {
-        standing: "/static/res/npc/bot-2/standing.png",
+        standing: "/static/res/npc/bot-2/standing.gif",
         attack: "/static/res/npc/bot-2/attack.png",
         dying: "/static/res/npc/bot-2/dying.gif",
     },
     bot3: {
-        standing: "/static/res/npc/bot-3/standing.png",
+        standing: "/static/res/npc/bot-3/standing.apng",
         attack: "/static/res/npc/bot-3/attack.png",
         dying: "/static/res/npc/bot-3/dying.gif",
     },
     bot4: {
-        standing: "/static/res/npc/bot-4/standing.png",
+        standing: "/static/res/npc/bot-4/standing.apng",
         attack: "/static/res/npc/bot-4/attack.png",
         dying: "/static/res/npc/bot-4/dying.apng",
     },
     bot5: {
-        standing: "/static/res/npc/bot-5/standing.png",
+        standing: "/static/res/npc/bot-5/standing.apng",
         attack: "/static/res/npc/bot-5/attack.png",
         dying: "/static/res/npc/bot-5/dying.apng",
     },
     bot6: {
-        standing: "/static/res/npc/bot-6/standing.png",
+        standing: "/static/res/npc/bot-6/standing.apng",
         attack: "/static/res/npc/bot-6/attack.png",
         dying: "/static/res/npc/bot-6/dying.apng",
     },
     spectre: {
-        standing: "/static/res/npc/boss-spectre/standing.png",
+        standing: "/static/res/npc/boss-spectre/standing.apng",
         attack: "/static/res/npc/boss-spectre/attack.png",
         dying: "/static/res/npc/boss-spectre/dying.apng",
     },
     ghost: {
-        standing: "/static/res/npc/boss-ghost/standing.png",
+        standing: "/static/res/npc/boss-ghost/standing.apng",
         attack: "/static/res/npc/boss-ghost/attack.apng",
         dying: "/static/res/npc/boss-ghost/dying.apng",
     },
