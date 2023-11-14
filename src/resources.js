@@ -114,8 +114,12 @@ export const audios = {
                 volume: 0.4,
             }),
         boom: audio_resource(
-            '/static/res/sfx/boom.mp3', {
-                volume: 0.1,
+            '/static/res/sfx/boom2.wav', {
+                volume: 0.4,
+            }),
+        disparo: audio_resource(
+            '/static/res/sfx/Disparo2.wav', {
+                volume: 0.075,
             }),
     }
 };

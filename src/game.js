@@ -164,6 +164,11 @@ export class Game {
             const facing = entity.facing;
             elem.style.setProperty('--flip', entity.facing)
         }
+
+        if (this.render_metadata.attacking.length > 0) {
+            audios.sfx.disparo.play();
+        }
+
         await Promise.all(animations);
 
         if (this.render_metadata.follow_player) {
@@ -603,6 +608,7 @@ export class Game {
                     }
                     if ('item_added' in result && result.item_added) {
                         this.level.remove_entity_by_id(result.item_added.id);
+                        audios.sfx.pickup.play();
                     }
                     if ('db_item_added' in result && result.db_item_added) {
                         const db_button = document.getElementById("db-button");
