@@ -39,10 +39,10 @@ def _setup_logger():
 
 _logger = _setup_logger()
 
-DB_NAME = os.environ.get('DB_NAME')
-DB_PASS = os.environ.get('DB_PASS')
-DB_USER = os.environ.get('DB_USER')
-DB_HOST = os.environ.get('DB_HOST')
+DB_NAME = os.environ.get('DB_NAME', 'gamedb')
+DB_PASS = os.environ.get('DB_PASS', '')
+DB_USER = os.environ.get('DB_USER', 'root')
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
 
 _logger.info(f"Loaded database config: USER={DB_USER} HOST={DB_HOST} DB={DB_NAME}")
 
