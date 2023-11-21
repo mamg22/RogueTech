@@ -246,6 +246,8 @@ export function up_inventory_size(entity, {increment}) {
     entity.inventory.capacity += increment;
 
     results.push({
+        item_consumed: true,
+        consumed: 1,
         message: new Message(`¡Ahora puedes guardar ${increment} items más!`, 'green')
     });
 
