@@ -529,13 +529,7 @@ big, .big {
     background-color: transparent;
 }
 
-/* @font-face {
-    font-family: Square;
-    src: url('/static/Square.ttf');
-} */
-
 #database-info-dialog-description {
-    /* font-family: Square; */
     font-family: monospace;
     text-align: justify;
 }
