@@ -1,3 +1,4 @@
+import os
 import traceback
 
 from flask import Blueprint, render_template, send_from_directory, request, flash, session, redirect, url_for, make_response
@@ -290,7 +291,8 @@ def set_user_role(target_id: int):
 
 @web.route('/game')
 def game():
-    return render_template('game.html')
+    enable_devmenu = os.environ.get("ENABLE_DEVMENU", True)
+    return render_template('game.html', enable_devmenu=enable_devmenu)
 
 @web.route('/service-worker.js')
 def sw():

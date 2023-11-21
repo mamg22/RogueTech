@@ -227,11 +227,13 @@
                 go to url '/'
             end
             ">Menú Principal</button>
+            {% if enable_devmenu %}
             <button type="button" class="" _="
             on click
                 call #dev-menu.showModal()
             end
             ">Opciones de desarrollador</button>
+            {% endif %}
         </div>
         <hr>
         <div class="center">
@@ -245,6 +247,7 @@
     </div>
 {%- endcall -%}
 
+{% if enable_devmenu %}
 {%- call funcs.game_dialog("dev-menu", "Opcioes de desarrollador") -%}
 <div class="center column">
     <button type="button" _="
@@ -274,6 +277,7 @@
     </button>
 </div>
 {%- endcall -%}
+{% endif %}
 
 {%- call funcs.game_dialog("how-to-play", "Cómo jugar") -%}
 
