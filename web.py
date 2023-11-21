@@ -291,7 +291,7 @@ def set_user_role(target_id: int):
 
 @web.route('/game')
 def game():
-    enable_devmenu = os.environ.get("ENABLE_DEVMENU", True)
+    enable_devmenu = int(os.environ.get("ENABLE_DEVMENU", True))
     return render_template('game.html', enable_devmenu=enable_devmenu)
 
 @web.route('/service-worker.js')
