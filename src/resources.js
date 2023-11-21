@@ -1,6 +1,6 @@
 export const sprites = {
     player: {
-        standing: "/static/res/player/standing.png",
+        standing: "/static/res/player/standing.gif",
         moving: "/static/res/player/moving.png",
         attack: "/static/res/player/attack.png",
         dying: ""
