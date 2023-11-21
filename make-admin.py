@@ -5,9 +5,9 @@ import sys
 import core
 
 def main():
-    username = input("Username> ")
-    password = input("Password> ")
-    pin      = input("Pin     > ")
+    username = input("Nombre    > ")
+    password = input("Contrasena> ")
+    pin      = input("Pin       > ")
 
     try:
         model = core.Model()
@@ -17,9 +17,9 @@ def main():
         sys.exit(1)
 
     if created:
-        print(f"Created administrator '{username}'")
+        print(f"Creado administrador '{username}'")
     else:
-        print(f"User '{username}' already exists")
+        print(f"Error: Usuario '{username}' ya existe")
 
 if __name__ == '__main__':
     main()
