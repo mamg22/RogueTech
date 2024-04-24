@@ -11,6 +11,7 @@ Roguetech is a RPG roguelike game for browsers, with online competitive function
 * Can create accounts for submitting scores and competing with other users.
 * Follow friend and other users to find their scores easily.
 * Highly dynamic interface, will look good on desktop as well as on mobile.
+* Can be easily downloaded and installed as an app.
 
 ## Requirements
 

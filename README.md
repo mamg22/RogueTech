@@ -11,6 +11,7 @@ Roguetech es un juego RPG roguelike para navegadores, con funciones competitivas
 * Capacidad de crear cuentas para subir puntuaciones y competir con otros usuarios.
 * Seguir amigos y otros usuarios para encontrar sus puntuaciones más facilmente.
 * Interfaz altamente dinámica, se verá bien tanto en escritorio como en móvil.
+* Puede descargarse e instalarse como aplicación fácilmente.
 
 ## Requisitos
 
