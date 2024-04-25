@@ -1,8 +1,8 @@
 [Leer en español/Read in spanish](README.md)
 
-# Roguetech
+# RogueTech
 
-Roguetech is a RPG roguelike game for browsers, with online competitive functionality between players via online leaderboards.
+RogueTech is a RPG roguelike game for browsers, with online competitive functionality between players via online leaderboards.
 
 ## Features
 
