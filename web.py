@@ -301,3 +301,7 @@ def sw():
 @web.route('/offline')
 def offline():
     return render_template('offline.html')
+
+@web.route('/about')
+def about():
+    return render_template('about.html')
