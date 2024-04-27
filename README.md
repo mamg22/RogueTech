@@ -1,50 +1,50 @@
-[Leer en inglés/Read in english](README.en.md)
+[Leer en español/Read in spanish](README.es.md)
 
 # RogueTech
 
-RogueTech es un juego RPG roguelike para navegadores, con funciones competitivas entre jugadores mediante calificaciones en línea.
+RogueTech is a RPG roguelike game for browsers, with online competitive functionality between players via online leaderboards.
 
-## Características
+## Features
 
-* Jugabilidad estilo roguelike (Niveles aleatorios, derrota permanente).
-* Animaciones, efectos de sonido, música de fondo, amplia variedad de enemigos y objetos.
-* Capacidad de crear cuentas para subir puntuaciones y competir con otros usuarios.
-* Seguir amigos y otros usuarios para encontrar sus puntuaciones más facilmente.
-* Interfaz altamente dinámica, se verá bien tanto en escritorio como en móvil.
-* Puede descargarse e instalarse como aplicación fácilmente.
+* Roguelike gameplay (Random levels, permadeath).
+* Animations, sound effects, background music, wide variety of enemies and items.
+* Can create accounts for submitting scores and competing with other users.
+* Follow friend and other users to find their scores easily.
+* Highly dynamic interface, will look good on desktop as well as on mobile.
+* Can be easily downloaded and installed as an app.
 
-## Requisitos
+## Requirements
 
-El programa requiere que las siguientes dependencias se encuentren instaladas y configuradas en el sistema:
+The program requires the following dependencies to be installed and configured in the system:
 
-* Python versión 3.10 o posterior.
-* Base de datos MariaDB o MySQL.
-* Node.js 18 o posterior.
+* Python 3.10 or newer.
+* MariaDB or MySQL database.
+* Node.js 18 or newer.
 
-## Instalación
+## Instalation
 
-### Configuración de la base de datos
+### Database configuration
 
-Primero debe importarse la estructura de la base de datos al sistema gestor de bases de datos, lo cual se puede hacer a través de las herramientas provistas por éste u otras adicionales como phpMyAdmin. El primer paso será crear la base de datos que será usada, el nombre por defecto es “gamedb”; si elige otro nombre para la base de datos deberá especificarlo en la configuración (explicado en las secciones siguientes). Luego de crear la base de datos, deberá importar el archivo `schema.sql` en la base de datos.
+The database structure first has to be imported to the DBMS, which can be done using the tools provided by it or additional tools such as phpMyAdmin. The first step is to create the database to be used, the default database name is "gamedb"; if you choose another name for the database, you will need to specify it in the configuration (explained in the following sections). After creating the database, you need to import the `schema.sql` file into it.
 
-### Instalar dependencias
+### Installing dependencies
 
-Inicie una terminal o ventana de cmd en la carpeta de la aplicación y ejecute los siguiente comandos para instalar las dependencias requeridas la aplicación:
+Start a terminal or cmd window running in the application's directory and run the following commands to install the dependencies required by the application:
 
 ```
 python -m pip install -r requirements.txt
 npm install
 ```
 
-El código del juego se encuentra dividido en múltiples archivos JavaScript en la carpeta `src`, que luego son compiladas junto con otras librerías en un único archivo completo que puede ser cargado por el navegador como `main-compiled.js`. Para compilar el código en un único archivo ejecute:
+The game's code is divided into multiple JavaScript files in the `src` directory, which are later compiled along with other libraries into a single complete file that can be loaded by the browser as `main-compiled.js`. To compile the game source code run:
 
 ```
 npm run build
 ```
 
-### Configurar la aplicación
+### Configuring the application
 
-Al iniciar, la aplicación buscará configuración sobre cómo conectarse a la base de datos en la carpeta donde se está ejecutando. Buscará un archivo `.env` que contendrá el nombre de la base de datos, así como también otra información sobre la base de datos. Si no existe el archivo `.env`, el servidor usará los valores por defecto para una configuración común, como la que se muestra a continuación. El contenido de este archivo `.env` puede ser:
+At startup, the program will search settings for how to connect to the database in the directory where it is executing. It will search for a `.env` file that will contain the database name, as well as other information regarding the database. If the `.env` file doesn't exist, the server will use the default values as seen below. The `.env` file contents can be:
 
 ```
 export DB_NAME=gamedb
@@ -53,50 +53,48 @@ export DB_PASS=
 export DB_HOST=localhost
 ```
 
-Donde `DB_NAME` es el nombre de la base de datos, `DB_USER` es el nombre del usuario con el que nos conectaremos a la base de datos, `DB_PASS` es la contraseña del usuario de la base de datos, y `DB_HOST` es la dirección de la base de datos, normalmente es localhost.
+Where `DB_NAME` is the database name, `DB_USER` is the username used to connect to the database, `DB_PASS` is the database user's password, and `DB_HOST` is the address to connect to the database, usually being `localhost`.
 
-Adicionalmente a las opciones de la base de datos y de manera opcional, puede configurar la opción `ENABLE_DEVMENU`, que activa o desactiva el menú de opciones para desarrollador disponible en el menú de pausa dentro del juego. Un valor de 1 (el valor por defecto) activa el menú y un valor de 0 desactiva el menú.
+Additionally to the database options, the optional `ENABLE_DEVMENU` can be configured to enable or disable the developer settings available in the pause menu inside the game. A value of 1 (the default) activates the menu, and a value of 0 disables it.
 
 ```
 export ENABLE_DEVMENU=1
 ```
 
+### Creating an administrator user
 
-### Crear un usuario administrador
-
-El sistema inicialmente no tendrá usuarios, por lo que deberá crear un usuario administrador inicial. Por motivos de seguridad, la creación de usuarios administradores está completamente separada de la que es ofrecida a través de la interfaz web, la cual sólo registrá usuarios de tipo regular. Para crear un nuevo usuario administrador, ejecute el siguiente comando:
+Initially, the system will have no users, so you should create an initial administrator user. For security reasons, the creation of admin users is completely separated from the one offered in the web interface, which will only register regular users. To create a new admin user, execute the follwing command:
 
 ```
 python make-admin.py
 ```
 
-El cual le preguntará por el nombre de usuario, contraseña y pin para el nuevo administrador; una vez ingresados los datos, el script intentará crear el administrador e indicará si la operación fue exitosa o si ha ocurrido algún error.
+It will ask for the username, password and security pin for the new administrator; once the information is provided, the script will try to create the administrator and indicate the success of the operation or any errors that may happen.
 
-## Ejecución
+## Executing
 
-### Iniciar la aplicación
+### Starting the application
 
-Una vez instaladas las dependencias y configurado el entorno, la aplicación podrá iniciar correctamente. Para iniciarla, abra una terminal o cmd en la carpeta de la aplicación, donde deberá ejecutar el siguiente comando:
+Once the dependencies have been installed and the environment configured, the application can start correctly. To run it, start a terminal or cmd window in the application's directory, and run the following command:
 
 ```
 python -m flask run
 ```
 
-Una vez iniciada, podrá abrir http://localhost:5000/ para hacer uso de la aplicación.
+Once it starts, you will be able to open http://localhost:5000/ to begin using the application.
 
-## Otros
+## Other
 
-### Compilar o modificar el juego
+### Compile or modify the game
 
-Para compilar o efectuar modificaciones en el código del juego (ubicado en la carpeta `src`), es necesario recompilar el código para formar un único archivo que incluye todas las dependencias. Para recompilar el código se usa el comando:
+To compile or modify the game's code (in the `src` directory), it is required to recompile the the code to create a bundled file including all dependencies. To recompile use the command:
 
 ```
 npm run build
 ```
 
-O para el modo de compilación continua, que recompila el juego cada vez que se guarda un cambio, se usa el comando:
+Or for the continuous compilation mode, recompiling the game every time a change is saved, use:
 
 ```
 npm run watch
 ```
-
