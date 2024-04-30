@@ -13,6 +13,15 @@ RogueTech is a RPG roguelike game for browsers, with online competitive function
 * Highly dynamic interface, will look good on desktop as well as on mobile.
 * Can be easily downloaded and installed as an app.
 
+## Screenshots
+
+| Landing page | Game |
+|-|-|
+| ![Landing page](https://github.com/mamg22/RogueTech/assets/45301823/d309f964-3a44-4048-be37-a5de3e4c3b28) | ![In-game screen](https://github.com/mamg22/RogueTech/assets/45301823/eb2a9592-2f42-4d2d-b04e-749711f6c072) |
+| Scores page | Responsive game UI |
+| ![Score listing page](https://github.com/mamg22/RogueTech/assets/45301823/f01724f3-663e-4c6e-a1c4-8221e062ac70) | ![Responsive game interface](https://github.com/mamg22/RogueTech/assets/45301823/c2f8e931-caa8-4d88-94c1-29a415e587f7) |
+
+
 ## Requirements
 
 The program requires the following dependencies to be installed and configured in the system:
